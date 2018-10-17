@@ -60,29 +60,30 @@ def handle_dialog(req, res):
 
         sessionStorage[user_id] = {
             'suggests': [
-                "Не хочу.",
-                "Не буду.",
-                "Отстань!",
+                "Хочу",
+                "Очень хочу",
+                "Огонь как хочу",
+                "Быстрее, трубы горят",
             ]
         }
 
-        res['response']['text'] = 'Привет! Купи слона!'
+        res['response']['text'] = 'Хочешь пиво?'
         res['response']['buttons'] = get_suggests(user_id)
         return
 
     # Обрабатываем ответ пользователя.
     if req['request']['original_utterance'].lower() in [
-        'ладно',
-        'куплю',
-        'покупаю',
-        'хорошо',
+        'нет',
+        'отстань',
+        'я не пью',
+        'мне нельзя',
     ]:
         # Пользователь согласился, прощаемся.
-        res['response']['text'] = 'Слона можно найти на Яндекс.Маркете!'
+        res['response']['text'] = 'Жаль, а ведь так хорошо начали ...'
         return
 
     # Если нет, то убеждаем его купить слона!
-    res['response']['text'] = 'Все говорят "%s", а ты купи слона!' % (
+    res['response']['text'] = 'Все говорят "%s", а ты реально хочешь пива?' % (
         req['request']['original_utterance']
     )
     res['response']['buttons'] = get_suggests(user_id)
@@ -105,8 +106,8 @@ def get_suggests(user_id):
     # со ссылкой на Яндекс.Маркет.
     if len(suggests) < 2:
         suggests.append({
-            "title": "Ладно",
-            "url": "https://market.yandex.ru/search?text=слон",
+            "title": "Лови",
+            "url": "https://market.yandex.ru/search?text=пиво",
             "hide": True
         })
 
