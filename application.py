@@ -14,6 +14,7 @@ from __future__ import unicode_literals
 # Импортируем модули для работы с JSON и логами.
 import json
 import logging
+import db
 
 # Импортируем подмодули Flask для запуска веб-сервиса.
 from flask import Flask, request
@@ -58,17 +59,17 @@ def handle_dialog(req, res):
         # Это новый пользователь.
         # Инициализируем сессию и поприветствуем его.
 
-        sessionStorage[user_id] = {
-            'suggests': [
-                "Хочу",
-                "Очень хочу",
-                "Огонь как хочу",
-                "Быстрее, трубы горят",
-            ]
-        }
-
-        res['response']['text'] = 'Хочешь пиво?'
-        res['response']['buttons'] = get_suggests(user_id)
+        #sessionStorage[user_id] = {
+        #    'suggests': [
+        #        "Хочу",
+        #        "Очень хочу",
+        #        "Огонь как хочу",
+        #        "Быстрее, трубы горят",
+        #    ]
+        #}
+        
+        res['response']['text'] = 'Привет'
+        #res['response']['buttons'] = get_suggests(user_id)
         return
 
     # Обрабатываем ответ пользователя.
