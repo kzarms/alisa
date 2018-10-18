@@ -125,7 +125,7 @@ def SeachActionTimeDetection(text):
         word = word.strip(" ?!,;:")
         if word in TimeWords.keys():
             return TimeWords[word]
-    return -1 
+    return 2 
 
 #print(SearchName("когда во все тяжкие большого взрыва"))
 #print(SeachActionTimeDetection("ГДs сока сколь;в ы новый когда же ты где?"))
@@ -168,11 +168,11 @@ def CoreSearch(text):
     #lookinc for a name (fist stage)
     filmId = SearchName(text)
     if filmId == -1:
-        return movie()
+        return "Простите, я не нашла такого фильма или сериала, попробуйте еще раз."
     #looking for an action, if we do not have an action return -2
     action = SearchAction(text)
     if action == -1:
-        return movie()
+        return "Простите, я не поняла что нужно сделать, уточните свой вопрос."
     #looking for advanced action in the phrase
     time = SeachActionTimeDetection(text)
     #core logic
