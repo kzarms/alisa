@@ -1,6 +1,20 @@
 ID	SerialID	SeasonNumber	EpisodeNumber	OriginalName	RussianName	DateOfIssue
-256	1	12	1	The Conjugal Configuration	Семейные настройки	24.09.2018
-257	1	12	2	The Wedding Gift Wormhole	Червоточина на свадьбу	27.09.2018
-258	1	12	3	The Procreation Calculation	Планирование семьи	04.10.2018
-259	1	12	4	The Tam Turbulence	Ложная турбулентность	11.10.2018
-260	1	12	5	The Planetarium Collision	Планетарные столкновения	18.10.2018
+1	1	12	1	The Conjugal Configuration	Семейные настройки	24.09.2018
+2	1	12	2	The Wedding Gift Wormhole	Червоточина на свадьбу	27.09.2018
+3	1	12	3	The Procreation Calculation	Планирование семьи	04.10.2018
+4	1	12	4	The Tam Turbulence	Ложная турбулентность	11.10.2018
+5	1	12	5	The Planetarium Collision	Планетарные столкновения	18.10.2018
+6	2	5	1	Grow Fast or Die Slow	Расти быстро или умри медленно	25.03.2018
+7	3	5	2	Reorientation	Переориентация	01.04.2018
+8	3	5	3	Chief Operating Officer	Главный исполнительный директор	08.04.2018
+9	3	5	4	Tech Evangelist	Технический евангелист	15.04.2018
+10	3	5	5	Facial Recognition	Распознавание лиц	22.04.2018
+11	3	5	6	Artificial Emotional Intelligence	Искусственный эмоциональный интеллект	30.04.2018
+12	3	5	7	Initial Coin Offering	Первичное размещение монет	07.05.2018
+13	3	5	8	Fifty-One Percent	Пятьдесят один процент	14.05.2018
+14	4	3	1	TBD	TBD	01.01.1986
+15	5	8	1	TBD	TBD	01.04.2019
+16	5	8	2	TBD	TBD	01.04.2019
+17	5	8	3	TBD	TBD	01.04.2019
+18	5	8	4	TBD	TBD	01.05.2019
+19	5	8	5	TBD	TBD	01.05.2019

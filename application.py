@@ -14,12 +14,13 @@ from __future__ import unicode_literals
 # Импортируем модули для работы с JSON и логами.
 import json
 import logging
-#import dbfunctions
+from dbfunctions import *
 
+#abc = CoreSearch("Когда выйдет мстители война бесконечности?")
+#print(len(abc))
 # Импортируем подмодули Flask для запуска веб-сервиса.
 from flask import Flask, request
 app = Flask(__name__)
-
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -73,22 +74,30 @@ def handle_dialog(req, res):
         return
 
     # Обрабатываем ответ пользователя.
-    if req['request']['original_utterance'].lower() in [
-        'нет',
-        'отстань',
-        'я не пью',
-        'мне нельзя',
-    ]:
-        # Пользователь согласился, прощаемся.
-        res['response']['text'] = 'Жаль, а ведь так хорошо начали ...'
-        return
+    text = req['request']['original_utterance'].lower()
+    print(text)
+    result = CoreSearch(text)
+    print(result)
+    #if req['request']['original_utterance'].lower() in [
+    #    'нет',
+    #    'отстань',
+    #    'я не пью',
+    #    'мне нельзя',
+    #]:
+    #    # Пользователь согласился, прощаемся.
+    #    res['response']['text'] = 'Жаль, а ведь так хорошо начали ...'
+    #    return
 
     # Если нет, то убеждаем его купить слона!
-    res['response']['text'] = 'Все говорят "%s", а ты реально хочешь пива?' % (
-        req['request']['original_utterance']
-    )
-    res['response']['buttons'] = get_suggests(user_id)
-
+    #res['response']['text'] = 'Все говорят "%s", а ты реально хочешь пива?' % (
+    #    req['request']['original_utterance']
+    #)
+    #res['response']['buttons'] = get_suggests(user_id)
+    # if len(result) > 0:
+    #     res['response']['text'] = " ".join(result)
+    # else:
+    #     res['response']['text'] = "Не удалось найти ваш фильм, попробуйте другой."
+    res['response']['text'] = result
 # Функция возвращает две подсказки для ответа.
 def get_suggests(user_id):
     session = sessionStorage[user_id]
