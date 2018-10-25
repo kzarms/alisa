@@ -71,7 +71,10 @@ def handle_dialog(req, res):
     if text == 'инфо':
         res['response']['text'] = 'Заглушка для подробной информации'
         return
-    
+    if text == 'cмотреть':
+        res['response']['text'] = 'Слышала, что есть альтернативные вариаты просмотра ;)'
+        res['response']['end_session'] = True
+        return
     #res['response']['text'] = 'работаю ...'
     #execute seach function on top of this text
     result = CoreSearch(text)
