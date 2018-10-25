@@ -68,6 +68,10 @@ def handle_dialog(req, res):
 
     # Take user text
     text = req['request']['command'].lower()
+    if text == 'инфо':
+        res['response']['text'] = 'Заглушка для подробной информации'
+        return
+
     res['response']['text'] = 'работаю ...'
     #execute seach function on top of this text
     result = CoreSearch(text)
@@ -101,6 +105,7 @@ def handle_dialog(req, res):
     res['response']['buttons'] = [
         {
             "title": "Смотреть",
+            "payload": {},
             "url": buttons(result[1]),
             "hide": True
         },
