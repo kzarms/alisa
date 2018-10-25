@@ -98,13 +98,13 @@ def handle_dialog(req, res):
     #retun results from seach function
     res['response']['text'] = result[0]
     #add suggessted buttons
-    res['response']['buttons'] = [,
+    res['response']['buttons'] = [
         {
             "title": "Смотреть",
             "url": buttons(result[1]),
             "hide": True
         },
-                {
+        {
             "title": "Инфо",
         }
     ]
