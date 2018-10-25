@@ -121,20 +121,20 @@ def filmSearch(id, action, time):
         tvdbanswer = tvdbLastEpisode(row[1], row[9])
         print(tvdbanswer)
         if tvdbanswer[0] == 'Error':
-            return 'Простите, не удалось найти'
+            return 'Простите, не удалось найти', ''
         #define time according todays date
         d = datetime.strptime(tvdbanswer[2], '%Y-%m-%d')
         n = datetime.now()
         nowday = datetime(n.year, n.month, n.day)
         if d > nowday:
             #Is not issued
-            return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выйдет в прокат ' + datetime.strftime(d, '%d.%m.%Y')
+            return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выйдет в прокат ' + datetime.strftime(d, '%d.%m.%Y'), id
         elif d == nowday:
             #it is today
-            return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выходит сегодня!'
+            return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выходит сегодня!', id
         else:
             #it was in a past
-            return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" уже вышла в прокат ' + datetime.strftime(d, '%d.%m.%Y')
+            return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" уже вышла в прокат ' + datetime.strftime(d, '%d.%m.%Y'), id
 
 #main function, check for key words and finnaly execute a 
 def CoreSearch(text):
@@ -142,7 +142,7 @@ def CoreSearch(text):
     filmId = SearchName(text)
     if filmId == -1:
         #we did not find a film
-        return "Простите, я не нашла такого фильма или сериала, попробуйте еще раз."
+        return "Простите, я не нашла такого фильма или сериала, попробуйте еще раз.", ''
     #looking for an action, if we do not have an action return -2
     action = SearchAction(text)
     #looking for advanced action in the phrase

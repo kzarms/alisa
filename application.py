@@ -39,12 +39,30 @@ def main():
         indent=2
     )
 
+def buttons(id):
+    URLs = {
+        'CBS': 'https://www.cbs.com/',
+        'HBO': 'www.hbogo.com/', 
+        'Showtime': 'https://www.sho.com/',
+        'Netflix': 'https://www.netflix.com/',
+    }
+
+    f = open('films.csv', mode="r", encoding="utf-8")
+    films = csv.reader(f, delimiter='\t')
+    for row in films:
+        if id == row[0]:
+            #we found a film, close file and exit form the loop
+            f.close()
+            break
+    return URLs[row[8]]
+
+
 # Hanle dialog
 def handle_dialog(req, res):
     user_id = req['session']['user_id']
 
     if req['session']['new']:
-        #New user, return welcome message     
+        #New user, return welcome message       
         res['response']['text'] = 'Привет, что ищешь?'
         return
 
@@ -53,6 +71,10 @@ def handle_dialog(req, res):
     res['response']['text'] = 'работаю ...'
     #execute seach function on top of this text
     result = CoreSearch(text)
+    sessionStorage[user_id] = result[1]
+    #print(result[1])
+    
+
     #if req['request']['original_utterance'].lower() in [
     #    'нет',
     #    'отстань',
@@ -74,18 +96,16 @@ def handle_dialog(req, res):
     #     res['response']['text'] = "Не удалось найти ваш фильм, попробуйте другой."
 
     #retun results from seach function
-    res['response']['text'] = result
+    res['response']['text'] = result[0]
     #add suggessted buttons
-    res['response']['buttons'] = [
-        {
-            "title": "Инфо",
-            "url": "https://market.yandex.ru/search?text=пиво",
-            "hide": True
-        },
+    res['response']['buttons'] = [,
         {
             "title": "Смотреть",
-            "url": "https://market.yandex.ru/search?text=пиво",
+            "url": buttons(result[1]),
             "hide": True
+        },
+                {
+            "title": "Инфо",
         }
     ]
 # Функция возвращает две подсказки для ответа.
