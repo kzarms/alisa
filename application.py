@@ -76,7 +76,18 @@ def handle_dialog(req, res):
     #retun results from seach function
     res['response']['text'] = result
     #add suggessted buttons
-    res['response']['buttons'] = []
+    res['response']['buttons'] = [
+        {
+            "title": "Инфо",
+            "url": "https://market.yandex.ru/search?text=пиво",
+            "hide": True
+        },
+        {
+            "title": "Смотреть",
+            "url": "https://market.yandex.ru/search?text=пиво",
+            "hide": True
+        }
+    ]
 # Функция возвращает две подсказки для ответа.
 # def get_suggests(user_id):
 #     session = sessionStorage[user_id]
