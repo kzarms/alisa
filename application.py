@@ -1,37 +1,24 @@
-# from flask import Flask
-# app = Flask(__name__)
-
-# @app.route("/")
-# def hello():
-#     return "Yo yo yo yo yo! This is my world!"
-
-
-
 # coding: utf-8
-# Импортирует поддержку UTF-8.
+# UTF-8.
 from __future__ import unicode_literals
-
-# Импортируем модули для работы с JSON и логами.
+from dbfunctions import *
+#
 import json
 import logging
-from dbfunctions import *
 
-#abc = CoreSearch("Когда выйдет мстители война бесконечности?")
-#print(len(abc))
-# Импортируем подмодули Flask для запуска веб-сервиса.
 from flask import Flask, request
 app = Flask(__name__)
 
 logging.basicConfig(level=logging.DEBUG)
 
-# Хранилище данных о сессиях.
+# Session storage
 sessionStorage = {}
 
-# Задаем параметры приложения Flask.
+# Start flask with POST method listening
 @app.route("/", methods=['POST'])
 
 def main():
-# Функция получает тело запроса и возвращает ответ.
+# Main function
     logging.info('Request: %r', request.json)
 
     response = {
@@ -52,32 +39,19 @@ def main():
         indent=2
     )
 
-# Функция для непосредственной обработки диалога.
+# Hanle dialog
 def handle_dialog(req, res):
     user_id = req['session']['user_id']
 
     if req['session']['new']:
-        # Это новый пользователь.
-        # Инициализируем сессию и поприветствуем его.
-
-        #sessionStorage[user_id] = {
-        #    'suggests': [
-        #        "Хочу",
-        #        "Очень хочу",
-        #        "Огонь как хочу",
-        #        "Быстрее, трубы горят",
-        #    ]
-        #}
-        
-        res['response']['text'] = 'Привет'
-        #res['response']['buttons'] = get_suggests(user_id)
+        #New user, return welcome message     
+        res['response']['text'] = 'Привет, что ищешь?'
         return
 
-    # Обрабатываем ответ пользователя.
+    # Take user text
     text = req['request']['original_utterance'].lower()
-    print(text)
+    #execute seach function on top of this text
     result = CoreSearch(text)
-    print(result)
     #if req['request']['original_utterance'].lower() in [
     #    'нет',
     #    'отстань',
@@ -97,28 +71,32 @@ def handle_dialog(req, res):
     #     res['response']['text'] = " ".join(result)
     # else:
     #     res['response']['text'] = "Не удалось найти ваш фильм, попробуйте другой."
+
+    #retun results from seach function
     res['response']['text'] = result
+    #add suggessted buttons
+    res['response']['buttons'] = []
 # Функция возвращает две подсказки для ответа.
-def get_suggests(user_id):
-    session = sessionStorage[user_id]
+# def get_suggests(user_id):
+#     session = sessionStorage[user_id]
 
-    # Выбираем две первые подсказки из массива.
-    suggests = [
-        {'title': suggest, 'hide': True}
-        for suggest in session['suggests'][:2]
-    ]
+#     # Выбираем две первые подсказки из массива.
+#     suggests = [
+#         {'title': suggest, 'hide': True}
+#         for suggest in session['suggests'][:2]
+#     ]
 
-    # Убираем первую подсказку, чтобы подсказки менялись каждый раз.
-    session['suggests'] = session['suggests'][1:]
-    sessionStorage[user_id] = session
+#     # Убираем первую подсказку, чтобы подсказки менялись каждый раз.
+#     session['suggests'] = session['suggests'][1:]
+#     sessionStorage[user_id] = session
 
-    # Если осталась только одна подсказка, предлагаем подсказку
-    # со ссылкой на Яндекс.Маркет.
-    if len(suggests) < 2:
-        suggests.append({
-            "title": "Лови",
-            "url": "https://market.yandex.ru/search?text=пиво",
-            "hide": True
-        })
+#     # Если осталась только одна подсказка, предлагаем подсказку
+#     # со ссылкой на Яндекс.Маркет.
+#     if len(suggests) < 2:
+#         suggests.append({
+#             "title": "Лови",
+#             "url": "https://market.yandex.ru/search?text=пиво",
+#             "hide": True
+#         })
 
-    return suggests
+#     return suggests
