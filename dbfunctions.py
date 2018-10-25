@@ -142,7 +142,7 @@ def CoreSearch(text):
     filmId = SearchName(text)
     if filmId == -1:
         #we did not find a film
-        return "Простите, я не нашла такого фильма или сериала, попробуйте еще раз.", ''
+        return "Простите, я не нашла такого фильма или сериала, попробуйте еще раз.", None
     #looking for an action, if we do not have an action return -2
     action = SearchAction(text)
     #looking for advanced action in the phrase
