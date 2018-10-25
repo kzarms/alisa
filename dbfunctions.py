@@ -1,12 +1,9 @@
-#Модуль работы с внутренней базой данных
+# function module
 import csv
 import io
 import requests
 from datetime import datetime, timedelta
-#Функиця поиска фильма или сериала по таблице, возвращает ID сериала или фильма.
-#   -1  Нет сериала
-#   X   ID фильма или сериала
-
+#film search funtion in a csv file
 def SearchName(text):
     text = text.lower()
     words = text.split(" ")
@@ -27,10 +24,8 @@ def SearchName(text):
     f.close()
     return -1
 
-#Функция поиска ключевого слова в фразе, от него зависит дальнейшее действие. Возвращает ID действия
-#   -1  Нет слова
-#   0   когда (время)
-#   1   где (место)
+#Looking for key words related to action
+#time 0, plase 1, else -1
 def SearchAction(text):
     KeyWords = {
         'когда': 0, 'кагда': 0, 'when': 0, 'скоро': 0,
@@ -44,11 +39,8 @@ def SearchAction(text):
             return KeyWords[word]
     return -1
 
-#Функция нужна для опеределении времени вопроса КОГДА, ищет ключевые слова относящиеся к будущему, прошлому и настоящему
-#Возвращает int
-# 0 - прошлое
-# 1 - настоящее
-# 2 - будущее
+#Looking for key words related to time
+#future 2, present 1 and past 0, else -1
 def SeachActionTimeDetection(text):
     TimeWords = {
         'следующий': 2, 'следующая': 2, 'новый': 2, 'новая': 2, 'очередной': 2, 'очередная': 2, 'очередные': 2, 'будет': 2, 'появится': 2, 'выйдет': 2, "выходит": 2,
@@ -66,6 +58,7 @@ def SeachActionTimeDetection(text):
 #print(SearchName("во все тяжкие большого взрыва"))
 #print(SeachActionTimeDetection("ГДs сока сколь;в ы новый когда же ты где?"))
 #print(SearchAction("ГДs сока сколь;в ы когда же ты где?"))
+#seach function in the tbdb
 def tvdbLastEpisode(filmID, seasonNumber):
     URL = "https://api.thetvdb.com"
     token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDA1ODMyMjAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDQ5NjgyMCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.0TKJhRZ7-sVGaPonMOrSWYz2DIWkpKo1hHAbap01Fu6sYRVwK0_LYbrvDy_yilQXCG2wcIKtI6DdPDEJ9ZBhMkP2ZOLJSidqYfevJoo3l49rLBGNRbzCJEN8atFNGQHdpcu9iHe8I6U7MnCOPgwSijTxlJFCoOdeQrrgBaPHq_aRlxgtIUiqNvzt19jIlF2X_kUp_zrQw-XUgOJkGTC72LFGJPQA_5EIV00mPg0L3UuRFtvN1c9Gapu8Ku00mnRblfOUAgPG0mo76_UmnfYjq6va939B767S690sLorfWiO_qPECnFV5ByCoXXwSamZ3arISJK27qkX-l3VUq4oRdg'
@@ -85,7 +78,7 @@ def tvdbLastEpisode(filmID, seasonNumber):
         if 'No results for your query' in data['Error']:
             return 'Error', 'Search error'
         return 'Error', 'Unspecified error'
-    if data['data'][-1]['episodeName'] == '':
+    if data['data'][-1]['episodeName'] == None:
         #if there is no Rus name, repeat in En
         HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)}
         r = requests.get(url = URL, headers = HEADERS, params = PARAMS)
@@ -100,7 +93,6 @@ def tvdbLastEpisode(filmID, seasonNumber):
     for series in data['data']:
         if int(series['airedEpisodeNumber']) == lastEpisode:
             return series['airedEpisodeNumber'], series['episodeName'], series['firstAired']
-
 
 #tvdbanswer = tvdbLastEpisode('80379','12')
 
@@ -127,6 +119,7 @@ def filmSearch(id, action, time):
     if int(row[3]) > 0:
         #this is serial, looking for the serial
         tvdbanswer = tvdbLastEpisode(row[1], row[9])
+        print(tvdbanswer)
         if tvdbanswer[0] == 'Error':
             return 'Простите, не удалось найти'
         #define time according todays date
@@ -143,8 +136,7 @@ def filmSearch(id, action, time):
             #it was in a past
             return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" уже вышла в прокат ' + datetime.strftime(d, '%d.%m.%Y')
 
-
-#Функция поиска по фразе сериала и ключевой фразы дейстия, например "КОГДА появится НОВАЯ серия ТЕОРИИ БОЛЬШОГО ВЗРЫВА 
+#main function, check for key words and finnaly execute a 
 def CoreSearch(text):
     #lookinc for a name (fist stage)
     filmId = SearchName(text)

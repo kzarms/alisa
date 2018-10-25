@@ -49,7 +49,8 @@ def handle_dialog(req, res):
         return
 
     # Take user text
-    text = req['request']['original_utterance'].lower()
+    text = req['request']['command'].lower()
+    res['response']['text'] = 'работаю ...'
     #execute seach function on top of this text
     result = CoreSearch(text)
     #if req['request']['original_utterance'].lower() in [
