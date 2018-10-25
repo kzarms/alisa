@@ -7,73 +7,6 @@ from datetime import datetime, timedelta
 #   -1  Нет сериала
 #   X   ID фильма или сериала
 
-class movie:
-  def __init__(self, id="", IsSerial="", SerialId="", OriginalName="", RussianName="", Description="", DateOfIssue="", Kinopoisk="", IMDb=""):
-    self.id = id
-    self.IsSerial = IsSerial
-    self.SerialId = SerialId
-    self.OriginalName = OriginalName
-    self.RussianName = RussianName
-    self.Description = Description
-    self.DateOfIssue = DateOfIssue
-    self.Kinopoisk = Kinopoisk
-    self.IMDb = IMDb
-
-  def filmInfo(self):
-    print(self.RussianName, "вышел в прокат", self.DateOfIssue)
-  
-  def wentIssue(self):
-    if self.DateOfIssue == "":
-        return "Простите, не удалось найти."
-    d = datetime.strptime(self.DateOfIssue, '%d.%m.%Y')
-    n = datetime.now()
-    nowday = datetime(n.year, n.month, n.day)
-    if d > nowday:
-        #Is not issued
-        return self.RussianName + " выйдет в прокат " + self.DateOfIssue
-    elif d == nowday:
-        #it is today
-         return self.RussianName + " выходит в прокат сегодня!"
-    else:
-        #it was in a past
-        return self.RussianName + " уже вышел в прокат " + self.DateOfIssue
-
-  def getSerialId(self):
-      return int(self.SerialId)
-
-  def isSerial(self):
-    if self.IsSerial == '1':
-        return True
-    else:
-        return False
-
-class episode(movie):
-    def __init__(self, id, IsSerial, SerialId, OriginalName, RussianName, Description, DateOfIssue, Kinopoisk, IMDb, SeasonNumber, EpisodeNumber):
-        movie.__init__(self, id, IsSerial, SerialId, OriginalName, RussianName, Description, DateOfIssue, Kinopoisk, IMDb)
-        self.SeasonNumber = SeasonNumber
-        self.EpisodeNumber = EpisodeNumber
-    
-    def wentIssue(self):
-        if self.SeasonNumber == "":
-            return "Простите, не удалось найти." 
-        seasonName = ["", "первого", "второго", "третьего", "четвертого", "пятого", "шестого","седьмого","восьмого","девятого","десятого","одиннадцатого", "двенадцатого", "тринадцатого", "четырнадцатого", "пятнадцатого", "шестнадцатого"]
-        if self.OriginalName == "TBD":
-            return "Простите, дата выхода епизода " + self.EpisodeNumber + " " + seasonName[int(self.SeasonNumber)] + " cезона еще не анонсирована."
-        
-        d = datetime.strptime(self.DateOfIssue, '%d.%m.%Y')
-        n = datetime.now()
-        nowday = datetime(n.year, n.month, n.day)
-        if d > nowday:
-            #Is not issued
-            return "Серия " + self.EpisodeNumber + " " + seasonName[int(self.SeasonNumber)] + ' cезона "' + self.RussianName + '" выйдет в прокат ' + self.DateOfIssue
-        elif d == nowday:
-            #it is today
-            return "Серия " + self.EpisodeNumber + " " + seasonName[int(self.SeasonNumber)] + ' cезона "' + self.RussianName + '" выходит сегодня!'
-        else:
-            #it was in a past
-            return "Серия " + self.EpisodeNumber + " " + seasonName[int(self.SeasonNumber)] + ' cезона "' + self.RussianName + '" уже вышла в прокат ' + self.DateOfIssue
-
-
 def SearchName(text):
     text = text.lower()
     words = text.split(" ")
@@ -135,11 +68,10 @@ def SeachActionTimeDetection(text):
 #print(SearchAction("ГДs сока сколь;в ы когда же ты где?"))
 def tvdbLastEpisode(filmID, seasonNumber):
     URL = "https://api.thetvdb.com"
-    token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDA0OTY3NDMsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDQxMDM0MywidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.CzyfLQYCRV-6gCE8n6tcD5iVsbivXo9TQsvTZriirwtUQP0TCLQiDoSvh9bRTpHZXpXh_S7F-9N5KAUPRjPI6UQ2D73pzDWy1_Bw0qMXgllXluIoEf4KHzxbH9cSAR6-96-jJwGcP-qAJ9GAABAJq1piCAYb1dEnCOKBym-PluxBLYibGSbi0YBXow66NhmnRVpvkvpZ9SpSWSPE26SdZTAtDER-EW89kZ80ggf3fmVGen0exeTWPnxmLUeQghe43ZMsbY_MEW3Rs9axQC-FSkxIo7ktlqjQJVeFG-saeqsmw5-RE_FPnUbNuPdrZD3WedbXhM2hewcErpBOMjyU5g'
-    #filmID = '80379'
-    #seasonNumber = '12'
-    HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)} 
-    #HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}  
+    token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDA1ODMyMjAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDQ5NjgyMCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.0TKJhRZ7-sVGaPonMOrSWYz2DIWkpKo1hHAbap01Fu6sYRVwK0_LYbrvDy_yilQXCG2wcIKtI6DdPDEJ9ZBhMkP2ZOLJSidqYfevJoo3l49rLBGNRbzCJEN8atFNGQHdpcu9iHe8I6U7MnCOPgwSijTxlJFCoOdeQrrgBaPHq_aRlxgtIUiqNvzt19jIlF2X_kUp_zrQw-XUgOJkGTC72LFGJPQA_5EIV00mPg0L3UuRFtvN1c9Gapu8Ku00mnRblfOUAgPG0mo76_UmnfYjq6va939B767S690sLorfWiO_qPECnFV5ByCoXXwSamZ3arISJK27qkX-l3VUq4oRdg'
+    #filmID = '296762'
+    #seasonNumber = '2'
+    HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}  
     PARAMS = {'airedSeason':seasonNumber} 
     #Create full request
     URL = URL + '/series/' + filmID + '/episodes/query'
@@ -149,17 +81,25 @@ def tvdbLastEpisode(filmID, seasonNumber):
     if 'Error' in data:
         #there is an error
         if data['Error'] == 'Not authorized':
-            return "Auth error"
+            return 'Error', 'Auth error'
         if 'No results for your query' in data['Error']:
-            return "Search error"
-        return "Unspecified error"
-
-    #collect data about last record
-    airedEpisodeNumber = data['data'][-1]['airedEpisodeNumber']
-    episodeName = data['data'][-1]['episodeName']
-    firstAired = data['data'][-1]['firstAired']
-    print(airedEpisodeNumber, episodeName, firstAired)   
-    return airedEpisodeNumber, episodeName, firstAired
+            return 'Error', 'Search error'
+        return 'Error', 'Unspecified error'
+    if data['data'][-1]['episodeName'] == '':
+        #if there is no Rus name, repeat in En
+        HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)}
+        r = requests.get(url = URL, headers = HEADERS, params = PARAMS)
+        data = r.json()
+    #looking for the last episod in the seies
+    lastEpisode = 1
+    for series in data['data']:
+        if int(series['airedEpisodeNumber']) > lastEpisode:
+            lastEpisode = int(series['airedEpisodeNumber'])
+    print(lastEpisode)
+    #looking for particular data from the last episode
+    for series in data['data']:
+        if int(series['airedEpisodeNumber']) == lastEpisode:
+            return series['airedEpisodeNumber'], series['episodeName'], series['firstAired']
 
 
 #tvdbanswer = tvdbLastEpisode('80379','12')
@@ -173,6 +113,9 @@ def filmSearch(id, action, time):
     #  0 - past
     #  1 - current
     #  2 - future
+    seasonName = ["","первого","второго","третьего","четвертого","пятого","шестого","седьмого","восьмого","девятого","десятого",
+        "одиннадцатого","двенадцатого","тринадцатого","четырнадцатого","пятнадцатого","шестнадцатого","семнадцатого","восемнадцатого","девятнадцатого","двадцатого",
+        "двадцать первого","двадцать второго","двадцать третьего","двадцать четвертого","двадцать пятого","двадцать шестого",]
 
     f = open('films.csv', mode="r", encoding="utf-8")
     films = csv.reader(f, delimiter='\t')
@@ -180,37 +123,25 @@ def filmSearch(id, action, time):
         if id == row[0]:
             #we found a film, close file and exit form the loop
             f.close()
-            #MyMovie = movie(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8])
             break
-    if row[1] == '1':
+    if int(row[3]) > 0:
         #this is serial, looking for the serial
-        tvdbanswer = tvdbLastEpisode(row[2], row[3])
-        return 'Серия ' + str(tvdbanswer[0]) + ' ' + tvdbanswer[1] + ' выйдет в прокат ' + tvdbanswer[2]
-
-
-    # #MyMovie.filmInfo()
-    # #We done with film search and now lookig for an answer
-    # if (action == 0) and (time == 2):
-    #     #looking for the next seies
-    #     if MyMovie.isSerial():
-    #         #this is serial, looking for the next episode in the different csv file
-    #         movieid = MyMovie.SerialId
-    #         #n = datetime.now()
-    #         #nowday = datetime(n.year, n.month, n.day)
-    #         f = open('episodes.csv', mode="r", encoding="utf-8")
-    #         episodes = csv.reader(f, delimiter='\t')
-    #         for row in episodes:
-    #             #looking for in rows our movie
-    #             if movieid == row[1]:
-    #                 MyEpisode = episode("", "", "", row[4], row[5], "", row[6], "", "", row[2], row[3])
-
-    #         f.close()
-    #         return MyEpisode.wentIssue()
-    #     else:
-    #         #this is a move, return data of issue
-    #         return MyMovie.wentIssue()
-    # return movie().wentIssue()
-
+        tvdbanswer = tvdbLastEpisode(row[1], row[9])
+        if tvdbanswer[0] == 'Error':
+            return 'Простите, не удалось найти'
+        #define time according todays date
+        d = datetime.strptime(tvdbanswer[2], '%Y-%m-%d')
+        n = datetime.now()
+        nowday = datetime(n.year, n.month, n.day)
+        if d > nowday:
+            #Is not issued
+            return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выйдет в прокат ' + datetime.strftime(d, '%d.%m.%Y')
+        elif d == nowday:
+            #it is today
+            return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выходит сегодня!'
+        else:
+            #it was in a past
+            return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" уже вышла в прокат ' + datetime.strftime(d, '%d.%m.%Y')
 
 
 #Функция поиска по фразе сериала и ключевой фразы дейстия, например "КОГДА появится НОВАЯ серия ТЕОРИИ БОЛЬШОГО ВЗРЫВА 
@@ -222,19 +153,9 @@ def CoreSearch(text):
         return "Простите, я не нашла такого фильма или сериала, попробуйте еще раз."
     #looking for an action, if we do not have an action return -2
     action = SearchAction(text)
-    if action == -1:
-        #guess we whant to know when
-        action = 0
-        #return "Простите, я не поняла что нужно сделать, уточните свой вопрос."
     #looking for advanced action in the phrase
     time = SeachActionTimeDetection(text)
-    if time == -1:
-        #guess we whant to know when in future
-        time = 2
     #core logic
     return filmSearch(filmId, action, time)
-        
-        #this is time, checking advanceAction and if not, assume we are looking for date of issue
-        #if AdvanceAction 
 #a = CoreSearch("Когда выйдет игра престолов?")
 #print(a)

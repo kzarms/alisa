@@ -1,7 +1,3 @@
-ID	IsSerial	SerialID	LasEpisode  OriginalName	RussianName	Description	DateOfIssue	Kinopoisk	IMDb
-1	1	80379	12	The big bang theory	Теория большого взрыва	Сериал о не легкой жизни ботаников		8,5	8,5
-2	1	81189	5	Breaking Bad	Во все тяжкие	Сериал о судьбе учителя химии		8,8	9,9
-3	0	-1	-1  Avengers: Infinity War	Мстители: Война бесконечности	Американский художественный фильм 2018 года	28.04.2018	8,9	8,1
-4	1	277165	5	Silicon Valley	Селиконовая долина	Сериал о программистах в США		8,9	8,1
-5	1	296762	2	Westworld	Мир дикого запада	Сериал о вымышленном парке развлечений		9,7	9,6
-6	1	121361	7	Game of Thrones	Игра престолов	Сериал по циклю романов "Песнь льда и пламени"		9,6	9,9
+Id	tvdbId	imdbId	seriesId	nameEn	nameRu	status	firstAired	network	seazons	lastEpisode	rating
+1	80379	tt0898266	58053	The Big Bang Theory		Continuing	2007-09-24	CBS	12	256	8.8
+2	296762	tt0475784	194892	Westworld		Continuing	2016-10-02	HBO	2	22	8.93	161511	tt1586680	78143	Shameless (US)		Continuing	2011-01-09	Showtime	9	112	94	277165	tt2575988	3072410	Silicon Valley		Continuing	2014-04-06	HBO	5	49	8.85	253463	tt2085059	81497	Black Mirror		Continuing	2011-12-04	Netflix	4	19	96	121361	tt0944947		Game of Thrones		Continuing	2011-04-17	HBO	7	107	9.5
