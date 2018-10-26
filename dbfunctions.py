@@ -208,10 +208,7 @@ def CoreSearch(text):
     #looking for advanced action in the phrase
     time = SeachActionTimeDetection(text)
     #core logic
-    a = filmSearch(filmId, action, time)
-    print(a)
-    return a
-    #return filmSearch(filmId, action, time)
+    return filmSearch(filmId, action, time)
 
 # print(SearchName("во все тяжкие большого взрыва"))
 # print(SeachActionTimeDetection("ГДs сока сколь;в ы новый когда же ты где?"))

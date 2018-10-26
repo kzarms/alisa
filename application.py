@@ -51,10 +51,16 @@ def handle_dialog(req, res):
 
     # Take user text
     text = req['request']['command'].lower()
-    if text == 'инфо':
+    if text == 'подробнее':
         if sessionStorage[user_id] != 0:
-            res['response']['text'] = getFilmInfoLocal(sessionStorage[user_id])
-            #res['response']['text'] = 'Заглушка для подробной информации'
+            #res['response']['text'] = getFilmInfoLocal(str(sessionStorage[user_id]))
+            res['response']['text'] = 'Заглушка для подробной информации о серии'            
+        else:
+            res['response']['text'] = 'Я потеряла нить нашей беседы :)'
+        return
+    if text == 'сериал':
+        if sessionStorage[user_id] != 0:
+            res['response']['text'] = getFilmInfoLocal(str(sessionStorage[user_id]))
         else:
             res['response']['text'] = 'Я потеряла нить нашей беседы :)'
         return
@@ -62,26 +68,27 @@ def handle_dialog(req, res):
         res['response']['text'] = 'Слышала, что есть альтернативные вариаты просмотра ;)'
         res['response']['end_session'] = True
         return
-
-    #execute seach function on top of this text
+    #no more key works, execute seach function on top of this text
     # print('test search')
     result = CoreSearch(text)
-    print(result)
+    #save intId into dictionary
     sessionStorage[user_id] = result[1]
-    print(sessionStorage)
-    #
+    #return result to user
     res['response']['text'] = result[0]
     #res['response']['text'] = CoreSearch(text)
     #add suggessted buttons
     if result[1] != 0:
         res['response']['buttons'] = [
             {
-                "title": "Смотреть",
-                "url": OfficialURL(result[1]),
-                "hide": True
+                "title": "Подробнее",
             },
             {
-                "title": "Инфо",
+                "title": "сериал",
+            },
+            {
+                "title": "Смотреть",
+                "url": OfficialURL(result[1]),
+                #"hide": True
             }
         ]
 
