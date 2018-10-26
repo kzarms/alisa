@@ -1,10 +1,12 @@
 # coding: utf-8
 # UTF-8.
-from __future__ import unicode_literals
-from dbfunctions import *
 #
+from __future__ import unicode_literals
+
 import json
 import logging
+
+from dbfunctions import *
 
 from flask import Flask, request
 app = Flask(__name__)
@@ -17,8 +19,8 @@ sessionStorage = {}
 # Start flask with POST method listening
 @app.route("/", methods=['POST'])
 
+#main function
 def main():
-# Main function
     logging.info('Request: %r', request.json)
 
     response = {
@@ -39,28 +41,9 @@ def main():
         indent=2
     )
 
-def buttons(id):
-    URLs = {
-        'CBS': 'https://www.cbs.com',
-        'HBO': 'www.hbogo.com', 
-        'Showtime': 'https://www.sho.com',
-        'Netflix': 'https://www.netflix.com',
-    }
-
-    f = open('films.csv', mode="r", encoding="utf-8")
-    films = csv.reader(f, delimiter='\t')
-    for row in films:
-        if id == row[0]:
-            #we found a film, close file and exit form the loop
-            f.close()
-            break
-    return URLs[row[8]]
-
-
 # Hanle dialog
 def handle_dialog(req, res):
     user_id = req['session']['user_id']
-
     if req['session']['new']:
         #New user, return welcome message       
         res['response']['text'] = 'Привет, что ищешь?'
@@ -69,28 +52,37 @@ def handle_dialog(req, res):
     # Take user text
     text = req['request']['command'].lower()
     if text == 'инфо':
-        res['response']['text'] = 'Заглушка для подробной информации'
+        if sessionStorage[user_id] != 0:
+            res['response']['text'] = getFilmInfoLocal(sessionStorage[user_id])
+            #res['response']['text'] = 'Заглушка для подробной информации'
+        else:
+            res['response']['text'] = 'Я потеряла нить нашей беседы :)'
         return
     if text == 'cмотреть':
         res['response']['text'] = 'Слышала, что есть альтернативные вариаты просмотра ;)'
         res['response']['end_session'] = True
         return
-    #res['response']['text'] = 'работаю ...'
+
     #execute seach function on top of this text
+    # print('test search')
     result = CoreSearch(text)
+    print(result)
     sessionStorage[user_id] = result[1]
+    print(sessionStorage)
     #
     res['response']['text'] = result[0]
+    #res['response']['text'] = CoreSearch(text)
     #add suggessted buttons
-    if result[1] != None:
+    if result[1] != 0:
         res['response']['buttons'] = [
             {
                 "title": "Смотреть",
-                "payload": {},
-                "url": buttons(result[1]),
+                "url": OfficialURL(result[1]),
                 "hide": True
             },
             {
                 "title": "Инфо",
             }
         ]
+
+

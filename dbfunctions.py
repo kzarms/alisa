@@ -3,13 +3,16 @@ import csv
 import io
 import requests
 from datetime import datetime, timedelta
+
 #film search funtion in a csv file
 def SearchName(text):
+    #text = "дай инфо о теории большого взрывы"
     text = text.lower()
     words = text.split(" ")
     wordList = []
     for word in words:
-        wordList.append(word.strip(' ?!,;:'))
+        if len(word.strip(' ?!,;:')) > 1:
+            wordList.append(word.strip(' ?!,;:'))
     f = open('NameVariations.csv', mode="r", encoding="utf-8")
     filmReader = csv.reader(f, delimiter='\t')
     for row in filmReader:        
@@ -23,13 +26,13 @@ def SearchName(text):
             return row[0]
     f.close()
     return -1
-
 #Looking for key words related to action
-#time 0, plase 1, else -1
+#time 0, plase 1, info 2, else -1
 def SearchAction(text):
     KeyWords = {
         'когда': 0, 'кагда': 0, 'when': 0, 'скоро': 0,
         'где': 1,
+        'info': 2, 'инфо': 2, 'информация': 2, 'подробнее': 2, 'подробно': 2,
     }
     text = text.lower()    
     WordList = text.split(" ")
@@ -38,7 +41,6 @@ def SearchAction(text):
         if word in KeyWords.keys():
             return KeyWords[word]
     return -1
-
 #Looking for key words related to time
 #future 2, present 1 and past 0, else -1
 def SeachActionTimeDetection(text):
@@ -54,23 +56,23 @@ def SeachActionTimeDetection(text):
         if word in TimeWords.keys():
             return TimeWords[word]
     return -1 
-
-#print(SearchName("во все тяжкие большого взрыва"))
-#print(SeachActionTimeDetection("ГДs сока сколь;в ы новый когда же ты где?"))
-#print(SearchAction("ГДs сока сколь;в ы когда же ты где?"))
 #seach function in the tbdb
 def tvdbLastEpisode(filmID, seasonNumber):
     URL = "https://api.thetvdb.com"
     token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDA1ODMyMjAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDQ5NjgyMCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.0TKJhRZ7-sVGaPonMOrSWYz2DIWkpKo1hHAbap01Fu6sYRVwK0_LYbrvDy_yilQXCG2wcIKtI6DdPDEJ9ZBhMkP2ZOLJSidqYfevJoo3l49rLBGNRbzCJEN8atFNGQHdpcu9iHe8I6U7MnCOPgwSijTxlJFCoOdeQrrgBaPHq_aRlxgtIUiqNvzt19jIlF2X_kUp_zrQw-XUgOJkGTC72LFGJPQA_5EIV00mPg0L3UuRFtvN1c9Gapu8Ku00mnRblfOUAgPG0mo76_UmnfYjq6va939B767S690sLorfWiO_qPECnFV5ByCoXXwSamZ3arISJK27qkX-l3VUq4oRdg'
-    #filmID = '296762'
-    #seasonNumber = '2'
     HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}  
     PARAMS = {'airedSeason':seasonNumber} 
     #Create full request
     URL = URL + '/series/' + filmID + '/episodes/query'
-    r = requests.get(url = URL, headers = HEADERS, params = PARAMS)  
+    #r = requests.get(url = URL, headers = HEADERS, params = PARAMS)    
+    try:
+        r = requests.get(url = URL, headers = HEADERS, params = PARAMS)
+    except:
+        return 'Error', 'Connection error'
+ 
     # extracting data in json format 
     data = r.json()
+    #print(data)
     if 'Error' in data:
         #there is an error
         if data['Error'] == 'Not authorized':
@@ -88,15 +90,57 @@ def tvdbLastEpisode(filmID, seasonNumber):
     for series in data['data']:
         if int(series['airedEpisodeNumber']) > lastEpisode:
             lastEpisode = int(series['airedEpisodeNumber'])
-    print(lastEpisode)
+    #print(lastEpisode)
     #looking for particular data from the last episode
     for series in data['data']:
         if int(series['airedEpisodeNumber']) == lastEpisode:
             return series['airedEpisodeNumber'], series['episodeName'], series['firstAired']
-
-#tvdbanswer = tvdbLastEpisode('80379','12')
-
-def filmSearch(id, action, time):
+#Return the URL to the offical site 
+def OfficialURL(intId):
+    URLs = {
+        'CBS': 'https://www.cbs.com',
+        'HBO': 'https://www.hbogo.com', 
+        'Showtime': 'https://www.sho.com',
+        'Netflix': 'https://www.netflix.com',
+    }
+    f = open('films.csv', mode="r", encoding="utf-8")
+    films = csv.reader(f, delimiter='\t')
+    for row in films:
+        if intId == row[0]:
+            #we found a film, close file and exit form the loop
+            f.close()
+            break
+    return URLs[row[8]]
+#Return main info about serial
+def getFilmInfoLocal(intId):
+    #intId = '1'
+    f = open('films.csv', mode="r", encoding="utf-8")
+    films = csv.reader(f, delimiter='\t')
+    for row in films:
+        if intId == row[0]:
+            #we found a film, close file and exit form the loop
+            f.close()
+            break
+        
+    msg = 'Сериал "' + row[5] + '" (' + row[4] + ') впервые вышел в прокат ' + datetime.strftime(datetime.strptime(row[7], '%Y-%m-%d'), '%d.%m.%Y') + ' на канале ' + row[8] + '.'
+    if row[9] == '1':
+        msg += ' В сериале только 1 сезон и ' + row[10] + ' серий.'
+    elif int(row[9]) < 5:
+        msg += ' В сериале ' + row[9] + ' сезонa и ' + row[10] + ' серий.'
+    else:
+        msg += ' В сериале ' + row[9] + ' сезонoв и ' + row[10] + ' серий.'
+    msg += ' IMDB рейтинг ' + row[11] + '.'
+    if row[6].lower() == 'continuing': 
+        msg += ' Продолжает сниматься.'
+    else:
+        msg += ' Cьемки завершены.'
+    return msg
+#Return film location 
+def getFilmLocationLocal(intId):
+    #intId = '1'
+    return "Сериал можно посмотреть на сайте " + OfficialURL(intId)
+#Film Search function
+def filmSearch(intId, action, time):
     #print(id, action, time)
     #action
     #  0 - looking for a time period
@@ -111,43 +155,71 @@ def filmSearch(id, action, time):
 
     f = open('films.csv', mode="r", encoding="utf-8")
     films = csv.reader(f, delimiter='\t')
+    found = False
     for row in films:
-        if id == row[0]:
+        if intId == row[0]:
             #we found a film, close file and exit form the loop
             f.close()
+            found = True
             break
-    if int(row[3]) > 0:
-        #this is serial, looking for the serial
-        tvdbanswer = tvdbLastEpisode(row[1], row[9])
-        print(tvdbanswer)
-        if tvdbanswer[0] == 'Error':
-            return 'Простите, не удалось найти', ''
-        #define time according todays date
-        d = datetime.strptime(tvdbanswer[2], '%Y-%m-%d')
-        n = datetime.now()
-        nowday = datetime(n.year, n.month, n.day)
-        if d > nowday:
-            #Is not issued
-            return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выйдет в прокат ' + datetime.strftime(d, '%d.%m.%Y'), id
-        elif d == nowday:
-            #it is today
-            return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выходит сегодня!', id
-        else:
-            #it was in a past
-            return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" уже вышла в прокат ' + datetime.strftime(d, '%d.%m.%Y'), id
-
+    if not found:
+        return 'Простите, не удалось найти в нашей базе данных', 0
+    #print(intId, action, time)
+    if action == 1:
+        #looking for information about location for watching
+        return getFilmLocationLocal(intId), int(intId) 
+    if action == 2:
+        #loocing for additional info in local file
+        return getFilmInfoLocal(intId), int(intId)
+    if action == 0 or action == -1:
+        #question about time, looking for corresponding data, accept default action
+        if int(row[3]) > 0:
+            #this is serial, looking for the serial
+            #print('enter to search')
+            tvdbanswer = tvdbLastEpisode(row[1], row[9])
+            #print(tvdbanswer)
+            if tvdbanswer[0] == 'Error':
+                return 'Простите, не удалось найти', 0
+            #define time according todays date
+            d = datetime.strptime(tvdbanswer[2], '%Y-%m-%d')
+            n = datetime.now()
+            nowday = datetime(n.year, n.month, n.day)
+            print(d)
+            if d > nowday:
+                #Is not issued
+                return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выйдет в прокат ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
+            elif d == nowday:
+                #it is today
+                return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выходит сегодня!', int(intId)
+            else:
+                #it was in a past
+                return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" уже вышла в прокат ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
+    #final close return (if everythig esle bad)
+    return 'Простите, не удалось найти в базе данных', 0
 #main function, check for key words and finnaly execute a 
 def CoreSearch(text):
-    #lookinc for a name (fist stage)
+    #looking for a name (fist stage)
     filmId = SearchName(text)
     if filmId == -1:
-        #we did not find a film
-        return "Простите, я не нашла такого фильма или сериала, попробуйте еще раз.", None
+        #we did not find a film, return info message and None as ID
+        return "Простите, я не нашла такого фильма или сериала, попробуйте еще раз.", 0
     #looking for an action, if we do not have an action return -2
     action = SearchAction(text)
     #looking for advanced action in the phrase
     time = SeachActionTimeDetection(text)
     #core logic
-    return filmSearch(filmId, action, time)
-#a = CoreSearch("Когда выйдет игра престолов?")
-#print(a)
+    a = filmSearch(filmId, action, time)
+    print(a)
+    return a
+    #return filmSearch(filmId, action, time)
+
+# print(SearchName("во все тяжкие большого взрыва"))
+# print(SeachActionTimeDetection("ГДs сока сколь;в ы новый когда же ты где?"))
+# print(SearchAction("ГДs сока сколь;в ы когда же ты где?"))
+
+# print(CoreSearch("теория большого взрыва"))
+# print(CoreSearch("Когда выйдет игра престолов?"))
+# print(CoreSearch("дай инфо о теории большого взрыва"))
+# print(CoreSearch("где глянуть теорию большого взрыва"))
+
+# print(tvdbLastEpisode('80379','12'))
