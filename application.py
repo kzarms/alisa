@@ -65,8 +65,11 @@ def handle_dialog(req, res):
             res['response']['text'] = 'Я потеряла нить нашей беседы :)'
         return
     if text == 'cмотреть':
-        res['response']['text'] = 'Слышала, что есть альтернативные вариаты просмотра ;)'
-        res['response']['end_session'] = True
+        if sessionStorage[user_id] != 0:
+            res['response']['text'] = 'Слышала, что есть альтернативные вариаты просмотра ;)'
+            res['response']['end_session'] = True
+        else:
+            res['response']['text'] = 'Я потеряла нить нашей беседы :)'
         return
     #no more key works, execute seach function on top of this text
     # print('test search')
@@ -83,7 +86,7 @@ def handle_dialog(req, res):
                 "title": "Подробнее",
             },
             {
-                "title": "сериал",
+                "title": "Сериал",
             },
             {
                 "title": "Смотреть",

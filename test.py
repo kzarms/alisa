@@ -10,7 +10,7 @@ import requests
   
 def tvdbGetSerialInfo(filmID):
     URL = "https://api.thetvdb.com"
-    token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDA1ODMyMjAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDQ5NjgyMCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.0TKJhRZ7-sVGaPonMOrSWYz2DIWkpKo1hHAbap01Fu6sYRVwK0_LYbrvDy_yilQXCG2wcIKtI6DdPDEJ9ZBhMkP2ZOLJSidqYfevJoo3l49rLBGNRbzCJEN8atFNGQHdpcu9iHe8I6U7MnCOPgwSijTxlJFCoOdeQrrgBaPHq_aRlxgtIUiqNvzt19jIlF2X_kUp_zrQw-XUgOJkGTC72LFGJPQA_5EIV00mPg0L3UuRFtvN1c9Gapu8Ku00mnRblfOUAgPG0mo76_UmnfYjq6va939B767S690sLorfWiO_qPECnFV5ByCoXXwSamZ3arISJK27qkX-l3VUq4oRdg'
+    token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDA2Njk5MjAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDU4MzUyMCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.y1ewCP-UtgljD-sV0TVsWRcfCpdH0hBq_mYwXWgCjyMEa0ZLRvh6RjnobSMLk8ldbzYRtzdhOjoZ2HGk-T1x3xHXKJi_uqApI-FwCf7y5-qb-LWRLoey0rnkowlCSFS7HCam1UmjhpxSe7D1UMoQE7NmaMaOS1AJlkOy1Wo93wdiTHYp7SsA1Iy0pFEkCtR0bkGBHL1rgbcZjWjbbwzrXVGQ08xgEF7x0j8LnIMdQT36M9lIi9MCT9VStM9a0xDVNx65w0epS-vuwrTrb2XT0qGYwXEWrF_fZ5fZXX_c4_t_VtPPsN_KRPb27BByXkW90mjCEb9ibTuwKytUIQ80CQ'
     #filmID = '80379'
     #seasonNumber = '12'
     HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)} 
@@ -61,4 +61,4 @@ def tvdbGetSerialInfo(filmID):
     csv_writer.writerow(fields)
     f.close()
 
-#tvdbGetSerialInfo('121361')
+tvdbGetSerialInfo('338946')
