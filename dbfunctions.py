@@ -5,6 +5,8 @@ import requests
 import random
 from datetime import datetime, timedelta
 
+ token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDA2Njk5MjAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDU4MzUyMCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.y1ewCP-UtgljD-sV0TVsWRcfCpdH0hBq_mYwXWgCjyMEa0ZLRvh6RjnobSMLk8ldbzYRtzdhOjoZ2HGk-T1x3xHXKJi_uqApI-FwCf7y5-qb-LWRLoey0rnkowlCSFS7HCam1UmjhpxSe7D1UMoQE7NmaMaOS1AJlkOy1Wo93wdiTHYp7SsA1Iy0pFEkCtR0bkGBHL1rgbcZjWjbbwzrXVGQ08xgEF7x0j8LnIMdQT36M9lIi9MCT9VStM9a0xDVNx65w0epS-vuwrTrb2XT0qGYwXEWrF_fZ5fZXX_c4_t_VtPPsN_KRPb27BByXkW90mjCEb9ibTuwKytUIQ80CQ'
+
 #film search funtion in a csv file
 def SearchName(text):
     #text = "дай инфо о теории большого взрывы"
@@ -59,8 +61,7 @@ def SeachActionTimeDetection(text):
     return -1 
 #seach function in the tbdb
 def tvdbLastEpisode(filmID, seasonNumber):
-    URL = "https://api.thetvdb.com"
-    token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDA2Njk5MjAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDU4MzUyMCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.y1ewCP-UtgljD-sV0TVsWRcfCpdH0hBq_mYwXWgCjyMEa0ZLRvh6RjnobSMLk8ldbzYRtzdhOjoZ2HGk-T1x3xHXKJi_uqApI-FwCf7y5-qb-LWRLoey0rnkowlCSFS7HCam1UmjhpxSe7D1UMoQE7NmaMaOS1AJlkOy1Wo93wdiTHYp7SsA1Iy0pFEkCtR0bkGBHL1rgbcZjWjbbwzrXVGQ08xgEF7x0j8LnIMdQT36M9lIi9MCT9VStM9a0xDVNx65w0epS-vuwrTrb2XT0qGYwXEWrF_fZ5fZXX_c4_t_VtPPsN_KRPb27BByXkW90mjCEb9ibTuwKytUIQ80CQ'
+    URL = "https://api.thetvdb.com"   
     HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}  
     PARAMS = {'airedSeason':seasonNumber} 
     #Create full request
@@ -178,7 +179,7 @@ def filmSearch(intId, action, time):
             #this is serial, looking for the serial
             if(row[6] == 'Ended'):
                 #This serial is ended, return message with search ID
-                variants = ['Этот сериал завершен.','К сожалению, этот сериал завершен.','Сериал более не выпускаетсяю','Сериал закончен.']
+                variants = ['Этот сериал завершен.','К сожалению, этот сериал завершен.','Сериал более не выпускается.','Сериал закончен.']
                 return random.choice(variants) + ' Последняя серия ' + row[13] + ' "' + row[14] + '" ' + seasonName[int(row[9])] + ' cезона вышла в прокат ' + datetime.strftime(datetime.strptime(row[12], '%Y-%m-%d'), '%d.%m.%Y'), int(intId)
             
             tvdbanswer = tvdbLastEpisode(row[1], row[9])
@@ -225,8 +226,8 @@ def CoreSearch(text):
 # print(CoreSearch("где глянуть теорию большого взрыва"))
 #print(CoreSearch("новая серия грифинов"))
 #print(CoreSearch("свежая серия полицейского с рублевки"))
-#print(CoreSearch("доктор хаус"))
-#print(CoreSearch("кяввм"))
-
+print(CoreSearch("доктор хаус"))
+print(CoreSearch("кяввм"))
+print(CoreSearch("друзья"))
 
 # print(tvdbLastEpisode('80379','12'))
