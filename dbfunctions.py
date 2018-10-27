@@ -104,6 +104,10 @@ def OfficialURL(intId):
         'HBO': 'https://www.hbogo.com', 
         'Showtime': 'https://www.sho.com',
         'Netflix': 'https://www.netflix.com',
+        'Первый канал': 'https://www.1tv.ru',
+        'NBC':  'https://www.nbc.com',
+        'Hulu': 'https://www.hulu.com',
+        'The CW': 'http://www.cwtv.com',
     }
     f = open('films.csv', mode="r", encoding="utf-8")
     films = csv.reader(f, delimiter='\t')
@@ -112,7 +116,10 @@ def OfficialURL(intId):
             #we found a film, close file and exit form the loop
             f.close()
             break
-    return URLs[row[8]]
+    if row[8] in URLs:        
+        return URLs[row[8]]
+    else:
+        return 'https://www.yandex.ru'
 #Return main info about serial
 def getFilmInfoLocal(intId):
     #intId = '1'
@@ -226,8 +233,8 @@ def CoreSearch(text):
 # print(CoreSearch("где глянуть теорию большого взрыва"))
 #print(CoreSearch("новая серия грифинов"))
 #print(CoreSearch("свежая серия полицейского с рублевки"))
-print(CoreSearch("доктор хаус"))
-print(CoreSearch("кяввм"))
-print(CoreSearch("друзья"))
+# print(CoreSearch("доктор хаус"))
+# print(CoreSearch("кяввм"))
+# print(CoreSearch("друзья"))
 
 # print(tvdbLastEpisode('80379','12'))
