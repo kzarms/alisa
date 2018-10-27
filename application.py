@@ -67,10 +67,10 @@ def handle_dialog(req, res):
         else:
             res['response']['text'] = 'Я потеряла нить нашей беседы :)'
         return
-    if text == 'cмотреть':
+    if text == 'смотреть':
         if sessionStorage[user_id] != 0:
             res['response']['text'] = 'Слышала, что есть альтернативные вариаты просмотра ;)'
-            res['response']['end_session'] = True
+            res['response']['end_session'] = 'true'
         else:
             res['response']['text'] = 'Я потеряла нить нашей беседы :)'
         return
