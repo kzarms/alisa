@@ -51,6 +51,9 @@ def handle_dialog(req, res):
 
     # Take user text
     text = req['request']['command'].lower()
+    if (text == 'добавить сериал') and (sessionStorage[user_id] == 0):
+        res['response']['text'] = 'Спасибо! Мы проверим ваше обращение и добавим интересующий сериал в ближайшее вермя'
+        return
     if text == 'подробнее':
         if sessionStorage[user_id] != 0:
             #res['response']['text'] = getFilmInfoLocal(str(sessionStorage[user_id]))
@@ -80,6 +83,12 @@ def handle_dialog(req, res):
     res['response']['text'] = result[0]
     #res['response']['text'] = CoreSearch(text)
     #add suggessted buttons
+    if result[1] == 0:        
+        res['response']['buttons'] = [
+            {
+                "title": "Добавить сериал",
+            }
+        ]
     if result[1] != 0:
         res['response']['buttons'] = [
             {

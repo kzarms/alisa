@@ -2,6 +2,7 @@
 import csv
 import io
 import requests
+import random
 from datetime import datetime, timedelta
 
 #film search funtion in a csv file
@@ -175,7 +176,11 @@ def filmSearch(intId, action, time):
         #question about time, looking for corresponding data, accept default action
         if int(row[3]) > 0:
             #this is serial, looking for the serial
-            #print('enter to search')
+            if(row[6] == 'Ended'):
+                #This serial is ended, return message with search ID
+                variants = ['Этот сериал завершен.','К сожалению, этот сериал завершен.','Сериал более не выпускаетсяю','Сериал закончен.']
+                return random.choice(variants) + ' Последняя серия ' + row[13] + ' "' + row[14] + '" ' + seasonName[int(row[9])] + ' cезона вышла в прокат ' + datetime.strftime(datetime.strptime(row[12], '%Y-%m-%d'), '%d.%m.%Y'), int(intId)
+            
             tvdbanswer = tvdbLastEpisode(row[1], row[9])
             #print(tvdbanswer)
             if tvdbanswer[0] == 'Error':
@@ -218,5 +223,10 @@ def CoreSearch(text):
 # print(CoreSearch("Когда выйдет игра престолов?"))
 # print(CoreSearch("дай инфо о теории большого взрыва"))
 # print(CoreSearch("где глянуть теорию большого взрыва"))
+#print(CoreSearch("новая серия грифинов"))
+#print(CoreSearch("свежая серия полицейского с рублевки"))
+#print(CoreSearch("доктор хаус"))
+#print(CoreSearch("кяввм"))
+
 
 # print(tvdbLastEpisode('80379','12'))
