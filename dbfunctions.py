@@ -5,7 +5,7 @@ import requests
 import random
 from datetime import datetime, timedelta
 
-token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDA3NTY5MjUsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDY3MDUyNSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.uNwbwGata1RgRbj_4uDJ4TgsPwfCb1ladYK0GYmYrr7hXWo50HYPxKnSqfGaspiNZEDtyXiAUH6CAmrFvNpfOFwgX1KfEhL5lfT-MHRJY7snRyZh9GOkY9LmvEy669a6xrhmMtAUfYx9NVC809ihAZAQ3xlYNlZ-xsayPvrgxA9FBth2-32QJY2fxh8SdF9RHBhRSr_w9SE993PjNpsVdu9dkKZZwAhHxcbsv3wTBBa7k70sqwyQkT4QMr9zF8MvkLBouBdVwzkOx9CtBJ_icTxIJHAZ8hsrNTVjztkDrDL2ybUORaEsKoZzcE9Jmc_TUfXb45gsh8mwYqaGjFG1Ww'
+token = '1eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDA3NTY5MjUsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDY3MDUyNSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.uNwbwGata1RgRbj_4uDJ4TgsPwfCb1ladYK0GYmYrr7hXWo50HYPxKnSqfGaspiNZEDtyXiAUH6CAmrFvNpfOFwgX1KfEhL5lfT-MHRJY7snRyZh9GOkY9LmvEy669a6xrhmMtAUfYx9NVC809ihAZAQ3xlYNlZ-xsayPvrgxA9FBth2-32QJY2fxh8SdF9RHBhRSr_w9SE993PjNpsVdu9dkKZZwAhHxcbsv3wTBBa7k70sqwyQkT4QMr9zF8MvkLBouBdVwzkOx9CtBJ_icTxIJHAZ8hsrNTVjztkDrDL2ybUORaEsKoZzcE9Jmc_TUfXb45gsh8mwYqaGjFG1Ww'
 
 #film search funtion in a csv file
 def SearchName(text):
@@ -59,6 +59,21 @@ def SeachActionTimeDetection(text):
         if word in TimeWords.keys():
             return TimeWords[word]
     return -1 
+#update token
+def tockenRefresh():
+    URL = "https://api.thetvdb.com/login"   
+    HEADERS = {'Content-Type': 'application/json'}  
+    DATA = {"apikey": "0AHRVCC9FPSYWACV", "userkey": "QOCM9N37ADVTQ42W", "username": "vlkootmni"}
+    r = requests.post(url = URL, json = DATA, headers = HEADERS)
+    data = r.json()
+    global token
+    if 'Error' in data:
+        print('Error in token request')
+        token = '0'
+    if 'token' in data:
+        print('the token has been got sussessfully')
+        token = data['token']
+    
 #seach function in the tbdb
 def tvdbLastEpisode(filmID, seasonNumber):
     URL = "https://api.thetvdb.com"   
@@ -77,11 +92,20 @@ def tvdbLastEpisode(filmID, seasonNumber):
     #print(data)
     if 'Error' in data:
         #there is an error
-        if data['Error'] == 'Not authorized':
-            return 'Error', 'Auth error'
         if 'No results for your query' in data['Error']:
             return 'Error', 'Search error'
-        return 'Error', 'Unspecified error'
+        if data['Error'] == 'Not authorized':
+            #try update token
+            tockenRefresh()
+            print(token)
+            if token == '0':
+                return 'Error', 'Auth error and update token error'
+            HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}
+            r = requests.get(url = URL, headers = HEADERS, params = PARAMS)
+            data = r.json()
+            if 'Error' in data:
+                return 'Error', 'Error token update'
+    
     if data['data'][-1]['episodeName'] == None:
         #if there is no Rus name, repeat in En
         HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)}
