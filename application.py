@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 
 import json
 import logging
+import random
 
 from dbfunctions import *
 
@@ -45,35 +46,49 @@ def main():
 def handle_dialog(req, res):
     user_id = req['session']['user_id']
     if req['session']['new']:
-        #New user, return welcome message       
-        res['response']['text'] = 'Привет, что ищешь?'
+        #New user, return welcome message
+        variants = ['Привет, что ищешь?',
+            'Приветсвую, какой сериал интересует?',
+            'Приветсвую, я помогаю узнать дату выхода новой серии вашего любимого сериала. Какой интересует?',
+            'Здравствуй, о какой серии ищите информацию?',
+            'Помогаю найти информацию о тате выхода свежей серии. Кстати, зрасьте :)',
+            'Привет. Буду рада подсказать дату выхода новой серии. Какой сериал?',]     
+        res['response']['text'] = random.choice(variants)
         return
 
     # Take user text
     text = req['request']['command'].lower()
-    if (text == 'добавить сериал') and (sessionStorage[user_id] == 0):
-        res['response']['text'] = 'Спасибо! Мы проверим ваше обращение и добавим интересующий сериал в ближайшее вермя'
-        return
-    if text == 'подробнее':
-        if sessionStorage[user_id] != 0:
-            #res['response']['text'] = getFilmInfoLocal(str(sessionStorage[user_id]))
-            res['response']['text'] = 'Заглушка для подробной информации о серии'            
-        else:
+
+    #check for key words
+    keywords = ['добавить сериал', 'подробнее','сериал','смотреть']
+    if text in keywords:
+        if user_id not in sessionStorage:
             res['response']['text'] = 'Я потеряла нить нашей беседы :)'
-        return
-    if text == 'сериал':
-        if sessionStorage[user_id] != 0:
-            res['response']['text'] = getFilmInfoLocal(str(sessionStorage[user_id]))
-        else:
-            res['response']['text'] = 'Я потеряла нить нашей беседы :)'
-        return
-    if text == 'cмотреть':
-        if sessionStorage[user_id] != 0:
-            res['response']['text'] = 'Слышала, что есть альтернативные вариаты просмотра ;)'
-            res['response']['end_session'] = True
-        else:
-            res['response']['text'] = 'Я потеряла нить нашей беседы :)'
-        return
+            return
+        if (text == 'добавить сериал') and (sessionStorage[user_id] == 0):
+            #Добавление сериала и сессия была (не пустой)
+            res['response']['text'] = 'Спасибо! Мы проверим ваше обращение и добавим интересующий сериал в ближайшее вермя'
+            return
+        if text == 'подробнее':
+            if sessionStorage[user_id] != 0:
+                #res['response']['text'] = getFilmInfoLocal(str(sessionStorage[user_id]))
+                res['response']['text'] = 'Заглушка для подробной информации о серии'            
+            else:
+                res['response']['text'] = 'Я потеряла нить нашей беседы :)'
+            return
+        if text == 'сериал':
+            if sessionStorage[user_id] != 0:
+                res['response']['text'] = getFilmInfoLocal(str(sessionStorage[user_id]))
+            else:
+                res['response']['text'] = 'Я потеряла нить нашей беседы :)'
+            return
+        if text == 'смотреть':
+            if sessionStorage[user_id] != 0:
+                res['response']['text'] = 'Слышала, что есть альтернативные вариаты просмотра ;)'
+                res['response']['end_session'] = 'true'
+            else:
+                res['response']['text'] = 'Я потеряла нить нашей беседы :)'
+            return
     #no more key works, execute seach function on top of this text
     # print('test search')
     result = CoreSearch(text)

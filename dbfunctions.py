@@ -5,6 +5,8 @@ import requests
 import random
 from datetime import datetime, timedelta
 
+token = '1eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDA3NTY5MjUsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDY3MDUyNSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.uNwbwGata1RgRbj_4uDJ4TgsPwfCb1ladYK0GYmYrr7hXWo50HYPxKnSqfGaspiNZEDtyXiAUH6CAmrFvNpfOFwgX1KfEhL5lfT-MHRJY7snRyZh9GOkY9LmvEy669a6xrhmMtAUfYx9NVC809ihAZAQ3xlYNlZ-xsayPvrgxA9FBth2-32QJY2fxh8SdF9RHBhRSr_w9SE993PjNpsVdu9dkKZZwAhHxcbsv3wTBBa7k70sqwyQkT4QMr9zF8MvkLBouBdVwzkOx9CtBJ_icTxIJHAZ8hsrNTVjztkDrDL2ybUORaEsKoZzcE9Jmc_TUfXb45gsh8mwYqaGjFG1Ww'
+
 #film search funtion in a csv file
 def SearchName(text):
     #text = "дай инфо о теории большого взрывы"
@@ -57,10 +59,24 @@ def SeachActionTimeDetection(text):
         if word in TimeWords.keys():
             return TimeWords[word]
     return -1 
+#update token
+def tockenRefresh():
+    URL = "https://api.thetvdb.com/login"   
+    HEADERS = {'Content-Type': 'application/json'}  
+    DATA = {"apikey": "0AHRVCC9FPSYWACV", "userkey": "QOCM9N37ADVTQ42W", "username": "vlkootmni"}
+    r = requests.post(url = URL, json = DATA, headers = HEADERS)
+    data = r.json()
+    global token
+    if 'Error' in data:
+        print('Error in token request')
+        token = '0'
+    if 'token' in data:
+        print('the token has been got sussessfully')
+        token = data['token']
+    
 #seach function in the tbdb
 def tvdbLastEpisode(filmID, seasonNumber):
-    URL = "https://api.thetvdb.com"
-    token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDA2Njk5MjAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDU4MzUyMCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.y1ewCP-UtgljD-sV0TVsWRcfCpdH0hBq_mYwXWgCjyMEa0ZLRvh6RjnobSMLk8ldbzYRtzdhOjoZ2HGk-T1x3xHXKJi_uqApI-FwCf7y5-qb-LWRLoey0rnkowlCSFS7HCam1UmjhpxSe7D1UMoQE7NmaMaOS1AJlkOy1Wo93wdiTHYp7SsA1Iy0pFEkCtR0bkGBHL1rgbcZjWjbbwzrXVGQ08xgEF7x0j8LnIMdQT36M9lIi9MCT9VStM9a0xDVNx65w0epS-vuwrTrb2XT0qGYwXEWrF_fZ5fZXX_c4_t_VtPPsN_KRPb27BByXkW90mjCEb9ibTuwKytUIQ80CQ'
+    URL = "https://api.thetvdb.com"   
     HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}  
     PARAMS = {'airedSeason':seasonNumber} 
     #Create full request
@@ -76,11 +92,20 @@ def tvdbLastEpisode(filmID, seasonNumber):
     #print(data)
     if 'Error' in data:
         #there is an error
-        if data['Error'] == 'Not authorized':
-            return 'Error', 'Auth error'
         if 'No results for your query' in data['Error']:
             return 'Error', 'Search error'
-        return 'Error', 'Unspecified error'
+        if data['Error'] == 'Not authorized':
+            #try update token
+            tockenRefresh()
+            print(token)
+            if token == '0':
+                return 'Error', 'Auth error and update token error'
+            HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}
+            r = requests.get(url = URL, headers = HEADERS, params = PARAMS)
+            data = r.json()
+            if 'Error' in data:
+                return 'Error', 'Error token update'
+    
     if data['data'][-1]['episodeName'] == None:
         #if there is no Rus name, repeat in En
         HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)}
@@ -103,6 +128,10 @@ def OfficialURL(intId):
         'HBO': 'https://www.hbogo.com', 
         'Showtime': 'https://www.sho.com',
         'Netflix': 'https://www.netflix.com',
+        'Первый канал': 'https://www.1tv.ru',
+        'NBC':  'https://www.nbc.com',
+        'Hulu': 'https://www.hulu.com',
+        'The CW': 'http://www.cwtv.com',
     }
     f = open('films.csv', mode="r", encoding="utf-8")
     films = csv.reader(f, delimiter='\t')
@@ -111,7 +140,10 @@ def OfficialURL(intId):
             #we found a film, close file and exit form the loop
             f.close()
             break
-    return URLs[row[8]]
+    if row[8] in URLs:        
+        return URLs[row[8]]
+    else:
+        return 'https://www.yandex.ru'
 #Return main info about serial
 def getFilmInfoLocal(intId):
     #intId = '1'
@@ -153,6 +185,10 @@ def filmSearch(intId, action, time):
     seasonName = ["","первого","второго","третьего","четвертого","пятого","шестого","седьмого","восьмого","девятого","десятого",
         "одиннадцатого","двенадцатого","тринадцатого","четырнадцатого","пятнадцатого","шестнадцатого","семнадцатого","восемнадцатого","девятнадцатого","двадцатого",
         "двадцать первого","двадцать второго","двадцать третьего","двадцать четвертого","двадцать пятого","двадцать шестого",]
+    seasonName2 = ['','первая','вторая','третья','четвертая','пятая','шестая','седьмая','восьмая','девятая','десятая',
+        'одиннадцатая','двенадцатая','тринадцатая','четырнадцатая','пятнадцатая','шеснадцатая','семнадцатая','восемнадцатая','девятнадцатая','двадцатая',
+        'двадцать первая','двадцать вторая','двадцать третья','двадцать четвертая','двадцать пятая','двадцать шестая','двадцать седьмая','двадцать восьмая','двадцать девятая',
+        'тридцатая',]
 
     f = open('films.csv', mode="r", encoding="utf-8")
     films = csv.reader(f, delimiter='\t')
@@ -178,8 +214,9 @@ def filmSearch(intId, action, time):
             #this is serial, looking for the serial
             if(row[6] == 'Ended'):
                 #This serial is ended, return message with search ID
-                variants = ['Этот сериал завершен.','К сожалению, этот сериал завершен.','Сериал более не выпускаетсяю','Сериал закончен.']
-                return random.choice(variants) + ' Последняя серия ' + row[13] + ' "' + row[14] + '" ' + seasonName[int(row[9])] + ' cезона вышла в прокат ' + datetime.strftime(datetime.strptime(row[12], '%Y-%m-%d'), '%d.%m.%Y'), int(intId)
+                variants = ['Этот сериал завершен.','К сожалению, этот сериал завершен.','Сериал более не выпускается.','Сериал закончен.']
+                variants2 = ['Последняя серия под номером','Последняя серия с номером','Заключительная серия номер ','Завершающая серия под номером']
+                return random.choice(variants) + ' ' +  random.choice(variants2) + ' ' + row[13] + ' "' + row[14] + '" ' + seasonName[int(row[9])] + ' cезона вышла в прокат ' + datetime.strftime(datetime.strptime(row[12], '%Y-%m-%d'), '%d.%m.%Y'), int(intId)
             
             tvdbanswer = tvdbLastEpisode(row[1], row[9])
             #print(tvdbanswer)
@@ -192,7 +229,14 @@ def filmSearch(intId, action, time):
             print(d)
             if d > nowday:
                 #Is not issued
+                # variants = [
+                #     'Серия ' + str(tvdbanswer[0]) + ' ' + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выйдет в прокат ' + datetime.strftime(d, '%d.%m.%Y'),
+                #     'Эпизод ' + str(tvdbanswer[0]) + ' сезона номер ' + row[9] + ' "' + tvdbanswer[1] + '" появится в прокате ' + datetime.strftime(d, '%d.%m.%Y'),
+                #     '"' + tvdbanswer[1] + '" выйдет как ' + seasonName2[int(tvdbanswer[0])] + ' cерия в ' + row[9] + '-ом сезоне ' + datetime.strftime(d, '%d.%m.%Y'),
+                #     seasonName2[int(tvdbanswer[0])] + 'серия ' + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выйдет в эфир ' datetime.strftime(d, '%d.%m.%Y')
+                #     ]
                 return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выйдет в прокат ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
+                #return random.choice(variants), int(intId)
             elif d == nowday:
                 #it is today
                 return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выходит сегодня!', int(intId)
@@ -225,8 +269,8 @@ def CoreSearch(text):
 # print(CoreSearch("где глянуть теорию большого взрыва"))
 #print(CoreSearch("новая серия грифинов"))
 #print(CoreSearch("свежая серия полицейского с рублевки"))
-#print(CoreSearch("доктор хаус"))
-#print(CoreSearch("кяввм"))
-
+# print(CoreSearch("доктор хаус"))
+# print(CoreSearch("кяввм"))
+# print(CoreSearch("друзья"))
 
 # print(tvdbLastEpisode('80379','12'))
