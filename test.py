@@ -118,10 +118,6 @@ def getLastEpisodData(filmID, airedSeason):
     l = [episod['firstAired'], episod['airedEpisodeNumber'], episod['episodeName'],]
     return l
 
-#tvdbGetSerialInfo('293372')
-
-#getLastEpisodData(75760,9)
-
 
 def updateCsv():
     with open('films.csv', mode="r", encoding="utf-8") as csvinput:
@@ -150,4 +146,16 @@ def updateCsv():
 
             writer.writerows(all)
 
-updateCsv()
+
+"""series_id = open("series_id.txt", 'r')
+for line in series_id.readlines():
+    id = str.rstrip(line)
+    tvdbGetSerialInfo(id)
+    print(id + ' completed')
+"""
+#getLastEpisodData(75760,9)
+
+
+
+
+#updateCsv()

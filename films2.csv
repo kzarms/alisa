@@ -1,0 +1,137 @@
+Id	tvdbId	imdbId	seriesId	nameEn	nameRu	status	firstAired	network	seazons	lastEpisode	rating	lastShow	airedEpisodeNumber	episodeName
+1	80379	tt0898266	58053	The Big Bang Theory	Теория большого взрыва	Continuing	9/24/2007	CBS	12	256	8.8	TBD	TBD	TBD
+2	296762	tt0475784	194892	Westworld	Западный мир	Continuing	10/2/2016	HBO	2	22	8.9	TBD	TBD	TBD
+3	161511	tt1586680	78143	Shameless (US)	Бесстыжие	Continuing	1/9/2011	Showtime	9	112	9	TBD	TBD	TBD
+4	277165	tt2575988	3072410	Silicon Valley	Силиконовая долина	Continuing	4/6/2014	HBO	5	49	8.8	TBD	TBD	TBD
+5	253463	tt2085059	81497	Black Mirror	Черное зеркало	Continuing	12/4/2011	Netflix	4	19	9	TBD	TBD	TBD
+6	121361	tt0944947	121361	Game of Thrones	Игра престолов	Continuing	4/17/2011	HBO	7	107	9.5	TBD	TBD	TBD
+7	302204	tt5135336	999999	The Method	Метод	Continuing	10/18/2015	Первый канал	1	16	7.8	TBD	TBD	TBD
+8	338946	tt6586318	205155	Patrick Melrose	Патрик Мелроз	Ended	5/12/2018	Showtime	1	5	0	6/9/2018	5	Наконец
+9	342040	tt7768848	999999	Wild Wild Country	Дикий Дикий мир	Ended	3/16/2018	Netflix	1	6	0	3/16/2018	6	Part 6
+10	153021	tt1520211	999999	The Walking Dead	Ходячие мертвецы	Continuing	10/31/2010	AMC	9	173	9	TBD	TBD	TBD
+11	328535	tt6470396	999999	Champions	Чемпионы	Ended	3/8/2018	NBC	1	10	6	5/25/2018	9	Opening Night
+12	331821	tt6474236	999999	The Looming Tower	Призрачная башня	Ended	2/28/2018	Hulu	1	10	9	4/18/2018	10	11 Сентября
+13	313999	tt4288182	200487	Atlanta	Атланта	Continuing	9/6/2016	FX (US)	3	22	8.5	TBD	TBD	TBD
+14	340959	tt7016936	999999	Killing Eve		Continuing	4/8/2018	BBC America	1	8	8	TBD	TBD	TBD
+15	257655	tt2193021	158560	Arrow	Стрела	Continuing	10/10/2012	The CW	7	156	8.2	TBD	TBD	TBD
+16	280619	tt3230854	193822	The Expanse	Экспансия	Continuing	11/23/2015	Amazon	4	64	8.7	TBD	TBD	TBD
+17	305288	tt4574334	999999	Stranger Things	Загадочные события	Continuing	7/15/2016	Netflix	2	24	9.2	TBD	TBD	TBD
+18	279536	tt4270492	195793	Billions	Миллиарды	Continuing	1/17/2016	Showtime	3	44	8.6	TBD	TBD	TBD
+19	273181	tt3032476	193443	Better Call Saul	Лучше звоните Солу	Continuing	2/8/2015	AMC	4	48	8.9	TBD	TBD	TBD
+20	292157	tt3647998	999999	Taboo (2017)	Табу	Continuing	1/7/2017	BBC One	1	8	8.8	TBD	TBD	TBD
+21	331980	tt5675620	999999	Marvel's The Punisher	Каратель	Continuing	11/17/2017	Netflix	1	13	9.5	TBD	TBD	TBD
+22	270915	tt2442560	194585	Peaky Blinders	Острые козырьки	Continuing	9/12/2013	BBC One	5	28	9	TBD	TBD	TBD
+23	332331	tt2261227	332331	Altered Carbon	Видоизмененный углерод	Continuing	2/2/2018	Netflix	1	11	8.4	TBD	TBD	TBD
+24	295685	tt4052886	196146	Lucifer	Люцифер	Continuing	1/25/2016	Netflix	4	67	8.4	TBD	TBD	TBD
+25	260449	tt2306299	176402	Vikings	Викинги	Continuing	3/3/2013	History	5	65	8.8	TBD	TBD	TBD
+26	304262	tt5574490	304262	Animal Kingdom (2016)	По волчьим законам	Continuing	6/14/2016	TNT (US)	3	36	8.3	TBD	TBD	TBD
+27	274431	tt3749900	193623	Gotham	Готэм	Continuing	9/22/2014	FOX (US)	5	111	8.4	TBD	TBD	TBD
+28	328361	tt2452242	999999	Happy!	Хэппи!	Continuing	12/6/2017	Syfy	2	10	8.9	TBD	TBD	TBD
+29	298566	tt4179452	194222	The Last Kingdom	Последнее королевство	Continuing	10/10/2015	Netflix	3	19	8.3	TBD	TBD	TBD
+30	289079	tt3865236	27749	Into the Badlands	В пустыне смерти	Continuing	11/15/2015	AMC	3	38	8	TBD	TBD	TBD
+31	328634	tt6470478	203695	The Good Doctor	Хороший доктор	Continuing	9/25/2017	ABC (US)	2	24	8.5	TBD	TBD	TBD
+32	263365	tt2364582	183210	Marvel's Agents of S.H.I.E.L.D.	Агенты Щ.И.Т.	Continuing	9/24/2013	ABC (US)	6	129	8.5	TBD	TBD	TBD
+33	281662	tt3322312	195188	Marvel's Daredevil	Сорвиголова	Continuing	4/10/2015	Netflix	3	39	8.8	TBD	TBD	TBD
+34	75897	tt0121955	344	South Park	Южный парк	Continuing	8/1/1997	Comedy Central (US)	22	328	8.7	TBD	TBD	TBD
+35	328552	tt4396630	203686	The Gifted	Одаренные	Continuing	10/2/2017	FOX (US)	2	21	7.8	TBD	TBD	TBD
+36	308772	tt5197820	200582	Van Helsing	Ван Хельсинг	Continuing	9/23/2016	Syfy	3	39	6.7	TBD	TBD	TBD
+37	250487	tt1844624	81011	American Horror Story	Американская история ужасов	Continuing	2/6/2011	FX (US)	8	94	8.4	TBD	TBD	TBD
+38	75710	tt0452046	33484	Criminal Minds	Мыслить как преступник Continuing	9/22/2005	CBS	14	310	8.6	TBD	TBD	TBD	
+39	78901	tt0460681	30144	Supernatural	Сверхестественное	Continuing	9/13/2005	The CW	14	303	9	TBD	TBD	TBD
+40	79168	tt0108778	71	Friends	Друзья	Ended	9/22/1994	NBC	10	242	9.1	5/6/2004	18	Финальный эпизод, Часть 2
+41	75760	tt0460649	33700	How I Met Your Mother	Как я всетретил вашу маму	Ended	9/19/2005	CBS	9	219	8.9	3/31/2014	24	Last Forever (2)
+42	76107	tt0056751	355	Doctor Who	Доктор кто	Ended	11/23/1963	BBC One	26	809	9.4	12/6/1989	14	Survival (3)
+43	82459	tt1196946	75200	The Mentalist	Менталист	Ended	9/23/2008	CBS	7	153	8.7	2/18/2015	13	Белые орхидеи
+44	73255	tt0412142	22374	House	Доктор Хаус	Ended	11/16/2004	FOX (US)	8	181	9.1	5/21/2012	22	Все умрут
+45	71663	tt0096697	146	The Simpsons	Сипмсоны	Continuing	12/17/1989	FOX (US)	30	707	8.9	TBD	TBD	TBD
+46	295777	tt4094300	999999	Crazy Ex-Girlfriend	Чекнутая бывшая	Continuing	10/12/2015	The CW	4	50	9.2	TBD	TBD	TBD
+47	341663	tt1043813	999999	Titans (2018)	Титаны	Continuing		DC Universe	1	11	0	TBD	TBD	TBD
+48	328687	tt6111130	203707	S.W.A.T. (2017)	Спецназ города ангелов	Continuing	11/2/2017	CBS	2	29	7.4	TBD	TBD	TBD
+49	75978	tt0182576	348	Family Guy	Гриффины	Continuing	1/31/1999	FOX (US)	17	345	8.6	TBD	TBD	TBD
+50	332028	tt7509270	999999	I Love You, America	Я люблю тебя, Америка	Continuing	10/12/2017	Hulu	1	19	7	TBD	TBD	TBD
+51	351535		999999	House Arrest (2018)	Домашний арест	Continuing		ТНТ	1	12	0	TBD	TBD	TBD
+52	289514		999999	Major (2014)	Мажор	Continuing	12/15/2014	Первый канал	2	24	8.8	TBD	TBD	TBD
+53	350112	tt6840106	999999	Sparta	Sпарта	Continuing		Первый канал	1	8	0	TBD	TBD	TBD
+54	82696	tt1124373	75303	Sons of Anarchy	Сыны анархии	Ended	9/3/2008	FX (US)	7	106	8.9	12/9/2014	13	Papa's Goods
+55	262407	tt2375692	176817	Black Sails	Черные паруса	Ended	1/25/2014	Starz!	4	40	8.6	4/2/2017	10	XXXVIII
+56	75299	tt0141842	314	The Sopranos	Клан Сопрано	Ended	1/10/1999	HBO	6	91	9.2	6/10/2007	21	Сделано в Америке
+57	286970	tt4032214	999999	Chernobyl. Exclusion zone	Чернобыль, зона отчуждения	Continuing	10/13/2014	ТНТ	2	21	10	TBD	TBD	TBD
+58	309235		999999	Policeman from Rublevka	Полицейский с рублевки	Continuing	3/21/2016	ТНТ	3	24	8	TBD	TBD	TBD
+59	293372		999999	Zakon Kamennih Djunglei	Закон каменных джунглей	Continuing	3/16/2015	ТНТ	2	16	9.5	TBD	TBD	TBD
+60	71985	tt0330958	16207	Taboo	Табу	Ended	2/1/2003	National Geographic (US)	10	122	7.7	TBD	TBD	TBD
+61	311790	tt5164196	199737	Lethal Weapon	Смертельное оружие	Continuing	9/21/2016	FOX (US)	3	47	8.3	TBD	TBD	TBD
+62	272171		999999	Animal Kingdom	По волчьим законам	Ended	6/7/2011	ITV	1	10	0	TBD	TBD	TBD
+63	85527	tt1415175	999999	Yellowstone	Йеллоустоун	Ended	3/15/2009	BBC Four	1	6	8.9	TBD	TBD	TBD
+64	266189	tt2741602	183289	The Blacklist	Черный список	Continuing	9/23/2013	NBC	6	118	8.6	TBD	TBD	TBD
+65	322191	tt2708480	199011	The Terror	Террор	Continuing	3/26/2018	AMC	2	11	8.3	TBD	TBD	TBD
+66	300166	tt5011816	999999	Sneaky Pete	Подлый Пит	Continuing	1/12/2017	Amazon	3	24	7.3	TBD	TBD	TBD
+67	350665	tt7587890	205509	The Rookie	Новобранец	Continuing		ABC (US)	1	4	0	TBD	TBD	TBD
+68	300472	tt5016504	198461	Preacher	Пастырь	Continuing	5/22/2016	AMC	3	41	8.5	TBD	TBD	TBD
+69	75340	tt0455275	31635	Prison Break	Побег	Continuing	8/29/2005	FOX (US)	5	95	8.5	TBD	TBD	TBD
+70	328708	tt5290382	999999	MINDHUNTER	Охотник за разумом	Continuing	10/13/2017	Netflix	1	10	8.7	TBD	TBD	TBD
+71	255316	tt2191671	158575	Elementary	Элементарно	Continuing	9/27/2012	CBS	6	142	8.4	TBD	TBD	TBD
+72	218401	tt1830351	999999	The Magicians	Волшебники	Ended	1/1/2011	BBC One	2	11	6	TBD	TBD	TBD
+73	295829	tt1740299	195470	The Man in the High Castle	Человек в высоком замке	Continuing	1/15/2015	Amazon	3	43	8	TBD	TBD	TBD
+74	276678	tt3355982	999999	StartUp	Стартап	Ended	1/6/2014	BNN	1	52	0	TBD	TBD	TBD
+75	329089	tt5071412	329089	Ozark	Озарк	Continuing	7/21/2017	Netflix	3	21	9.2	TBD	TBD	TBD
+76	292124	tt4122068	196249	Humans	Люди	Continuing	6/14/2015	Channel 4	3	25	8.6	TBD	TBD	TBD
+77	337302	tt4643084	999999	Counterpart	Обратная сторона	Continuing	12/10/2017	Starz!	2	12	8.3	TBD	TBD	TBD
+78	342107	tt6510950	999999	Condor	Кондор	Continuing	6/6/2018	Audience Network	1	10	0	TBD	TBD	TBD
+79	268592	tt2661044	183133	The 100	Сотня	Continuing	3/19/2014	The CW	6	73	8.3	TBD	TBD	TBD
+80	176941	tt1475582	79744	Sherlock	Шерлок	Continuing	7/25/2010	BBC One	4	21	9.3	TBD	TBD	TBD
+81	283468	tt2930604	194219	Star Wars Rebels	Звездные войны: Повстанцы	Ended	10/3/2014	Disney XD	4	82	8.9	TBD	TBD	TBD
+82	311714	tt5555260	199860	This Is Us	Это мы	Continuing	9/20/2016	NBC	3	46	8.8	TBD	TBD	TBD
+83	269613	tt2802850	179637	Fargo	Фарго	Continuing	4/15/2014	FX (US)	3	30	9.1	TBD	TBD	TBD
+84	328690	tt4604612	199903	The Alienist	Алиенист	Ended	1/22/2018	TNT (US)	1	10	8	TBD	TBD	TBD
+85	164541	tt1600194	hawaii-five-0	Hawaii Five-0	Полиция Гавайев	Continuing	9/20/2010	CBS	9	203	8.1	TBD	TBD	TBD
+86	306719	tt1064899	queen-of-the-south	Queen of the South	Королева юга	Continuing	6/23/2016	USA Network	3	39	9.1	TBD	TBD	TBD
+87	295647	tt4474344	196068	Blindspot	Слепое пятно	Continuing	9/21/2015	NBC	4	78	8.2	TBD	TBD	TBD
+88	349743	tt7472896	999999	Mr Inbetween	Посредник	Continuing		FX (US)	1	6	0	TBD	TBD	TBD
+89	311954	tt5420376	999999	Riverdale	Ривердэйл	Continuing	1/26/2017	The CW	3	44	7.7	TBD	TBD	TBD
+90	247897	tt1796960	80132	Homeland	Родина	Continuing	10/2/2011	Showtime	7	86	8.3	TBD	TBD	TBD
+91	73282	tt0054531	225	The Defenders	Защитники	Ended	9/16/1961	CBS	4	136	0	TBD	TBD	TBD
+92	281534	tt3952222	193927	Killjoys	Киллджойс	Continuing	6/19/2015	Syfy	5	48	8	TBD	TBD	TBD
+93	326866	tt6048596	999999	The Sinner	Грешница	Continuing	8/2/2017	USA Network	2	16	7.9	TBD	TBD	TBD
+94	253573	tt1898069	196476	American Gods	Американские боги	Continuing	4/30/2017	Starz!	1	8	8.3	TBD	TBD	TBD
+95	331600	tt6548228	331600	Castle Rock	Касл-Рок	Continuing	7/25/2018	Hulu	2	12	0	TBD	TBD	TBD
+96	320286	tt3839822	999999	The Son	Сын	Continuing	4/8/2017	AMC	1	10	8.7	TBD	TBD	TBD
+97	302627	tt4206804	999999	The Frankenstein Chronicles	Хроники Франкенштейна	Continuing	11/11/2015	ITV Encore	2	12	7.7	TBD	TBD	TBD
+98	323168	tt1837492	203261	13 Reasons Why	13 причин почему	Continuing	3/31/2017	Netflix	2	28	8.3	TBD	TBD	TBD
+99	290508	tt1399664	198394	The Night Manager	Ночной администратор	Continuing	8/22/2016	BBC One	1	6	8.5	TBD	TBD	TBD
+100	320724	tt5114356	17820	Legion	Легион	Continuing	2/8/2017	FX (US)	3	21	8.5	TBD	TBD	TBD
+101	70533	tt0098936	1030	Twin Peaks	Твин Пикс	Ended	4/8/1990	Showtime	3	53	8.9	TBD	TBD	TBD
+102	294781	tt4484722	196002	The Making of The Mob	Рождение мафии	Continuing	6/15/2015	AMC	2	16	6.5	TBD	TBD	TBD
+103	328487	tt5691552	203688	The Orville	Орвилл	Continuing	9/10/2017	FOX (US)	2	14	8.4	TBD	TBD	TBD
+104	74202	tt0243732	26	Titans	Титаны	Ended	10/1/2000	NBC	1	13	0	TBD	TBD	TBD
+105	78650	tt0098798	970	The Flash	Флэш	Ended	9/20/1990	CBS	1	22	7.2	TBD	TBD	TBD
+106	322672	tt5992164	203208	Snatch	Большой куш	Continuing	3/16/2017	Sony Crackle	2	20	9.4	TBD	TBD	TBD
+107	330997	tt4975856	999999	Future Man	Человек будущего	Continuing	11/14/2017	Hulu	2	18	8.1	TBD	TBD	TBD
+108	349271	tt8421350	999999	Manifest	Манифест	Continuing		NBC	1	10	0	TBD	TBD	TBD
+109	77398	tt0106179	61	The X-Files	Секретные материалы	Ended	9/10/1993	FOX (US)	11	225	8.9	TBD	TBD	TBD
+110	306304	tt4834206	202642	A Series of Unfortunate Events	Лемони Сникет: 33 несчастья	Continuing	1/13/2017	Netflix	3	25	8.9	TBD	TBD	TBD
+111	264954	tt2390334	999999	Chosen	Избранный	Ended	1/17/2013	Crackle	3	18	8.1	TBD	TBD	TBD
+112	328599	tt4276624	999999	Krypton	Криптон	Continuing	3/21/2018	Syfy	2	22	9.4	TBD	TBD	TBD
+113	334075	tt6271042	999999	McMafia	МакМафия	Continuing	1/1/2018	BBC One	2	11	4.8	TBD	TBD	TBD
+114	321060	tt4635282	999999	The OA	ОА	Continuing	12/16/2016	Netflix	2	12	8.2	TBD	TBD	TBD
+115	300899	tt4923036	999999	Siren	Сирена	Ended	10/20/2015	Fuji TV	1	9	9	TBD	TBD	TBD
+116	300185	tt5185980	999999	Patriot	Патриот	Ended	8/30/2015	TVRI	1	7	7.7	TBD	TBD	TBD
+117	328549	tt6461746	999999	Reverie	Грезы	Continuing	5/30/2018	NBC	1	10	0	TBD	TBD	TBD
+118	280494	tt3843168	193784	Z Nation	Нация Z	Continuing	9/12/2014	Syfy	5	64	7.7	TBD	TBD	TBD
+119	320060	tt2431088	999999	Runaways	Беглецы	Ended	8/31/2012	YouTube	3	18	0	TBD	TBD	TBD
+120	349659	tt5715524	999999	Mayans M.C.	Майянцы	Continuing		FX (US)	1	10	0	TBD	TBD	TBD
+121	289108	tt2788432	194591	American Crime Story	Американская история преступлений	Continuing	2/2/2016	FX (US)	2	19	9.4	TBD	TBD	TBD
+122	295759	tt4016454	195575	Supergirl	Супергёрл	Continuing	10/26/2015	The CW	4	72	8	TBD	TBD	TBD
+123	72923	tt0058824	2099	Lost in Space	Затерянные в космосе	Ended	9/15/1965	CBS	3	123	7.1	TBD	TBD	TBD
+124	269533	tt2402207	183034	The Last Ship	Последний корабль	Continuing	6/22/2014	TNT (US)	5	77	8.8	TBD	TBD	TBD
+125	303798	tt3714902	999999	Maniac	Маньяк	Ended	12/1/2015	TV 2	1	10	0	TBD	TBD	TBD
+126	322466	tt1984119	199661	Feud	Вражда	Continuing	3/5/2017	FX (US)	1	8	8.2	TBD	TBD	TBD
+127	95011	tt1442437	77270	Modern Family	Американская семейка	Continuing	9/23/2009	ABC (US)	10	219	8.8	TBD	TBD	TBD
+128	349661	tt6110648	999999	The Purge	Судная ночь	Continuing		USA Network	1	11	0	TBD	TBD	TBD
+129	348841	tt7375404	999999	Kidding	Шучу	Continuing		Showtime	1	10	0	TBD	TBD	TBD
+130	72039		16419	Trust	Траст	Ended	1/9/2003	BBC One	1	6	6	TBD	TBD	TBD
+131	343174	tt7210448	999999	Strange Angel	Странный ангел	Continuing	6/14/2018	CBS All Access	1	10	0	TBD	TBD	TBD
+132	298305	tt4406248	999999	Vixen	Лисица	Continuing	8/25/2015	CW Seed	2	13	9	TBD	TBD	TBD
+133	332525	tt6045840	203712	Black Lightning	Черная молния	Continuing	1/16/2018	The CW	2	25	8.3	TBD	TBD	TBD
+134	345831	tt7612548	999999	The Outpost	Аванпост	Continuing	7/10/2018	The CW	1	10	0	TBD	TBD	TBD
+135	349002	tt7412482	999999	The First	Первые	Continuing		Hulu	1	8	0	TBD	TBD	TBD
+136	351575	tt8336340	999999	Star Wars Resistance	Звёздные войны: Сопротивление	Continuing		Disney Channel (US)	1	11	0	TBD	TBD	TBD
