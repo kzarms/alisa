@@ -98,7 +98,12 @@ def handle_dialog(req, res):
     res['response']['text'] = result[0]
     #res['response']['text'] = CoreSearch(text)
     #add suggessted buttons
-    if result[1] == 0:        
+    if result[1] == 0:
+        #write data to the log file
+        f = open('logs.txt', mode="a+", encoding="utf-8")
+        csv_writer = csv.writer(f, lineterminator='\n', delimiter='\t')
+        csv_writer.writerow([user_id, text, req['meta']['client_id'], req['meta']['locale']])
+        f.close()        
         res['response']['buttons'] = [
             {
                 "title": "Добавить сериал",

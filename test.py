@@ -1,14 +1,9 @@
-# l = ['a', 'b', 'c', 'd']
-# for i in range(10):
-#     print(l[i%len(l)])
-#from flask import Flask, request
-
 # importing the requests library 
 import csv
 import io
 import requests 
 
-token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDA4NDIwNTIsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDc1NTY1MiwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.IsZxHlgf1HxaBiizZ5M90nQtId5Cv6B1iiwkUIH-ivHdBx78_RJbzawHU_jYEVadtakZc0f6kiOVKK_D1TfxiQD82rNHCcyC4-kUUTbS8JrqQxU0GgUXS8Va0HAOA9J9kxsJKHu7iCYLYotQaWBQpkq5Z__dhScnfHtLBL9_GS9XYaixNZ3SVcq6T83lVcYMJU9-eNZ7YHkPf7Aji52S5rqAEedC4FRn1YkchbPdMlPaLaFRb8MKH56_wSINuQ5b5rJTJa6hevIQZpV8MJ2PtbSEyeiSkUjG3pQy78csy7nO3UiSOOmJHTh4CcQa_OSRQbx1Fes63vE6YIK3Yaxwmw'
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDEwMTI5NDAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDkyNjU0MCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.driSi20NFVcsXS8pE1VIbJNJPMBCbyZ2NMwOIyxph_qhJUOlEqcJJVxFobFsoSxwr_1gm1KrK12mM7GCIDrtGETUrzdAlb20hyaV931fTMeNPVza_7OIPL-nSMGF1g64X9cqSXOBQgZUdGIhB43cP4kSnXiNnN7YCIe7qI-zlXUJzRqB43AnrML5XT7Phx5w1M--oIRK1bxzhLzUketcvwJWBfkgXX6-UCEtoWhSWHAnEklC1lZNDbqGefRLoHiv40MptcouOsXhEBAPJ9MpjQ7eQet7WE5adf2YKdBUx3VlRusfq_PyUQEY8Ln4jnT8xpQ_a6Jnx6jvzPj4FcpSmw'
 
 #update tokenыукпун1989
 def tockenRefresh():
@@ -26,14 +21,20 @@ def tockenRefresh():
         token = data['token']
  
 def tvdbGetSerialInfo(filmID):
+    #check we do not have such film in the list
+    f = open('films.csv', mode="r", encoding="utf-8")
+    recordList = list(f)
+    f.close()
+    for i in recordList:
+        if i.split('\t')[1] == str(filmID):
+            print('This film ID', str(filmID), 'is already in the DB')
+            return
+    #the last line + 1 is a new index
+    myid = int(i.split('\t')[0]) + 1
+    #myid = int((list(f)[-1]).split('\t')[0]) + 1
+
     URL = "https://api.thetvdb.com"    
-    #filmID = '80379'
-    #seasonNumber = '12'
     HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)} 
-    #HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}  
-    #PARAMS = {'airedSeason':seasonNumber} 
-    #Create full request
-    #URL = URL + '/series/' + filmID + '/episodes/query'
     URL1 = URL + '/series/' + str(filmID)
     r = requests.get(url = URL1, headers = HEADERS)  
     # extracting data in json format 
@@ -45,6 +46,7 @@ def tvdbGetSerialInfo(filmID):
         if data['Error'] == 'Not authorized':
             #try update token
             tockenRefresh()
+            print(token)
             if token == '0':
                 return 'Error', 'Auth error and update token error'
             HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)}
@@ -96,9 +98,9 @@ def tvdbGetSerialInfo(filmID):
         airedEpisodeNumber = 'TBD'
         episodeName = 'TBD'
     #
-    f = open('films.csv', mode="r", encoding="utf-8")
-    myid = int((list(f)[-1]).split('\t')[0]) + 1
-    f.close()
+    # f = open('films.csv', mode="r", encoding="utf-8")
+    # myid = int((list(f)[-1]).split('\t')[0]) + 1
+    # f.close()
     #summ result in the finnal line
     fields = [str(myid),
         data['data']['id'],
@@ -116,104 +118,35 @@ def tvdbGetSerialInfo(filmID):
         airedEpisodeNumber,
         episodeName,
         ]
+    #add info into main csv file
     f = open('films.csv', mode="a", encoding="utf-8")
     csv_writer = csv.writer(f, lineterminator='\n', delimiter='\t')
     csv_writer.writerow(fields)
     f.close()
+    #add alias into the NameVariations
+    if dataru['data']['seriesName'] != None:
+        feild1 = [str(myid),
+            dataru['data']['seriesName'].lower()
+        ]
+    if data['data']['seriesName'] != None:
+        feild2 = [str(myid),
+            data['data']['seriesName'].lower()
+        ]
+    fa = open('NameVariations.csv', mode="a", encoding="utf-8")
+    csv_writer = csv.writer(fa, lineterminator='\n', delimiter='\t')
+    if 'feild1' in locals():
+        csv_writer.writerow(feild1)
+    if 'feild2' in locals():
+        csv_writer.writerow(feild2)
+    fa.close()
+    print('The film ID', str(filmID), 'has been added successfully')
 
 #test add series :)
-tvdbGetSerialInfo(281534)
-tvdbGetSerialInfo(70533)
-tvdbGetSerialInfo(323168)
+tvdbGetSerialInfo(273455)
+tvdbGetSerialInfo(269586)
+tvdbGetSerialInfo(321219)
+tvdbGetSerialInfo(281776)
+tvdbGetSerialInfo(312505)
+tvdbGetSerialInfo(295683)
+# tvdbGetSerialInfo(323168)
 
-
-
-"""
-
-def getLastEpisodData(filmID, airedSeason): 
-    # intId = 8   
-    # f = open('films.csv', mode="r", encoding="utf-8")
-    # films = csv.reader(f, delimiter='\t')
-    # found = False
-    # for row in films:
-    #     if str(intId) == row[0]:
-    #         #we found a film, close file and exit form the loop
-    #         f.close()
-    #         found = True
-    #         break
-    # filmID = row[1]
-    # seasonNumber = row[9]
-    # airedEpisode = row[10]
-
-    URL = "https://api.thetvdb.com"
-    #HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)} 
-    HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}  
-    #PARAMS = {'airedSeason':str(airedSeason), 'absoluteNumber':str(absoluteNumber)} 
-    PARAMS = {'airedSeason':str(airedSeason),} 
-    #Create full request
-    URL = URL + '/series/' + str(filmID) + '/episodes/query'
-    r = requests.get(url = URL, headers = HEADERS, params = PARAMS)  
-    # extracting data in json format 
-    data = r.json()
-    if 'Error' in data:
-        #there is an error
-        if data['Error'] == 'Not authorized':
-            return "Auth error"
-        if 'No results for your query' in data['Error']:
-            return "Search error"
-        return "Unspecified error"
-    maxEpnum = 1
-    for episod in data['data']:
-        if int(episod['airedEpisodeNumber']) > maxEpnum:
-            maxEpnum = int(episod['airedEpisodeNumber'])
-            masEp = episod
-    if  episod['episodeName'] == None:
-        #no rus name
-        HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)}
-        r = requests.get(url = URL, headers = HEADERS, params = PARAMS)
-        data = r.json()
-        maxEpnum = 1
-        for episod in data['data']:
-            if int(episod['airedEpisodeNumber']) > maxEpnum:
-                maxEpnum = int(episod['airedEpisodeNumber'])
-                masEp = episod
-    l = [episod['firstAired'], episod['airedEpisodeNumber'], episod['episodeName'],]
-    return l
-
-
-def updateCsv():
-    with open('films.csv', mode="r", encoding="utf-8") as csvinput:
-        with open('films2.csv', mode="w+", encoding="utf-8") as csvoutput:
-            writer = csv.writer(csvoutput, lineterminator='\n', delimiter='\t')
-            reader = csv.reader(csvinput, delimiter='\t')
-
-            all = []
-            row = next(reader)
-            row.append('lastShow')
-            row.append('airedEpisodeNumber')
-            row.append('episodeName')
-            all.append(row)
-
-            for row in reader:
-                if row[6] == 'Ended':
-                    l = getLastEpisodData(row[1],row[9])
-                    row.append(l[0])
-                    row.append(l[1])
-                    row.append(l[2])
-                else:
-                    row.append('TBD')
-                    row.append('TBD')
-                    row.append('TBD')
-                all.append(row)
-
-            writer.writerows(all)
-
-"""
-"""series_id = open("series_id.txt", 'r')
-for line in series_id.readlines():
-    id = str.rstrip(line)
-    tvdbGetSerialInfo(id)
-    print(id + ' completed')
-"""
-#getLastEpisodData(75760,9)
-#updateCsv()
