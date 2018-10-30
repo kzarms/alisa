@@ -5,7 +5,7 @@ import requests
 import random
 from datetime import datetime, timedelta
 
-token = '1eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDA3NTY5MjUsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDY3MDUyNSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.uNwbwGata1RgRbj_4uDJ4TgsPwfCb1ladYK0GYmYrr7hXWo50HYPxKnSqfGaspiNZEDtyXiAUH6CAmrFvNpfOFwgX1KfEhL5lfT-MHRJY7snRyZh9GOkY9LmvEy669a6xrhmMtAUfYx9NVC809ihAZAQ3xlYNlZ-xsayPvrgxA9FBth2-32QJY2fxh8SdF9RHBhRSr_w9SE993PjNpsVdu9dkKZZwAhHxcbsv3wTBBa7k70sqwyQkT4QMr9zF8MvkLBouBdVwzkOx9CtBJ_icTxIJHAZ8hsrNTVjztkDrDL2ybUORaEsKoZzcE9Jmc_TUfXb45gsh8mwYqaGjFG1Ww'
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDEwMTY3NjIsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDkzMDM2MiwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.EBo2PwUwxfGgMFjjaBXzb_nYU8U_QSz6M-Vo31Yr2U5rSp1vxKJZP-S_eCxqWeNbYdQ_AFWZ3a1lZl12bmyGzBHSX8Yj56p63DOo2DMJWUHgQEF3LH17VPvD8J5XamLrz-DCiFug3DM_HhnXNOb-GQ7rFy1WAZquxUVxbCPY4ajuBEx5Um34YXjBtSbw44oCVoxwbGHAiyqHfaE0QPc4wXraM3sW7L_glVBaAgNxxhoS6-I96f6aevxCBhj-1jaL8pf1_clnm7CJbBmdTDOaJ8xgQT95oO6H7c1slWQ8N98OPwKP30tQWBgb1D377VjA2aPfTiyL4EU_NLbNHnbYhg'
 
 #film search funtion in a csv file
 def SearchName(text):
@@ -223,6 +223,8 @@ def filmSearch(intId, action, time):
             if tvdbanswer[0] == 'Error':
                 return 'Простите, не удалось найти', 0
             #define time according todays date
+            if tvdbanswer[2] == '':
+                return 'Что то пошло не так, не удалось найти информацию о серии, попробуйте позже', 0
             d = datetime.strptime(tvdbanswer[2], '%Y-%m-%d')
             n = datetime.now()
             nowday = datetime(n.year, n.month, n.day)
