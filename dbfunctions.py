@@ -125,6 +125,7 @@ def tockenRefresh():
   
 #seach function in the tbdb
 def tvdbLastEpisode(filmID, seasonNumber):
+    global cashRequests
     if filmID in cashRequests:         
          if cashRequests[filmID][0] > (datetime.now() - timedelta(hours=8)):
              #We have cash with less thatn 8 hours resutls, Return resutls from the chash
@@ -179,6 +180,7 @@ def tvdbLastEpisode(filmID, seasonNumber):
                 lastEpisode = int(series['airedEpisodeNumber'])
                 episode = series
     #save information into the cash
+    
     cashRequests[filmID] = [datetime.now(), str(episode['airedEpisodeNumber']), episode['episodeName'], str(episode['firstAired']),]
     return episode['airedEpisodeNumber'], episode['episodeName'], episode['firstAired']
 
