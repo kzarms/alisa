@@ -142,11 +142,18 @@ def tvdbGetSerialInfo(filmID):
     print('The film ID', str(filmID), 'has been added successfully')
 
 #test add series :)
-tvdbGetSerialInfo(273455)
-tvdbGetSerialInfo(269586)
-tvdbGetSerialInfo(321219)
-tvdbGetSerialInfo(281776)
-tvdbGetSerialInfo(312505)
-tvdbGetSerialInfo(295683)
-# tvdbGetSerialInfo(323168)
+#tvdbGetSerialInfo(273455)
+#tvdbGetSerialInfo(269586)
+#tvdbGetSerialInfo(321219)
+#tvdbGetSerialInfo(281776)
+#tvdbGetSerialInfo(312505)
+#tvdbGetSerialInfo(295683)
+#tvdbGetSerialInfo(295760)
 
+"""series_id = open("series_id.txt", 'r')
+for line in series_id.readlines():
+    id = str.rstrip(line)
+    tvdbGetSerialInfo(id)
+    print(id + ' completed')
+
+"""
