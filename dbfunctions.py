@@ -7,8 +7,11 @@ from datetime import datetime, timedelta
 import pymorphy2
 from difflib import SequenceMatcher
 
-token = ''
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDExNjY4NjAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTA4MDQ2MCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.mqZi5mUntc7_0kFM4FKbmri7kESL2Y68l0v8iMTJf5IjOfjvMLQ5CvJrkErtNuERqu_ymEzlEG-Bx6YWG4vZJUGXDCnTVx4Y3i3jIFdzCm88LQsMNTw-Euw5IyS8Sr62n_8VXRcM2iTLVjT7Cfi5L_a9bKVWCs4WpLIA-Hri0uXcHjXB7LBX2JBMVtl8e536ASGoqc3pEHF9s4xUf4o4evz-ZVXgI6dzjGNTy0zXmbW1_YkjE8cG0wdSTNMjie6pq6euvP4EEdq7lOecTje4miXD5YtbuAfihv33b_7ffeAP__zbtjXJsdcIla0OipmuVYdcxSK7mMG930M8p4UtHg'
 morph = pymorphy2.MorphAnalyzer()
+
+#storage for chash
+cashRequests = {}
 
 
 # --Получить из строки нормализованный список
@@ -63,7 +66,7 @@ def SearchName(text):
         if filmName[:-1] == row[1]:
             #Убираем последний пробел и проверям полное соответсвие названию
             f.close()
-            print(row[0])
+            #print(row[0])
             return row[0]
     #проверяем с помощью нормализаци слов и проверки на опечатки
     f.close()
@@ -74,7 +77,6 @@ def SearchName(text):
             return row[0]
     f.close()
     return -1
-
 
 #Looking for key words related to action
 #time 0, plase 1, info 2, else -1
@@ -120,9 +122,15 @@ def tockenRefresh():
     if 'token' in data:
         print('the token has been got sussessfully')
         token = data['token']
-    
+  
 #seach function in the tbdb
 def tvdbLastEpisode(filmID, seasonNumber):
+    if filmID in cashRequests:         
+         if cashRequests[filmID][0] > (datetime.now() - timedelta(hours=8)):
+             #We have cash with less thatn 8 hours resutls, Return resutls from the chash
+             return cashRequests[filmID][1], cashRequests[filmID][2], cashRequests[filmID][3]
+    #filmID = '80379'
+    #seasonNumber = '12'
     URL = "https://api.thetvdb.com"   
     HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}  
     PARAMS = {'airedSeason':seasonNumber} 
@@ -133,7 +141,7 @@ def tvdbLastEpisode(filmID, seasonNumber):
         r = requests.get(url = URL, headers = HEADERS, params = PARAMS)
     except:
         return 'Error', 'Connection error'
- 
+
     # extracting data in json format 
     data = r.json()
     #print(data)
@@ -152,22 +160,29 @@ def tvdbLastEpisode(filmID, seasonNumber):
             data = r.json()
             if 'Error' in data:
                 return 'Error', 'Error token update'
-    
-    if data['data'][-1]['episodeName'] == None:
-        #if there is no Rus name, repeat in En
-        HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)}
-        r = requests.get(url = URL, headers = HEADERS, params = PARAMS)
-        data = r.json()
     #looking for the last episod in the seies
     lastEpisode = 1
     for series in data['data']:
         if int(series['airedEpisodeNumber']) > lastEpisode:
             lastEpisode = int(series['airedEpisodeNumber'])
-    #print(lastEpisode)
-    #looking for particular data from the last episode
-    for series in data['data']:
-        if int(series['airedEpisodeNumber']) == lastEpisode:
-            return series['airedEpisodeNumber'], series['episodeName'], series['firstAired']
+            episode = series
+
+    if episode['episodeName'] == None:
+        #if there is no Rus name, repeat in En
+        HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)}
+        r = requests.get(url = URL, headers = HEADERS, params = PARAMS)
+        data = r.json()
+        #looking for the last episod in the seies
+        lastEpisode = 1
+        for series in data['data']:
+            if int(series['airedEpisodeNumber']) > lastEpisode:
+                lastEpisode = int(series['airedEpisodeNumber'])
+                episode = series
+    #save information into the cash
+    cashRequests[filmID] = [datetime.now(), str(episode['airedEpisodeNumber']), episode['episodeName'], str(episode['firstAired']),]
+    return episode['airedEpisodeNumber'], episode['episodeName'], episode['firstAired']
+
+#tvdbLastEpisode('80379','12')
 #Return the URL to the offical site 
 def OfficialURL(intId):
     URLs = {
@@ -210,10 +225,12 @@ def getFilmInfoLocal(intId):
     else:
         msg += ' В сериале ' + row[9] + ' сезонoв и ' + row[10] + ' серий.'
     msg += ' IMDB рейтинг ' + row[11] + '.'
-    if row[6].lower() == 'continuing': 
-        msg += ' Продолжает сниматься.'
+    if row[6].lower() == 'continuing':
+        variants = ['Продолжает сниматься.','Сьемки сериала продолжаются и по сей день.','Ждите новых серий.','Сьемочная группа работает над выпуском новых серий.']
+        msg += ' ' + random.choice(variants)
     else:
-        msg += ' Cьемки завершены.'
+        variants = ['Сьемки сериала завершены.','Серии более не выпускаются.','Сериал закончен.','Выпуск новых серий и сезонов не планируется.']
+        msg += ' ' + random.choice(variants)
     return msg
 #Return film location 
 def getFilmLocationLocal(intId):
@@ -234,18 +251,19 @@ def filmSearch(intId, action, time):
         "двадцать первого","двадцать второго","двадцать третьего","двадцать четвертого","двадцать пятого","двадцать шестого",]
     seasonName2 = ['','первая','вторая','третья','четвертая','пятая','шестая','седьмая','восьмая','девятая','десятая',
         'одиннадцатая','двенадцатая','тринадцатая','четырнадцатая','пятнадцатая','шеснадцатая','семнадцатая','восемнадцатая','девятнадцатая','двадцатая',
-        'двадцать первая','двадцать вторая','двадцать третья','двадцать четвертая','двадцать пятая','двадцать шестая','двадцать седьмая','двадцать восьмая','двадцать девятая',
-        'тридцатая',]
-
+        'двадцать первая','двадцать вторая','двадцать третья','двадцать четвертая','двадцать пятая','двадцать шестая','двадцать седьмая','двадцать восьмая','двадцать девятая', 'тридцатая'
+        'тридцать первая','тридцать вторая','тридцать третья','тридцать четвертая','тридцать пятая','тридцать шестая','тридцать седьмая','тридцать восьмая','тридцать девятая', 'тридцатая',
+        ]
+    #intId = '1'
     f = open('films.csv', mode="r", encoding="utf-8")
     films = csv.reader(f, delimiter='\t')
     found = False
     for row in films:
         if intId == row[0]:
-            #we found a film, close file and exit form the loop
-            f.close()
+            #we found a film, close file and exit form the loop        
             found = True
             break
+    f.close()
     if not found:
         return 'Простите, не удалось найти в нашей базе данных', 0
     #print(intId, action, time)
@@ -268,14 +286,18 @@ def filmSearch(intId, action, time):
             tvdbanswer = tvdbLastEpisode(row[1], row[9])
             #print(tvdbanswer)
             if tvdbanswer[0] == 'Error':
-                return 'Простите, не удалось найти', 0
+                return 'Простите, не удалось найти', 0            
+            if tvdbanswer[1] == None:
+                name = 'нет названия'
+            else:
+                name = tvdbanswer[1]
             #define time according todays date
             if tvdbanswer[2] == '':
                 return 'Что то пошло не так, не удалось найти информацию о дате выхода серии. Попробуйте позже.', 0
             d = datetime.strptime(tvdbanswer[2], '%Y-%m-%d')
             n = datetime.now()
             nowday = datetime(n.year, n.month, n.day)
-            print(d)
+            #print(d)
             if d > nowday:
                 #Is not issued
                 # variants = [
@@ -284,14 +306,14 @@ def filmSearch(intId, action, time):
                 #     '"' + tvdbanswer[1] + '" выйдет как ' + seasonName2[int(tvdbanswer[0])] + ' cерия в ' + row[9] + '-ом сезоне ' + datetime.strftime(d, '%d.%m.%Y'),
                 #     seasonName2[int(tvdbanswer[0])] + 'серия ' + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выйдет в эфир ' datetime.strftime(d, '%d.%m.%Y')
                 #     ]
-                return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выйдет в прокат ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
+                return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + name + '" выйдет в прокат ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
                 #return random.choice(variants), int(intId)
             elif d == nowday:
                 #it is today
-                return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выходит сегодня!', int(intId)
+                return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + name + '" выходит сегодня!', int(intId)
             else:
                 #it was in a past
-                return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" уже вышла в прокат ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
+                return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + name + '" уже вышла в прокат ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
     #final close return (if everythig esle bad)
     return 'Простите, не удалось найти в базе данных', 0
 #main function, check for key words and finnaly execute a 
@@ -312,9 +334,10 @@ def CoreSearch(text):
 # print(SeachActionTimeDetection("ГДs сока сколь;в ы новый когда же ты где?"))
 # print(SearchAction("ГДs сока сколь;в ы когда же ты где?"))
 
-# print(CoreSearch("теория большого взрыва"))
-# print(CoreSearch("Когда выйдет игра престолов?"))
-# print(CoreSearch("дай инфо о теории большого взрыва"))
+#print(CoreSearch("теория большого взрыва"))
+#print(CoreSearch("теория большого взрыва 2"))
+#print(CoreSearch("Когда выйдет игра престолов?"))
+#print(CoreSearch("дай инфо о теории большого взрыва"))
 # print(CoreSearch("где глянуть теорию большого взрыва"))
 #print(CoreSearch("новая серия грифинов"))
 #print(CoreSearch("свежая серия полицейского с рублевки"))
