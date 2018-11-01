@@ -224,7 +224,7 @@ def filmSearch(intId, action, time):
                 return 'Простите, не удалось найти', 0
             #define time according todays date
             if tvdbanswer[2] == '':
-                return 'Что то пошло не так, не удалось найти информацию о серии, попробуйте позже', 0
+                return 'Что то пошло не так, не удалось найти информацию о дате выхода серии. Попробуйте позже.', 0
             d = datetime.strptime(tvdbanswer[2], '%Y-%m-%d')
             n = datetime.now()
             nowday = datetime(n.year, n.month, n.day)
