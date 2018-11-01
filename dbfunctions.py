@@ -181,7 +181,7 @@ def tvdbLastEpisode(filmID, seasonNumber):
                 episode = series
     #save information into the cash
     
-    cashRequests[filmID] = [datetime.now(), str(episode['airedEpisodeNumber']), episode['episodeName'], str(episode['firstAired']),]
+    cashRequests[filmID] = [datetime.now(), str(episode['airedEpisodeNumber']), (episode['episodeName']+' cash'), str(episode['firstAired']),]
     return episode['airedEpisodeNumber'], episode['episodeName'], episode['firstAired']
 
 #tvdbLastEpisode('80379','12')
