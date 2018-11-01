@@ -36,7 +36,7 @@ def compare_names(name1, name2):
     percentage = round(compare_strings_typo(name1, name2))
     if percentage > 60:
         print('Вы сравнивали: ' + name1 + '|' + name2 + ', идентичность: ' + str(
-            percentage) + '%(найдено через typo)')
+            percentage) + '%(найдено через typo)') 
     else:
         percentage = round((len(overlap) / max(len(set1), len(set2))) * 100)
         if percentage > 60:
