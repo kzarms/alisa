@@ -4,12 +4,48 @@ import io
 import requests
 import random
 from datetime import datetime, timedelta
+import pymorphy2
+from difflib import SequenceMatcher
 
 token = '1eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDA3NTY5MjUsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDY3MDUyNSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.uNwbwGata1RgRbj_4uDJ4TgsPwfCb1ladYK0GYmYrr7hXWo50HYPxKnSqfGaspiNZEDtyXiAUH6CAmrFvNpfOFwgX1KfEhL5lfT-MHRJY7snRyZh9GOkY9LmvEy669a6xrhmMtAUfYx9NVC809ihAZAQ3xlYNlZ-xsayPvrgxA9FBth2-32QJY2fxh8SdF9RHBhRSr_w9SE993PjNpsVdu9dkKZZwAhHxcbsv3wTBBa7k70sqwyQkT4QMr9zF8MvkLBouBdVwzkOx9CtBJ_icTxIJHAZ8hsrNTVjztkDrDL2ybUORaEsKoZzcE9Jmc_TUfXb45gsh8mwYqaGjFG1Ww'
+morph = pymorphy2.MorphAnalyzer()
 
-#film search funtion in a csv file
+
+# --Получить из строки нормализованный список
+def get_normalized_string(string):
+    list_words = string.split()
+    normal_list = []
+    for word in list_words:
+        normal_word = morph.parse(word)[0].normal_form
+        normal_list.append(normal_word)
+    return normal_list
+
+
+# Сравнивать текст с возможными опечатками
+def compare_strings_typo(string1, string2):
+    similarity = SequenceMatcher(None, string1, string2)
+    return similarity.ratio() * 100
+
+
+# Сравнить две строки
+def compare_names(name1, name2):
+    set1 = set(get_normalized_string(name1))
+    set2 = set(get_normalized_string(name2))
+    overlap = set1 & set2
+
+    percentage = round(compare_strings_typo(name1, name2))
+    if percentage > 60:
+        print('Вы сравнивали: ' + name1 + '|' + name2 + ', идентичность: ' + str(
+            percentage) + '%(найдено через typo)')
+    else:
+        percentage = round((len(overlap) / max(len(set1), len(set2))) * 100)
+        if percentage > 60:
+            print('Вы сравнивали: ' + name1 + '|' + name2 + ', общее: ' + str(overlap) + ', идентичность: ' + str(
+                percentage) + '%(найдено через normalized)')
+    return round(percentage)
+
+
 def SearchName(text):
-    #text = "дай инфо о теории большого взрывы"
     text = text.lower()
     words = text.split(" ")
     wordList = []
@@ -18,7 +54,8 @@ def SearchName(text):
             wordList.append(word.strip(' ?!,;:'))
     f = open('NameVariations.csv', mode="r", encoding="utf-8")
     filmReader = csv.reader(f, delimiter='\t')
-    for row in filmReader:        
+    #Сначала проверяем по алиасам
+    for row in filmReader:
         filmName = ""
         for word in wordList:
             if word in row[1]:
@@ -26,9 +63,19 @@ def SearchName(text):
         if filmName[:-1] == row[1]:
             #Убираем последний пробел и проверям полное соответсвие названию
             f.close()
+            print(row[0])
+            return row[0]
+    #проверяем с помощью нормализаци слов и проверки на опечатки
+    f.close()
+    f = open('NameVariations.csv', mode="r", encoding="utf-8")
+    filmReader = csv.reader(f, delimiter='\t')
+    for row in filmReader:
+        if compare_names(text, row[1]) > 60:
             return row[0]
     f.close()
     return -1
+
+
 #Looking for key words related to action
 #time 0, plase 1, info 2, else -1
 def SearchAction(text):
