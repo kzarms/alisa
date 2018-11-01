@@ -33,8 +33,8 @@ Id	tvdbId	imdbId	seriesId	nameEn	nameRu	status	firstAired	network	seazons	lastEp
 85	311714	tt5555260	199860	This Is Us	Это мы	Continuing	2016-09-20	NBC	3	46	8.8	TBD	TBD	TBD
 86	269613	tt2802850	179637	Fargo	Фарго	Continuing	2014-04-15	FX (US)	3	30	9.1	TBD	TBD	TBD
 87	328690	tt4604612	199903	The Alienist	Алиенист	Ended	2018-01-22	TNT (US)	1	10	8	2018-03-26	10	Замок в небе
-88	164541	tt1600194	hawaii-five-0	Hawaii Five-0	Гавайи 5-0	Continuing	2010-09-20	CBS	9	203	8.1	TBD	TBD	TBD
-89	306719	tt1064899	queen-of-the-south	Queen of the South	Королева юга	Continuing	2016-06-23	USA Network	3	39	9.1	TBD	TBD	TBD
+88	164541	tt1600194	999999	Hawaii Five	Гавайи	Continuing	2010-09-20	CBS	9	203	8.1	TBD	TBD	TBD
+89	306719	tt1064899	999999	Queen of the South	Королева юга	Continuing	2016-06-23	USA Network	3	39	9.1	TBD	TBD	TBD
 90	295647	tt4474344	196068	Blindspot	Слепое пятно	Continuing	2015-09-21	NBC	4	78	8.2	TBD	TBD	TBD
 91	349743	tt7472896	999999	Mr Inbetween	Решала	Continuing		FX (US)	1	6	0	TBD	TBD	TBD
 92	311954	tt5420376	999999	Riverdale	Ривердэйл	Continuing	2017-01-26	The CW	3	44	7.7	TBD	TBD	TBD

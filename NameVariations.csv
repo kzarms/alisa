@@ -142,7 +142,7 @@ ID	NameVariation
 61	твин пикс
 61	twin peaks
 62	след
-63	бруклин 9-9
+63	бруклин
 63	brooklyn nine-nine
 64	superior donuts
 65	ты - воплощение порока
@@ -151,145 +151,6 @@ ID	NameVariation
 66	dirk gently's holistic detective agency
 67	роузвуд
 67	rosewood
-68	taboo
-69	смертельное оружие
-69	lethal weapon
-70	animal kingdom
-71	йеллоустоун: заметки о дикой природе
-71	yellowstone
-72	чёрный список
-72	the blacklist
-73	террор
-73	the terror
-74	подлый пит
-74	sneaky pete
-75	новобранец
-75	the rookie
-76	проповедник
-76	preacher
-77	побег из тюрьмы
-77	prison break
-78	охотник за разумом
-78	mindhunter
-79	элементарно
-79	elementary
-80	the magicians
-81	человек в высоком замке
-81	the man in the high castle
-82	startup
-83	озарк
-83	ozark
-84	люди
-84	humans
-85	обратная сторона
-85	counterpart
-86	кондор
-86	condor
-87	сотня
-87	the 100
-88	шерлок
-88	sherlock
-89	звёздные войны: повстанцы
-89	star wars rebels
-90	это мы
-90	this is us
-91	фарго
-91	fargo
-92	алиенист
-92	the alienist
-93	гавайи 5-0
-93	hawaii five-0
-94	королева юга
-94	queen of the south
-95	слепое пятно
-95	blindspot
-96	решала
-96	mr inbetween
-97	ривердэйл
-97	riverdale
-98	родина
-98	homeland
-99	the defenders
-100	грешница
-100	the sinner
-101	американские боги
-101	american gods
-102	касл-рок
-102	castle rock
-103	сын
-103	the son
-104	хроники франкенштейна
-104	the frankenstein chronicles
-105	13 причин почему
-105	13 reasons why
-106	ночной администратор
-106	the night manager
-107	легион
-107	legion
-108	рождение мафии
-108	the making of the mob
-109	орвилл
-109	the orville
-110	titans
-111	the flash
-112	большой куш
-112	snatch
-113	человек будущего
-113	future man
-114	манифест
-114	manifest
-115	секретные материалы
-115	the x-files
-116	лемони сникетт: 33 несчастья
-116	a series of unfortunate events
-117	избранный
-117	chosen
-118	криптон
-118	krypton
-119	макмафия
-119	mcmafia
-120	оа
-120	the oa
-121	siren
-122	patriot
-123	грёзы
-123	reverie
-124	нация z
-124	z nation
-125	runaways
-126	майянцы
-126	mayans m.c.
-127	американская история преступлений
-127	american crime story
-128	супердевушка
-128	supergirl
-129	lost in space
-130	бойтесь ходячих мертвецов
-130	fear the walking dead
-131	последний корабль
-131	the last ship
-132	maniac
-133	вражда
-133	feud
-134	американская семейка
-134	modern family
-135	судная ночь
-135	the purge
-136	шучу
-136	kidding
-137	trust
-138	странный ангел
-138	strange angel
-139	лисица
-139	vixen
-140	черная молния
-140	black lightning
-141	аванпост
-141	the outpost
-142	первые
-142	the first
-143	звёздные войны: сопротивление
-143	star wars resistance
 68	смертельное оружие
 68	lethal weapon
 69	чёрный список
@@ -330,14 +191,14 @@ ID	NameVariation
 86	fargo
 87	алиенист
 87	the alienist
-88	гавайи 5-0
-88	hawaii five-0
+88	гавайи
+88	hawaii five
 89	королева юга
 89	queen of the south
 90	слепое пятно
 90	blindspot
 91	решала
-91	mr inbetween
+91	inbetween
 92	ривердэйл
 92	riverdale
 93	родина
@@ -370,8 +231,8 @@ ID	NameVariation
 106	manifest
 107	секретные материалы
 107	the x-files
-108	лемони сникетт: 33 несчастья
-108	a series of unfortunate events
+108	33 несчастья
+108	series of unfortunate events
 109	избранный
 109	chosen
 110	криптон
@@ -380,10 +241,10 @@ ID	NameVariation
 111	mcmafia
 112	оа
 112	the oa
-113	грёзы
+113	грезы
 113	reverie
-114	нация z
-114	z nation
+114	нация
+114	nation
 115	майянцы
 115	mayans m.c.
 116	американская история преступлений
@@ -412,10 +273,10 @@ ID	NameVariation
 127	the outpost
 128	первые
 128	the first
-129	звёздные войны: сопротивление
+129	звездные войны: сопротивление
 129	star wars resistance
 130	флэш
-130	the flash (2014)
+130	the flash
 131	последний человек на земле
 131	the last man on earth
 132	анатомия страсти

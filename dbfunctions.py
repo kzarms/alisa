@@ -4,15 +4,21 @@ import io
 import requests
 import random
 from datetime import datetime, timedelta
-import pymorphy2
+#import pymorphy2
 from difflib import SequenceMatcher
 
 token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDExNjY4NjAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTA4MDQ2MCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.mqZi5mUntc7_0kFM4FKbmri7kESL2Y68l0v8iMTJf5IjOfjvMLQ5CvJrkErtNuERqu_ymEzlEG-Bx6YWG4vZJUGXDCnTVx4Y3i3jIFdzCm88LQsMNTw-Euw5IyS8Sr62n_8VXRcM2iTLVjT7Cfi5L_a9bKVWCs4WpLIA-Hri0uXcHjXB7LBX2JBMVtl8e536ASGoqc3pEHF9s4xUf4o4evz-ZVXgI6dzjGNTy0zXmbW1_YkjE8cG0wdSTNMjie6pq6euvP4EEdq7lOecTje4miXD5YtbuAfihv33b_7ffeAP__zbtjXJsdcIla0OipmuVYdcxSK7mMG930M8p4UtHg'
-morph = pymorphy2.MorphAnalyzer()
-
 #storage for chash
 cashRequests = {}
+#read files on start
+with open('NameVariations.csv', mode="r", encoding="utf-8") as file:
+    aliases_in_memory = file.read()
 
+with open('films.csv', mode="r", encoding="utf-8") as file:
+    films_in_memory = file.read()
+
+'''
+morph = pymorphy2.MorphAnalyzer()
 
 # --Получить из строки нормализованный список
 def get_normalized_string(string):
@@ -23,12 +29,10 @@ def get_normalized_string(string):
         normal_list.append(normal_word)
     return normal_list
 
-
 # Сравнивать текст с возможными опечатками
 def compare_strings_typo(string1, string2):
     similarity = SequenceMatcher(None, string1, string2)
     return similarity.ratio() * 100
-
 
 # Сравнить две строки
 def compare_names(name1, name2):
@@ -47,7 +51,7 @@ def compare_names(name1, name2):
                 percentage) + '%(найдено через normalized)')
     return round(percentage)
 
-
+'''
 def SearchName(text):
     text = text.lower()
     words = text.split(" ")
@@ -55,27 +59,25 @@ def SearchName(text):
     for word in words:
         if len(word.strip(' ?!,;:')) > 1:
             wordList.append(word.strip(' ?!,;:'))
-    f = open('NameVariations.csv', mode="r", encoding="utf-8")
-    filmReader = csv.reader(f, delimiter='\t')
-    #Сначала проверяем по алиасам
+    filmReader = csv.reader(aliases_in_memory.splitlines(), delimiter='\t')
+    #Check aliases
     for row in filmReader:
+        #print(row)
         filmName = ""
         for word in wordList:
             if word in row[1]:
                 filmName += word + " "
         if filmName[:-1] == row[1]:
-            #Убираем последний пробел и проверям полное соответсвие названию
-            f.close()
-            #print(row[0])
+            #Remove last space and check for 100% consistency
             return row[0]
+    
     #проверяем с помощью нормализаци слов и проверки на опечатки
-    f.close()
-    f = open('NameVariations.csv', mode="r", encoding="utf-8")
-    filmReader = csv.reader(f, delimiter='\t')
-    for row in filmReader:
-        if compare_names(text, row[1]) > 60:
-            return row[0]
-    f.close()
+    # f = open('NameVariations.csv', mode="r", encoding="utf-8")
+    # filmReader = csv.reader(f, delimiter='\t')
+    # for row in filmReader:
+    #     if compare_names(text, row[1]) > 60:
+    #         return row[0]
+    # f.close()
     return -1
 
 #Looking for key words related to action
@@ -181,7 +183,7 @@ def tvdbLastEpisode(filmID, seasonNumber):
                 episode = series
     #save information into the cash
     
-    cashRequests[filmID] = [datetime.now(), str(episode['airedEpisodeNumber']), (episode['episodeName']+' cash'), str(episode['firstAired']),]
+    cashRequests[filmID] = [datetime.now(), str(episode['airedEpisodeNumber']), episode['episodeName'], str(episode['firstAired']),]
     return episode['airedEpisodeNumber'], episode['episodeName'], episode['firstAired']
 
 #tvdbLastEpisode('80379','12')
@@ -197,12 +199,13 @@ def OfficialURL(intId):
         'Hulu': 'https://www.hulu.com',
         'The CW': 'http://www.cwtv.com',
     }
-    f = open('films.csv', mode="r", encoding="utf-8")
-    films = csv.reader(f, delimiter='\t')
+    # f = open('films.csv', mode="r", encoding="utf-8")
+    # films = csv.reader(f, delimiter='\t')
+    films = csv.reader(films_in_memory.splitlines(), delimiter='\t')
     for row in films:
         if intId == row[0]:
             #we found a film, close file and exit form the loop
-            f.close()
+            #f.close()
             break
     if row[8] in URLs:        
         return URLs[row[8]]
@@ -211,14 +214,14 @@ def OfficialURL(intId):
 #Return main info about serial
 def getFilmInfoLocal(intId):
     #intId = '1'
-    f = open('films.csv', mode="r", encoding="utf-8")
-    films = csv.reader(f, delimiter='\t')
+    #f = open('films.csv', mode="r", encoding="utf-8")
+    #films = csv.reader(f, delimiter='\t')
+    films = csv.reader(films_in_memory.splitlines(), delimiter='\t')
     for row in films:
         if intId == row[0]:
             #we found a film, close file and exit form the loop
-            f.close()
-            break
-        
+            #f.close()
+            break        
     msg = 'Сериал "' + row[5] + '" (' + row[4] + ') впервые вышел в прокат ' + datetime.strftime(datetime.strptime(row[7], '%Y-%m-%d'), '%d.%m.%Y') + ' на канале ' + row[8] + '.'
     if row[9] == '1':
         msg += ' В сериале только 1 сезон и ' + row[10] + ' серий.'
@@ -257,15 +260,16 @@ def filmSearch(intId, action, time):
         'тридцать первая','тридцать вторая','тридцать третья','тридцать четвертая','тридцать пятая','тридцать шестая','тридцать седьмая','тридцать восьмая','тридцать девятая', 'тридцатая',
         ]
     #intId = '1'
-    f = open('films.csv', mode="r", encoding="utf-8")
-    films = csv.reader(f, delimiter='\t')
+    #f = open('films.csv', mode="r", encoding="utf-8")
+    #films = csv.reader(f, delimiter='\t')
+    films = csv.reader(films_in_memory.splitlines(), delimiter='\t')
     found = False
     for row in films:
         if intId == row[0]:
             #we found a film, close file and exit form the loop        
             found = True
             break
-    f.close()
+    #f.close()
     if not found:
         return 'Простите, не удалось найти в нашей базе данных', 0
     #print(intId, action, time)
@@ -345,6 +349,6 @@ def CoreSearch(text):
 #print(CoreSearch("свежая серия полицейского с рублевки"))
 # print(CoreSearch("доктор хаус"))
 # print(CoreSearch("кяввм"))
-# print(CoreSearch("друзья"))
+#print(CoreSearch("грезы"))
 
 # print(tvdbLastEpisode('80379','12'))
