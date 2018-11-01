@@ -3,7 +3,7 @@ import csv
 import io
 import requests 
 
-token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDEwMTI5NDAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MDkyNjU0MCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.driSi20NFVcsXS8pE1VIbJNJPMBCbyZ2NMwOIyxph_qhJUOlEqcJJVxFobFsoSxwr_1gm1KrK12mM7GCIDrtGETUrzdAlb20hyaV931fTMeNPVza_7OIPL-nSMGF1g64X9cqSXOBQgZUdGIhB43cP4kSnXiNnN7YCIe7qI-zlXUJzRqB43AnrML5XT7Phx5w1M--oIRK1bxzhLzUketcvwJWBfkgXX6-UCEtoWhSWHAnEklC1lZNDbqGefRLoHiv40MptcouOsXhEBAPJ9MpjQ7eQet7WE5adf2YKdBUx3VlRusfq_PyUQEY8Ln4jnT8xpQ_a6Jnx6jvzPj4FcpSmw'
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDExNjY4NjAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTA4MDQ2MCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.mqZi5mUntc7_0kFM4FKbmri7kESL2Y68l0v8iMTJf5IjOfjvMLQ5CvJrkErtNuERqu_ymEzlEG-Bx6YWG4vZJUGXDCnTVx4Y3i3jIFdzCm88LQsMNTw-Euw5IyS8Sr62n_8VXRcM2iTLVjT7Cfi5L_a9bKVWCs4WpLIA-Hri0uXcHjXB7LBX2JBMVtl8e536ASGoqc3pEHF9s4xUf4o4evz-ZVXgI6dzjGNTy0zXmbW1_YkjE8cG0wdSTNMjie6pq6euvP4EEdq7lOecTje4miXD5YtbuAfihv33b_7ffeAP__zbtjXJsdcIla0OipmuVYdcxSK7mMG930M8p4UtHg'
 
 #update tokenыукпун1989
 def tockenRefresh():
@@ -149,6 +149,13 @@ def tvdbGetSerialInfo(filmID):
 #tvdbGetSerialInfo(312505)
 #tvdbGetSerialInfo(295683)
 #tvdbGetSerialInfo(295760)
+
+f = open('films2.csv', mode="r", encoding="utf-8")
+recordList = list(f)
+f.close()
+for i in range(2,60):
+    #print(recordList[i].split('\t')[1])
+    tvdbGetSerialInfo(recordList[i].split('\t')[1])
 
 """series_id = open("series_id.txt", 'r')
 for line in series_id.readlines():

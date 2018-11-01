@@ -350,6 +350,6 @@ def CoreSearch(text):
 #print(CoreSearch("свежая серия полицейского с рублевки"))
 # print(CoreSearch("доктор хаус"))
 # print(CoreSearch("кяввм"))
-print(CoreSearch("симпсоны"))
+print(CoreSearch("кяввм"))
 
 # print(tvdbLastEpisode('80379','12'))
