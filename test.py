@@ -1,7 +1,8 @@
 # importing the requests library 
 import csv
 import io
-import requests 
+import requests
+from datetime import datetime, timedelta
 
 token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDExNjY4NjAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTA4MDQ2MCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.mqZi5mUntc7_0kFM4FKbmri7kESL2Y68l0v8iMTJf5IjOfjvMLQ5CvJrkErtNuERqu_ymEzlEG-Bx6YWG4vZJUGXDCnTVx4Y3i3jIFdzCm88LQsMNTw-Euw5IyS8Sr62n_8VXRcM2iTLVjT7Cfi5L_a9bKVWCs4WpLIA-Hri0uXcHjXB7LBX2JBMVtl8e536ASGoqc3pEHF9s4xUf4o4evz-ZVXgI6dzjGNTy0zXmbW1_YkjE8cG0wdSTNMjie6pq6euvP4EEdq7lOecTje4miXD5YtbuAfihv33b_7ffeAP__zbtjXJsdcIla0OipmuVYdcxSK7mMG930M8p4UtHg'
 
@@ -149,7 +150,7 @@ def tvdbGetSerialInfo(filmID):
 #tvdbGetSerialInfo(312505)
 #tvdbGetSerialInfo(295683)
 #tvdbGetSerialInfo(295760)
-
+"""
 f = open('films2.csv', mode="r", encoding="utf-8")
 recordList = list(f)
 f.close()
@@ -157,10 +158,72 @@ for i in range(2,60):
     #print(recordList[i].split('\t')[1])
     tvdbGetSerialInfo(recordList[i].split('\t')[1])
 
-"""series_id = open("series_id.txt", 'r')
+series_id = open("series_id.txt", 'r')
 for line in series_id.readlines():
     id = str.rstrip(line)
     tvdbGetSerialInfo(id)
     print(id + ' completed')
 
 """
+
+def MyPostCommand(remote, command, i):
+    if remote:
+        URL = "https://kzaralisa.azurewebsites.net" 
+    else:
+        URL = "http://127.0.0.1:5000"
+    if command == '':
+        result = True
+    else:
+        result = False  
+    HEADERS = {'Content-Type': 'application/json'}
+    DATA = {
+        "meta": {
+            "client_id": "ru.yandex.searchplugin/7.16 (none none; android 4.4.2)",
+            "interfaces": {
+            "screen": {}
+            },
+            "locale": "ru-RU",
+            "timezone": "UTC"
+        },
+        "request": {
+            "command": command,
+            "nlu": {
+            "entities": [],
+            "tokens": [
+                ""
+            ]
+            },
+            "original_utterance": command,
+            "type": "SimpleUtterance"
+        },
+        "session": {
+            "message_id": i,
+            "new": result,
+            "session_id": "aa78144d-44710a9e-64ff4317-ad1be4d5",
+            "skill_id": "6b89b259-e2f2-44fb-b203-17833d97595a",
+            "user_id": "468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C"
+        },
+        "version": "1.0"
+    }    
+    r = requests.post(url = URL, json = DATA, headers = HEADERS)
+    data = r.json()
+    return data['response']['text']
+
+
+
+#print(MyPostCommand(False, 'кяввм', 2))
+n = datetime.now()
+print(MyPostCommand(False, 'стрела', 2))
+print(datetime.now() - n)
+print(MyPostCommand(False, 'подробнее', 2))
+print(datetime.now() - n)
+print(MyPostCommand(False, 'сериал', 2))
+print(datetime.now() - n)
+
+n = datetime.now()
+print(MyPostCommand(True, 'доктор хаус', 2))
+print(datetime.now() - n)
+print(MyPostCommand(True, 'подробнее', 2))
+print(datetime.now() - n)
+print(MyPostCommand(True, 'сериал', 2))
+print(datetime.now() - n)

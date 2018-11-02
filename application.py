@@ -60,7 +60,7 @@ def handle_dialog(req, res):
     text = req['request']['command'].lower()
 
     #check for key words
-    keywords = ['добавить сериал', 'подробнее','сериал','смотреть']
+    keywords = ['добавить сериал', 'подробнее', 'сериал', 'смотреть']
     if text in keywords:
         if user_id not in sessionStorage:
             res['response']['text'] = 'Я потеряла нить нашей беседы :)'

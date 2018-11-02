@@ -1,5 +1,5 @@
 Id	tvdbId	imdbId	seriesId	nameEn	nameRu	status	firstAired	network	seazons	lastEpisode	rating	lastShow	airedEpisodeNumber	episodeName
-1	80379	tt0898266	58053	The Big Bang Theory	Теория большого взрыва	Continuing	9/24/2007	CBS	12	256	8.8	TBD	TBD	TBD
+1	80379	tt0898266	58053	The Big Bang Theory	Теория большого взрыва	Continuing	2007-09-24	CBS	12	256	8.8	TBD	TBD	TBD
 2	296762	tt0475784	194892	Westworld	Мир Дикого запада	Continuing	2016-10-02	HBO	2	22	8.9	TBD	TBD	TBD
 3	161511	tt1586680	78143	Shameless (US)	Бесстыдники	Continuing	2011-01-09	Showtime	9	112	9	TBD	TBD	TBD
 4	277165	tt2575988	3072410	Silicon Valley	Кремниевая долина	Continuing	2014-04-06	HBO	5	49	8.8	TBD	TBD	TBD
