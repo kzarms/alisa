@@ -1,3 +1,4 @@
+# coding: utf-8
 # importing the requests library 
 import csv
 import io
@@ -213,17 +214,19 @@ def MyPostCommand(remote, command, i):
 
 #print(MyPostCommand(False, 'кяввм', 2))
 n = datetime.now()
+print(MyPostCommand(False, '', 1))
 print(MyPostCommand(False, 'стрела', 2))
 print(datetime.now() - n)
-print(MyPostCommand(False, 'подробнее', 2))
+print(MyPostCommand(False, 'подробнее', 3))
 print(datetime.now() - n)
-print(MyPostCommand(False, 'сериал', 2))
+print(MyPostCommand(False, 'сериал', 4))
 print(datetime.now() - n)
 
 n = datetime.now()
-print(MyPostCommand(True, 'доктор хаус', 2))
+print(MyPostCommand(True, '', 1))
+print(MyPostCommand(True, 'твин пикс', 2))
 print(datetime.now() - n)
-print(MyPostCommand(True, 'подробнее', 2))
+print(MyPostCommand(True, 'подробнее', 3))
 print(datetime.now() - n)
-print(MyPostCommand(True, 'сериал', 2))
+print(MyPostCommand(True, 'сериал', 4))
 print(datetime.now() - n)

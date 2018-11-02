@@ -1,3 +1,4 @@
+# coding: utf-8
 # function module
 import csv
 import io
