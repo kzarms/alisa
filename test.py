@@ -320,10 +320,10 @@ def createSeriesTable(seriesNumber, seasonNumber):
     con.commit()
     con.close()
 
-createSeriesTable(2, 2)
+#createSeriesTable(2, 2)
 
-for i in range(1,10):
-    createSeriesTable(3, i)
+# for i in range(1,10):
+#     createSeriesTable(3, i)
 
 # createSeriesTable(80379, 2)
 # createSeriesTable(80379, 3)
