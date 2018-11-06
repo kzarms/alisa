@@ -4,8 +4,11 @@ import csv
 import io
 import requests
 from datetime import datetime, timedelta
+import sqlite3
+import datetime
 
-token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDExNjY4NjAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTA4MDQ2MCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.mqZi5mUntc7_0kFM4FKbmri7kESL2Y68l0v8iMTJf5IjOfjvMLQ5CvJrkErtNuERqu_ymEzlEG-Bx6YWG4vZJUGXDCnTVx4Y3i3jIFdzCm88LQsMNTw-Euw5IyS8Sr62n_8VXRcM2iTLVjT7Cfi5L_a9bKVWCs4WpLIA-Hri0uXcHjXB7LBX2JBMVtl8e536ASGoqc3pEHF9s4xUf4o4evz-ZVXgI6dzjGNTy0zXmbW1_YkjE8cG0wdSTNMjie6pq6euvP4EEdq7lOecTje4miXD5YtbuAfihv33b_7ffeAP__zbtjXJsdcIla0OipmuVYdcxSK7mMG930M8p4UtHg'
+
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDE2MjU4NDEsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTUzOTQ0MSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.LZhqi1Gpo7Bj-Eycuz9T7i3nByC4sZ-2tbgX3xE1Rk0gBvP0jv2vcjY0Df2bTEyDSl63rIrIHCUsVaRZPtMzskcKAa2vRd0QthN1x7meA10OXUvbF2qBPYir-dUlWGc4lQN5eJMcSHmS5cgzHpykooy15BoH4Ef4xXbMC0l3Jwt-r14DKW3eZ8rpx3lNQgz39o1m8whJARhkTfuQYFWdw_gsZMtoSkTJxFCvWWD09rn6ybqBQDjVr-4V-vBR25SMXT3-t6Z3wigVYYUUf2f66u9E0nh8FUoHeWUNlDt5gbhyexnZKJylARHfYr5fRvyzJ0dd6Zq8CDZXU1tu0YIsFw'
 
 #update tokenыукпун1989
 def tockenRefresh():
@@ -211,23 +214,146 @@ def MyPostCommand(remote, command, i):
     data = r.json()
     return data['response']['text']
 
+#Connect and created films in the main DB
+# con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+# cur = con.cursor()
+# cur.execute("drop table films")
+# cur.execute('''create table films
+#     (tvdbId int,
+#     imdbId varchar,
+#     kinoId varchar,
+#     nameEn varchar,
+#     nameRu varchar,
+#     status varchar,
+#     firstAired data,
+#     network varchar,
+#     seazons int,
+#     lastEpisode int,
+#     ratingImbd double,
+#     ratingKino double,
+#     info text
+#     )''')
+# films = csv.reader(films_in_memory.splitlines(), delimiter='\t')
+# header = next(films)
+# for row in films:   
+#     film = (row[1],
+#         row[2],
+#         None,
+#         row[4],
+#         row[5],
+#         row[6],
+#         datetime.datetime.strptime(row[7], '%Y-%m-%d'),
+#         row[8],
+#         int(row[9]),
+#         int(row[10]),
+#         float(row[11]),
+#         0,
+#         None,)
+#     print(film)
+#     cur.execute("insert into films values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", film)
+# con.commit()
+# con.close()
+
+#stop films DB creation
+
+#create serial table series
+def createSeriesTable(seriesNumber, seasonNumber):
+    #seriesNumber = 2
+    # filmID = '296762'
+    # seasonNumber = 2
+    con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+    cur = con.cursor()
+    cur.execute('SELECT tvdbId FROM films WHERE rowid=?', str(seriesNumber))
+    filmID = cur.fetchone()
+    
+    URL = "https://api.thetvdb.com"   
+    HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}  
+    PARAMS = {'airedSeason':str(seasonNumber)} 
+    #Create full request
+    URL = URL + '/series/' + str(filmID[0]) + '/episodes/query'
+    r = requests.get(url = URL, headers = HEADERS, params = PARAMS)
+    dataRu = r.json()
+    HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)}
+    r = requests.get(url = URL, headers = HEADERS, params = PARAMS)
+    dataEn = r.json()
+
+    if int(seasonNumber) == 1:
+        cmd = 'drop table if exists series_' + str(seriesNumber)
+        cur.execute(cmd)
+        #create a new one
+        cmd = '''create table series_''' + str(seriesNumber) + '''
+            (airedSeason int,
+            airedEpisodeNumber int,
+            episodeNameEn varchar,
+            episodeNameRu varchar,
+            firstAired data,
+            director varchar,
+            overviewEn text,
+            overviewRu text,
+            showUrl varchar,
+            info text
+            )'''
+        cur.execute(cmd)
+    episodes = []
+    for i in range(len(dataEn['data'])):
+        if dataEn['data'][i]['firstAired'] != '': 
+            data = datetime.datetime.strptime(dataEn['data'][i]['firstAired'], '%Y-%m-%d')
+        elif dataRu['data'][i]['firstAired'] != '':
+            data = datetime.datetime.strptime(dataRu['data'][i]['firstAired'], '%Y-%m-%d')
+        else:
+            data = None
+        episode = (int(dataEn['data'][i]['airedSeason']),
+            int(dataEn['data'][i]['airedEpisodeNumber']),
+            dataEn['data'][i]['episodeName'],
+            dataRu['data'][i]['episodeName'],
+            data,
+            dataEn['data'][i]['director'],
+            dataEn['data'][i]['overview'],
+            dataRu['data'][i]['overview'],
+            dataEn['data'][i]['showUrl'],
+            None,)
+        episodes.append(episode)
+    
+    sorted_by_second = sorted(episodes, key=lambda tup: tup[1])
+    
+    cur.executemany("insert into series_" + str(seriesNumber) + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", sorted_by_second)
+    con.commit()
+    con.close()
+
+createSeriesTable(2, 2)
+
+for i in range(1,10):
+    createSeriesTable(3, i)
+
+# createSeriesTable(80379, 2)
+# createSeriesTable(80379, 3)
+# createSeriesTable(80379, 4)
+# createSeriesTable(80379, 5)
+# createSeriesTable(80379, 6)
+# createSeriesTable(80379, 7)
+# createSeriesTable(80379, 8)
+# createSeriesTable(80379, 9)
+# createSeriesTable(80379, 10)
+# createSeriesTable(80379, 11)
+# createSeriesTable(80379, 12)
+
 
 
 #print(MyPostCommand(False, 'кяввм', 2))
-n = datetime.now()
-print(MyPostCommand(False, '', 1))
-print(MyPostCommand(False, 'стрела', 2))
-print(datetime.now() - n)
-print(MyPostCommand(False, 'подробнее', 3))
-print(datetime.now() - n)
-print(MyPostCommand(False, 'сериал', 4))
-print(datetime.now() - n)
+# n = datetime.now()
+# print(MyPostCommand(False, '', 1))
+# print(MyPostCommand(False, 'стрела', 2))
+# print(datetime.now() - n)
+# print(MyPostCommand(False, 'подробнее', 3))
+# print(datetime.now() - n)
+# print(MyPostCommand(False, 'сериал', 4))
+# print(datetime.now() - n)
 
-n = datetime.now()
-print(MyPostCommand(True, '', 1))
-print(MyPostCommand(True, 'твин пикс', 2))
-print(datetime.now() - n)
-print(MyPostCommand(True, 'подробнее', 3))
-print(datetime.now() - n)
-print(MyPostCommand(True, 'сериал', 4))
-print(datetime.now() - n)
+# n = datetime.now()
+# print(MyPostCommand(True, '', 1))
+# print(MyPostCommand(True, 'твин пикс', 2))
+# print(datetime.now() - n)
+# print(MyPostCommand(True, 'подробнее', 3))
+# print(datetime.now() - n)
+# print(MyPostCommand(True, 'сериал', 4))
+# print(datetime.now() - n)
