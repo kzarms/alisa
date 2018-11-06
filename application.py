@@ -111,15 +111,13 @@ def handle_dialog(req, res):
     if result[1] != 0:
         res['response']['buttons'] = [
             {
-                "title": "Подробнее",
-            },
-            {
                 "title": "Сериал",
+                "hide": True
             },
             {
                 "title": "Смотреть",
                 "url": OfficialURL(result[1]),
-                #"hide": True
+                "hide": True
             }
         ]
 

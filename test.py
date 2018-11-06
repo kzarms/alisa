@@ -169,7 +169,8 @@ for line in series_id.readlines():
 
 def MyPostCommand(remote, command, i):
     if remote:
-        URL = "https://kzaralisa.azurewebsites.net" 
+        #URL = "https://kzaralisa.azurewebsites.net" 
+        URL = "https://alisa.ikot.eu"
     else:
         URL = "http://127.0.0.1:5000"
     if command == '':
