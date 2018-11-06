@@ -20,8 +20,6 @@ sessionStorage = {}
 # Start flask with POST method listening
 @app.route("/", methods=['POST'])
 
-#alisa_beta_marker
-
 #main function
 def main():
     # Hanle dialog
