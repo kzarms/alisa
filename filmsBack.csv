@@ -1,5 +1,5 @@
 Id	tvdbId	imdbId	seriesId	nameEn	nameRu	status	firstAired	network	seazons	lastEpisode	rating	lastShow	airedEpisodeNumber	episodeName
-1	80379	tt0898266	58053	The Big Bang Theory	Теория большого взрыва	Continuing	9/24/2007	CBS	12	256	8.8	TBD	TBD	TBD
+1	80379	tt0898266	58053	The Big Bang Theory	Теория большого взрыва	Continuing	2007-09-24	CBS	12	256	8.8	TBD	TBD	TBD
 2	296762	tt0475784	194892	Westworld	Мир Дикого запада	Continuing	2016-10-02	HBO	2	22	8.9	TBD	TBD	TBD
 3	161511	tt1586680	78143	Shameless (US)	Бесстыдники	Continuing	2011-01-09	Showtime	9	112	9	TBD	TBD	TBD
 4	277165	tt2575988	3072410	Silicon Valley	Кремниевая долина	Continuing	2014-04-06	HBO	5	49	8.8	TBD	TBD	TBD
@@ -7,7 +7,7 @@ Id	tvdbId	imdbId	seriesId	nameEn	nameRu	status	firstAired	network	seazons	lastEp
 6	121361	tt0944947	999999	Game of Thrones	Игра престолов	Continuing	2011-04-17	HBO	7	107	9.5	TBD	TBD	TBD
 7	302204	tt5135336	999999	The Method	Метод	Continuing	2015-10-18	Первый канал	1	16	7.8	TBD	TBD	TBD
 8	338946	tt6586318	205155	Patrick Melrose	Патрик Мелроуз	Ended	2018-05-12	Showtime	1	5	0	2018-06-09	5	Наконец
-9	342040	tt7768848	999999	Wild Wild Country		Ended	2018-03-16	Netflix	1	6	0	2018-03-16	6	Part 6
+9	342040	tt7768848	999999	Wild Wild Country	Дикая-дикая страна	Ended	2018-03-16	Netflix	1	6	0	2018-03-16	6	Part 6
 10	153021	tt1520211	999999	The Walking Dead	Ходячие мертвецы	Continuing	2010-10-31	AMC	9	173	9	TBD	TBD	TBD
 11	328535	tt6470396	999999	Champions	Чемпионы	Ended	2018-03-08	NBC	1	10	6	2018-05-25	10	Deal or No Deal
 12	331821	tt6474236	999999	The Looming Tower	Призрачная башня	Ended	2018-02-28	Hulu	1	10	9	2018-04-18	10	11 Сентября
@@ -44,14 +44,14 @@ Id	tvdbId	imdbId	seriesId	nameEn	nameRu	status	firstAired	network	seazons	lastEp
 43	82459	tt1196946	75200	The Mentalist	Менталист	Ended	2008-09-23	CBS	7	153	8.7	2015-02-18	13	Белые орхидеи
 44	73255	tt0412142	22374	House	Доктор Хаус	Ended	2004-11-16	FOX (US)	8	181	9.1	2012-05-21	22	Все умрут
 45	71663	tt0096697	146	The Simpsons	Симпсоны	Continuing	1989-12-17	FOX (US)	30	707	8.9	TBD	TBD	TBD
-46	295777	tt4094300	999999	Crazy Ex-Girlfriend		Continuing	2015-10-12	The CW	4	63	9.2	TBD	TBD	TBD
-47	341663	tt1043813	ibramyqg@gmail.com	Titans (2018)	Титаны	Continuing		DC Universe	1	11	0	TBD	TBD	TBD
+46	295777	tt4094300	999999	Crazy Ex-Girlfriend	Сумасшедшая бывшая	Continuing	2015-10-12	The CW	4	63	9.2	TBD	TBD	TBD
+47	341663	tt1043813	ibramyqg@gmail.com	Titans (2018)	Титаны	Continuing	2018-10-12	DC Universe	1	11	0	TBD	TBD	TBD
 48	328687	tt6111130	203707	S.W.A.T. (2017)	Спецназ (2017)	Continuing	2017-11-02	CBS	2	30	7.4	TBD	TBD	TBD
 49	75978	tt0182576	348	Family Guy	Гриффины	Continuing	1999-01-31	FOX (US)	17	345	8.6	TBD	TBD	TBD
-50	332028	tt7509270	999999	I Love You, America		Continuing	2017-10-12	Hulu	1	19	7	TBD	TBD	TBD
-51	351535		999999	House Arrest (2018)	Домашний арест	Continuing		ТНТ	1	12	0	TBD	TBD	TBD
+50	332028	tt7509270	999999	I Love You, America	Я люблю тебя, Америка	Continuing	2017-10-12	Hulu	1	19	7	TBD	TBD	TBD
+51	351535		999999	House Arrest (2018)	Домашний арест	Continuing	2018-09-16	ТНТ	1	12	0	TBD	TBD	TBD
 52	289514		999999	Major (2014)	Мажор	Continuing	2014-12-15	Первый канал	3	28	8.8	TBD	TBD	TBD
-53	350112	tt6840106	999999		Sпарта	Continuing		Первый канал	1	8	0	TBD	TBD	TBD
+53	350112	tt6840106	999999	Starta	Sпарта	Continuing	2018-07-09	Первый канал	1	8	0	TBD	TBD	TBD
 54	82696	tt1124373	75303	Sons of Anarchy	Сыны Анархии	Ended	2008-09-03	FX (US)	7	106	8.9	2014-12-09	13	Papa's Goods
 55	262407	tt2375692	176817	Black Sails	Чёрные паруса	Ended	2014-01-25	Starz!	4	40	8.6	2017-04-02	10	XXXVIII
 56	75299	tt0141842	314	The Sopranos	Клан Сопрано	Ended	1999-01-10	HBO	6	91	9.2	2007-06-10	21	Сделано в Америке
@@ -60,9 +60,9 @@ Id	tvdbId	imdbId	seriesId	nameEn	nameRu	status	firstAired	network	seazons	lastEp
 59	293372		999999	Zakon Kamennih Djunglei	Закон каменных джунглей	Continuing	2015-03-16	ТНТ	2	16	9.5	TBD	TBD	TBD
 60	281534	tt3952222	193927	Killjoys	Киллджойс	Continuing	2015-06-19	Syfy	5	48	8	TBD	TBD	TBD
 61	70533	tt0098936	1030	Twin Peaks	Твин Пикс	Ended	1990-04-08	Showtime	3	53	8.9	2017-09-03	18	Как тебя зовут?
-62	273455		999999		След	Continuing	2007-09-03	Пятый канал	21	2043	10	TBD	TBD	TBD
+62	273455		999999	Sled	След	Continuing	2007-09-03	Пятый канал	21	2043	10	TBD	TBD	TBD
 63	269586	tt2467372	183108	Brooklyn Nine-Nine	Бруклин 9-9	Continuing	2013-09-17	NBC	5	116	8.6	TBD	TBD	TBD
-64	321219	tt5462364	999999	Superior Donuts		Лучшие пончики	Ended	2017-02-02	CBS	2	34	8.2	2018-05-14	21	Donut Day Afternoon
+64	321219	tt5462364	999999	Superior Donuts	Лучшие пончики	Ended	2017-02-02	CBS	2	34	8.2	2018-05-14	21	Donut Day Afternoon
 65	281776	tt3228420	194065	You're the Worst	Ты - воплощение порока	Continuing	2014-07-17	FXX	4	49	8.6	TBD	TBD	TBD
 66	312505	tt4047038	999999	Dirk Gently's Holistic Detective Agency	Детективное агентство Дирка Джентли	Ended	2016-10-22	BBC America	2	20	8.3	2017-12-16	10	Хорошая куртка
 67	295683	tt4465472	196142	Rosewood	Роузвуд	Ended	2015-09-23	FOX (US)	2	44	6.8	2017-04-28	22	Blistering Heat & Brotherly Love
@@ -70,7 +70,7 @@ Id	tvdbId	imdbId	seriesId	nameEn	nameRu	status	firstAired	network	seazons	lastEp
 69	266189	tt2741602	183289	The Blacklist	Чёрный список	Continuing	2013-09-23	NBC	6	118	8.6	TBD	TBD	TBD
 70	322191	tt2708480	199011	The Terror	Террор	Continuing	2018-03-26	AMC	2	11	8.3	TBD	TBD	TBD
 71	300166	tt5011816	999999	Sneaky Pete	Подлый Пит	Continuing	2017-01-12	Amazon	3	24	7.3	TBD	TBD	TBD
-72	350665	tt7587890	205509	The Rookie	Новобранец	Continuing		ABC (US)	1	4	0	TBD	TBD	TBD
+72	350665	tt7587890	205509	The Rookie	Новобранец	Continuing	2018-10-16	ABC (US)	1	4	0	TBD	TBD	TBD
 73	300472	tt5016504	198461	Preacher	Проповедник	Continuing	2016-05-22	AMC	3	41	8.5	TBD	TBD	TBD
 74	75340	tt0455275	31635	Prison Break	Побег из тюрьмы	Continuing	2005-08-29	FOX (US)	5	95	8.5	TBD	TBD	TBD
 75	328708	tt5290382	999999	MINDHUNTER	Охотник за разумом	Continuing	2017-10-13	Netflix	1	10	8.7	TBD	TBD	TBD
@@ -89,7 +89,7 @@ Id	tvdbId	imdbId	seriesId	nameEn	nameRu	status	firstAired	network	seazons	lastEp
 88	164541	tt1600194	999999	Hawaii Five	Гавайи	Continuing	2010-09-20	CBS	9	203	8.1	TBD	TBD	TBD
 89	306719	tt1064899	999999	Queen of the South	Королева юга	Continuing	2016-06-23	USA Network	3	39	9.1	TBD	TBD	TBD
 90	295647	tt4474344	196068	Blindspot	Слепое пятно	Continuing	2015-09-21	NBC	4	78	8.2	TBD	TBD	TBD
-91	349743	tt7472896	999999	Mr Inbetween	Решала	Continuing		FX (US)	1	6	0	TBD	TBD	TBD
+91	349743	tt7472896	999999	Mr Inbetween	Решала	Continuing	2018-09-25	FX (US)	1	6	0	TBD	TBD	TBD
 92	311954	tt5420376	999999	Riverdale	Ривердэйл	Continuing	2017-01-26	The CW	3	44	7.7	TBD	TBD	TBD
 93	247897	tt1796960	80132	Homeland	Родина	Continuing	2011-10-02	Showtime	7	86	8.3	TBD	TBD	TBD
 94	326866	tt6048596	999999	The Sinner	Грешница	Continuing	2017-08-02	USA Network	2	16	7.9	TBD	TBD	TBD
@@ -104,7 +104,7 @@ Id	tvdbId	imdbId	seriesId	nameEn	nameRu	status	firstAired	network	seazons	lastEp
 103	328487	tt5691552	203688	The Orville	Орвилл	Continuing	2017-09-10	FOX (US)	2	14	8.4	TBD	TBD	TBD
 104	322672	tt5992164	203208	Snatch	Большой куш	Continuing	2017-03-16	Sony Crackle	2	20	9.4	TBD	TBD	TBD
 105	330997	tt4975856	999999	Future Man	Человек будущего	Continuing	2017-11-14	Hulu	2	18	8.1	TBD	TBD	TBD
-106	349271	tt8421350	999999	Manifest	Манифест	Continuing		NBC	1	10	0	TBD	TBD	TBD
+106	349271	tt8421350	999999	Manifest	Манифест	Continuing	2018-09-24	NBC	1	10	0	TBD	TBD	TBD
 107	77398	tt0106179	61	The X-Files	Секретные материалы	Ended	1993-09-10	FOX (US)	11	225	8.9	2018-03-21	10	Моя борьба 4
 108	306304	tt4834206	202642	A Series of Unfortunate Events	Лемони Сникетт: 33 несчастья	Continuing	2017-01-13	Netflix	3	25	8.9	TBD	TBD	TBD
 109	264954	tt2390334	999999	Chosen	Избранный	Ended	2013-01-17	Crackle	3	18	8.1	2014-04-15	6	Чудовища
@@ -113,21 +113,21 @@ Id	tvdbId	imdbId	seriesId	nameEn	nameRu	status	firstAired	network	seazons	lastEp
 112	321060	tt4635282	999999	The OA	ОА	Continuing	2016-12-16	Netflix	2	12	8.2	TBD	TBD	TBD
 113	328549	tt6461746	999999	Reverie	Грёзы	Continuing	2018-05-30	NBC	1	10	0	TBD	TBD	TBD
 114	280494	tt3843168	193784	Z Nation	Нация Z	Continuing	2014-09-12	Syfy	5	64	7.7	TBD	TBD	TBD
-115	349659	tt5715524	999999	Mayans M.C.	Майянцы	Continuing		FX (US)	1	10	0	TBD	TBD	TBD
+115	349659	tt5715524	999999	Mayans M.C.	Майянцы	Continuing	2018-09-04	FX (US)	1	10	0	TBD	TBD	TBD
 116	289108	tt2788432	194591	American Crime Story	Американская история преступлений	Continuing	2016-02-02	FX (US)	2	19	9.4	TBD	TBD	TBD
 117	295759	tt4016454	195575	Supergirl	Супердевушка	Continuing	2015-10-26	The CW	4	74	8	TBD	TBD	TBD
 118	290853	tt3743822	195810	Fear the Walking Dead	Бойтесь ходячих мертвецов	Continuing	2015-08-23	AMC	4	97	7.8	TBD	TBD	TBD
 119	269533	tt2402207	183034	The Last Ship	Последний корабль	Continuing	2014-06-22	TNT (US)	5	77	8.8	TBD	TBD	TBD
 120	322466	tt1984119	199661	Feud	Вражда	Continuing	2017-03-05	FX (US)	1	8	8.2	TBD	TBD	TBD
 121	95011	tt1442437	77270	Modern Family	Американская семейка	Continuing	2009-09-23	ABC (US)	10	219	8.8	TBD	TBD	TBD
-122	349661	tt6110648	999999	The Purge	Судная ночь	Continuing		USA Network	1	11	0	TBD	TBD	TBD
-123	348841	tt7375404	999999	Kidding	Шучу	Continuing		Showtime	1	10	0	TBD	TBD	TBD
+122	349661	tt6110648	999999	The Purge	Судная ночь	Continuing	2018-09-04	USA Network	1	11	0	TBD	TBD	TBD
+123	348841	tt7375404	999999	Kidding	Шучу	Continuing	2018-08-31	Showtime	1	10	0	TBD	TBD	TBD
 124	343174	tt7210448	999999	Strange Angel	Странный ангел	Continuing	2018-06-14	CBS All Access	1	10	0	TBD	TBD	TBD
 125	298305	tt4406248	999999	Vixen	Лисица	Continuing	2015-08-25	CW Seed	2	13	9	TBD	TBD	TBD
 126	332525	tt6045840	203712	Black Lightning	Черная молния	Continuing	2018-01-16	The CW	2	25	8.3	TBD	TBD	TBD
 127	345831	tt7612548	999999	The Outpost	Аванпост	Continuing	2018-07-10	The CW	1	10	0	TBD	TBD	TBD
-128	349002	tt7412482	999999	The First	Первые	Continuing		Hulu	1	8	0	TBD	TBD	TBD
-129	351575	tt8336340	999999	Star Wars Resistance	Звёздные войны: Сопротивление	Continuing		Disney Channel (US)	1	11	0	TBD	TBD	TBD
+128	349002	tt7412482	999999	The First	Первые	Continuing	2018-09-04	Hulu	1	8	0	TBD	TBD	TBD
+129	351575	tt8336340	999999	Star Wars Resistance	Звёздные войны: Сопротивление	Continuing	2018-10-07	Disney Channel (US)	1	11	0	TBD	TBD	TBD
 130	279121	tt3107288	193920	The Flash (2014)	Флэш	Continuing	2014-10-07	The CW	5	106	8.7	TBD	TBD	TBD
 131	281622	tt3230454	999999	The Last Man on Earth	Последний человек на Земле	Ended	2015-03-01	FOX (US)	4	68	7.7	2018-05-06	18	Cancun, Baby!
 132	73762	tt0413573	999999	Grey's Anatomy	Анатомия страсти	Continuing	2005-03-27	ABC (US)	15	335	8.2	TBD	TBD	TBD

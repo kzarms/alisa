@@ -7,8 +7,13 @@ import random
 from datetime import datetime, timedelta
 import pymorphy2
 from difflib import SequenceMatcher
+<<<<<<< HEAD
 #marker
 token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDExNjY4NjAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTA4MDQ2MCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.mqZi5mUntc7_0kFM4FKbmri7kESL2Y68l0v8iMTJf5IjOfjvMLQ5CvJrkErtNuERqu_ymEzlEG-Bx6YWG4vZJUGXDCnTVx4Y3i3jIFdzCm88LQsMNTw-Euw5IyS8Sr62n_8VXRcM2iTLVjT7Cfi5L_a9bKVWCs4WpLIA-Hri0uXcHjXB7LBX2JBMVtl8e536ASGoqc3pEHF9s4xUf4o4evz-ZVXgI6dzjGNTy0zXmbW1_YkjE8cG0wdSTNMjie6pq6euvP4EEdq7lOecTje4miXD5YtbuAfihv33b_7ffeAP__zbtjXJsdcIla0OipmuVYdcxSK7mMG930M8p4UtHg'
+=======
+
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDE1OTA1OTUsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTUwNDE5NSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.Ip9LG3zkR00myo3DjDNLB6edzm_09BViHa7nr-H-RpyAmoyyNx5lJ7KGvnOWDM2scMkJFwlZhG7h7B0uUfsC-c9k2y33ktEK28V4b0eZAGbUC6qLgjs9ZjPQOserucwBrPOpzx6jekjLM5uC_V-OLoezR4LYY0j3UUBIXWx6JfY9d_zEyRlnK-eLyz5PvBcN1Urj5fzuK_pZTYafnpS54k1EL8BH-Bw6iYPkYvh7NQfRScZ14LYt47z6oCZl5SCqECjKXHRpQyBIoXBNRfSI14tSUWMO8x5FmxTQ5vcERJpDWdDbYBNYh3cIx2R0DC9PS2Od3APjeeQL0yWD2KpxXg'
+>>>>>>> 4473b6410bba1424831184f838715d27e283ca02
 #storage for chash
 cashRequests = {}
 #read files on start
@@ -192,21 +197,36 @@ def tvdbLastEpisode(filmID, seasonNumber):
 def OfficialURL(intId):
     URLs = {
         'CBS': 'https://www.cbs.com',
-        'HBO': 'https://www.hbogo.com', 
-        'Showtime': 'https://www.sho.com',
-        'Netflix': 'https://www.netflix.com',
-        'Первый канал': 'https://www.1tv.ru',
-        'NBC':  'https://www.nbc.com',
+        'CBS All Access': 'https://www.cbs.com',
+        'Comedy Central (US)': 'https://www.cc.com',
+        'Crackle': 'https://www.sonycrackle.com',
+        'CW Seed': 'https://www.cwseed.com',
+        'DC Universe': 'https://www.dcuniverse.com',
+        'Disney Channel (US)': 'https://shows.disney.com',
+        'Disney XD': 'https://shows.disney.com',
+        'FOX (US)': 'https://www.fox.com',
+        'FX (US)': 'https://www.fxnetworks.com',
+        'FXX': 'https://www.fxnetworks.com',
+        'HBO': 'https://www.hbogo.com',
+        'History': 'https://www.history.com',
         'Hulu': 'https://www.hulu.com',
+        'ITV Encore': 'https://www.itv.com',
+        'NBC':  'https://www.nbc.com',
+        'Netflix': 'https://www.netflix.com',             
+        'Showtime': 'https://www.sho.com',
+        'Sony Crackle': 'https://www.sonycrackle.com',
+        'Starz!': 'https://www.starz.com',
+        'Syfy': 'https://www.syfy.com',
         'The CW': 'http://www.cwtv.com',
+        'TNT (US)': 'https://www.tntdrama.com/shows',
+        'USA Network': 'http://www.usanetwork.com/shows',
+        'Первый канал': 'https://www.1tv.ru',
+        'Пятый канал': 'https://www.5-tv.ru',
+        'ТНТ': 'https://tnt-online.ru/',
     }
-    # f = open('films.csv', mode="r", encoding="utf-8")
-    # films = csv.reader(f, delimiter='\t')
     films = csv.reader(films_in_memory.splitlines(), delimiter='\t')
     for row in films:
         if intId == row[0]:
-            #we found a film, close file and exit form the loop
-            #f.close()
             break
     if row[8] in URLs:        
         return URLs[row[8]]
@@ -351,6 +371,10 @@ def CoreSearch(text):
 #print(CoreSearch("свежая серия полицейского с рублевки"))
 # print(CoreSearch("доктор хаус"))
 # print(CoreSearch("кяввм"))
+<<<<<<< HEAD
 #print(CoreSearch("теория маленького взрыва"))
+=======
+#print(CoreSearch("кяввм"))
+>>>>>>> 4473b6410bba1424831184f838715d27e283ca02
 
 # print(tvdbLastEpisode('80379','12'))
