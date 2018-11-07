@@ -258,12 +258,13 @@ def MyPostCommand(remote, command, i):
 
 #create serial table series
 def createSeriesTable(seriesNumber, seasonNumber):
-    #seriesNumber = 2
+    #seriesNumber = 10
     # filmID = '296762'
-    # seasonNumber = 2
+    # seasonNumber = 1
     con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
     cur = con.cursor()
-    cur.execute('SELECT tvdbId FROM films WHERE rowid=?', str(seriesNumber))
+    cmd = 'SELECT tvdbId FROM films WHERE rowid=' + str(seriesNumber)
+    cur.execute(cmd)
     filmID = cur.fetchone()
     
     URL = "https://api.thetvdb.com"   
@@ -320,23 +321,8 @@ def createSeriesTable(seriesNumber, seasonNumber):
     con.commit()
     con.close()
 
-#createSeriesTable(2, 2)
-
-# for i in range(1,10):
-#     createSeriesTable(3, i)
-
-# createSeriesTable(80379, 2)
-# createSeriesTable(80379, 3)
-# createSeriesTable(80379, 4)
-# createSeriesTable(80379, 5)
-# createSeriesTable(80379, 6)
-# createSeriesTable(80379, 7)
-# createSeriesTable(80379, 8)
-# createSeriesTable(80379, 9)
-# createSeriesTable(80379, 10)
-# createSeriesTable(80379, 11)
-# createSeriesTable(80379, 12)
-
+#for i in range(1,9+1):
+#    createSeriesTable(10, i)
 
 
 #print(MyPostCommand(False, 'кяввм', 2))
@@ -357,3 +343,9 @@ def createSeriesTable(seriesNumber, seasonNumber):
 # print(datetime.now() - n)
 # print(MyPostCommand(True, 'сериал', 4))
 # print(datetime.now() - n)
+
+
+#shameless info about episode https://serialium.ru/tv-series/shameless/s8/ https://serialium.ru/tv-series/shameless/s9/
+#wild wild country https://en.myshows.me/view/56783/
+#Walking dead https://ru.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D1%8D%D0%BF%D0%B8%D0%B7%D0%BE%D0%B4%D0%BE%D0%B2_%D1%82%D0%B5%D0%BB%D0%B5%D1%81%D0%B5%D1%80%D0%B8%D0%B0%D0%BB%D0%B0_%C2%AB%D0%A5%D0%BE%D0%B4%D1%8F%D1%87%D0%B8%D0%B5_%D0%BC%D0%B5%D1%80%D1%82%D0%B2%D0%B5%D1%86%D1%8B%C2%BB
+
