@@ -321,10 +321,58 @@ def createSeriesTable(seriesNumber, seasonNumber):
     con.commit()
     con.close()
 
-#for i in range(1,9+1):
-#    createSeriesTable(10, i)
+films = films_in_memory.splitlines()
+films = csv.reader(films_in_memory.splitlines(), delimiter='\t')
+for i in range(20,30):
+    line = films[i].split('\t')
+    print(line[0], line[4], line[9])
+    for i in range(1,int(line[9])+1):
+        createSeriesTable(int(line[0]), i)
 
 
+def filmdbLastEpisode(filmID):
+    cmd = 'SELECT * FROM series_' + str(filmID) +  ' WHERE  firstAired >= date("' + datetime.datetime.today().strftime("%Y-%m-%d") + '")'
+    cur.execute(cmd)
+    episodeList = cur.fetchall()
+    # We have a list of recors, next check the numbers.
+    if len(episodeList) == 0:
+        #all episodes ended, return the last record from the table
+        cmd = 'SELECT * FROM series_' + str(filmID) + ' ORDER BY rowid DESC LIMIT 1'
+        cur.execute(cmd)
+        episode = cur.fetchone()
+        if episode[3] != None:
+            name = episode[3]
+        else:
+            name = episode[2]
+        return episode[1], name, episode[4][0:episode[4].index(" ")]
+    else:
+        #return the first row from the list (couse this is the closest to data issue)
+        if episodeList[0][3] != None:
+            name = episodeList[0][3] 
+        else:
+            name = episodeList[0][2] 
+        return episodeList[0][1], name, episodeList[0][4][0:episodeList[0][4].index(" ")]
+
+n = datetime.datetime.now()
+for i in range(1,30):
+    print(filmdbLastEpisode(i))
+print(datetime.datetime.now() - n)
+
+#episodeList.rowcount
+cur.rowcount
+len(cur)
+
+for row in cur:
+    print(row)
+
+filmList = cur.fetchone()
+if filmList
+
+
+
+print(filmList[1], name, filmList[4])
+
+episode['airedEpisodeNumber'], episode['episodeName'], episode['firstAired']filmList
 #print(MyPostCommand(False, 'кяввм', 2))
 # n = datetime.now()
 # print(MyPostCommand(False, '', 1))
@@ -348,4 +396,9 @@ def createSeriesTable(seriesNumber, seasonNumber):
 #shameless info about episode https://serialium.ru/tv-series/shameless/s8/ https://serialium.ru/tv-series/shameless/s9/
 #wild wild country https://en.myshows.me/view/56783/
 #Walking dead https://ru.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D1%8D%D0%BF%D0%B8%D0%B7%D0%BE%D0%B4%D0%BE%D0%B2_%D1%82%D0%B5%D0%BB%D0%B5%D1%81%D0%B5%D1%80%D0%B8%D0%B0%D0%BB%D0%B0_%C2%AB%D0%A5%D0%BE%D0%B4%D1%8F%D1%87%D0%B8%D0%B5_%D0%BC%D0%B5%D1%80%D1%82%D0%B2%D0%B5%D1%86%D1%8B%C2%BB
+#14 https://www.amediateka.ru/serial/ubivaya-evu
+#15 
+#18 http://www.lostfilm.tv/series/Billions/
+#26 http://www.lostfilm.tv/series/Animal_Kingdom/seasons/
+#27 http://www.lostfilm.tv/series/Gotham/seasons/
 
