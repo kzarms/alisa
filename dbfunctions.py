@@ -5,10 +5,15 @@ import io
 import requests
 import random
 from datetime import datetime, timedelta
-#import pymorphy2
+import pymorphy2
 from difflib import SequenceMatcher
+<<<<<<< HEAD
+#marker
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDExNjY4NjAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTA4MDQ2MCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.mqZi5mUntc7_0kFM4FKbmri7kESL2Y68l0v8iMTJf5IjOfjvMLQ5CvJrkErtNuERqu_ymEzlEG-Bx6YWG4vZJUGXDCnTVx4Y3i3jIFdzCm88LQsMNTw-Euw5IyS8Sr62n_8VXRcM2iTLVjT7Cfi5L_a9bKVWCs4WpLIA-Hri0uXcHjXB7LBX2JBMVtl8e536ASGoqc3pEHF9s4xUf4o4evz-ZVXgI6dzjGNTy0zXmbW1_YkjE8cG0wdSTNMjie6pq6euvP4EEdq7lOecTje4miXD5YtbuAfihv33b_7ffeAP__zbtjXJsdcIla0OipmuVYdcxSK7mMG930M8p4UtHg'
+=======
 
 token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDE1OTA1OTUsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTUwNDE5NSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.Ip9LG3zkR00myo3DjDNLB6edzm_09BViHa7nr-H-RpyAmoyyNx5lJ7KGvnOWDM2scMkJFwlZhG7h7B0uUfsC-c9k2y33ktEK28V4b0eZAGbUC6qLgjs9ZjPQOserucwBrPOpzx6jekjLM5uC_V-OLoezR4LYY0j3UUBIXWx6JfY9d_zEyRlnK-eLyz5PvBcN1Urj5fzuK_pZTYafnpS54k1EL8BH-Bw6iYPkYvh7NQfRScZ14LYt47z6oCZl5SCqECjKXHRpQyBIoXBNRfSI14tSUWMO8x5FmxTQ5vcERJpDWdDbYBNYh3cIx2R0DC9PS2Od3APjeeQL0yWD2KpxXg'
+>>>>>>> 4473b6410bba1424831184f838715d27e283ca02
 #storage for chash
 cashRequests = {}
 #read files on start
@@ -18,7 +23,7 @@ with open('NameVariations.csv', mode="r", encoding="utf-8") as file:
 with open('films.csv', mode="r", encoding="utf-8") as file:
     films_in_memory = file.read()
 
-'''
+
 morph = pymorphy2.MorphAnalyzer()
 
 # --Получить из строки нормализованный список
@@ -52,7 +57,7 @@ def compare_names(name1, name2):
                 percentage) + '%(найдено через normalized)')
     return round(percentage)
 
-'''
+
 def SearchName(text):
     text = text.lower()
     words = text.split(" ")
@@ -73,12 +78,12 @@ def SearchName(text):
             return row[0]
     
     #проверяем с помощью нормализаци слов и проверки на опечатки
-    # f = open('NameVariations.csv', mode="r", encoding="utf-8")
-    # filmReader = csv.reader(f, delimiter='\t')
-    # for row in filmReader:
-    #     if compare_names(text, row[1]) > 60:
-    #         return row[0]
-    # f.close()
+    f = open('NameVariations.csv', mode="r", encoding="utf-8")
+    filmReader = csv.reader(f, delimiter='\t')
+    for row in filmReader:
+        if compare_names(text, row[1]) > 60:
+            return row[0]
+    f.close()
     return -1
 
 #Looking for key words related to action
@@ -366,6 +371,10 @@ def CoreSearch(text):
 #print(CoreSearch("свежая серия полицейского с рублевки"))
 # print(CoreSearch("доктор хаус"))
 # print(CoreSearch("кяввм"))
+<<<<<<< HEAD
+#print(CoreSearch("теория маленького взрыва"))
+=======
 #print(CoreSearch("кяввм"))
+>>>>>>> 4473b6410bba1424831184f838715d27e283ca02
 
 # print(tvdbLastEpisode('80379','12'))
