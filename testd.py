@@ -180,34 +180,7 @@ def getFilmByAlias(alias):
 #print(getFilmByAlias('шучу'))
 
 
-
-
-
-
-
-
-
-
-
-
-token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDE4MjE2MDMsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTczNTIwMywidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.0FtDgPu3YQqOrxV9U3aH9GG0P64avUUxg9ETU15r-B2Yjt1m8zagcZ8iwmNazfOHjBiKgQPBducRE9mg6lrg14EhNVPfvfwxVkFSqU5QINhQRCw_7VXawHPQ4WrAhF7HSiLuHbIRZY5AkWUhvw4ZpbXY3MpfqLVK2yCBhrRPwOE0dT7p-yGTuguqQwF2pE_82n0dd6ToBWHmFCmme8wkWtbDRsr4lZsBQKwG95DWmnA3So9dvS3MbCY82yikwbNH6bmDbcA5Up7iWIbJiGHuRS3EaE1Jm6aotL1juvlWCwuZQKpbmpxjPY9KmZdZ6CneI7n6FKhtxHcLT8FwKzjjKg'
-
-#update tokenыукпун1989
-def tockenRefresh():
-    URL = "https://api.thetvdb.com/login"   
-    HEADERS = {'Content-Type': 'application/json'}  
-    DATA = {"apikey": "0AHRVCC9FPSYWACV", "userkey": "QOCM9N37ADVTQ42W", "username": "vlkootmni"}
-    r = requests.post(url = URL, json = DATA, headers = HEADERS)
-    data = r.json()
-    global token
-    if 'Error' in data:
-        print('Error in token request')
-        token = '0'
-    if 'token' in data:
-        print('the token has been got sussessfully')
-        token = data['token']
-        print(token)
- 
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDE4MjE2MDMsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTczNTIwMywidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.0FtDgPu3YQqOrxV9U3aH9GG0P64avUUxg9ETU15r-B2Yjt1m8zagcZ8iwmNazfOHjBiKgQPBducRE9mg6lrg14EhNVPfvfwxVkFSqU5QINhQRCw_7VXawHPQ4WrAhF7HSiLuHbIRZY5AkWUhvw4ZpbXY3MpfqLVK2yCBhrRPwOE0dT7p-yGTuguqQwF2pE_82n0dd6ToBWHmFCmme8wkWtbDRsr4lZsBQKwG95DWmnA3So9dvS3MbCY82yikwbNH6bmDbcA5Up7iWIbJiGHuRS3EaE1Jm6aotL1juvlWCwuZQKpbmpxjPY9KmZdZ6CneI7n6FKhtxHcLT8FwKzjjKg' 
    
 
 def addSeasonFromTVDBToBase(tvdbId, seasonNumber):
@@ -244,8 +217,6 @@ def addSeasonFromTVDBToBase(tvdbId, seasonNumber):
         addEpisode(episodeJSON)
 
 
-
-
 def addEpisodesFromCsv():
     f = open('seasons.csv', mode="r", encoding="utf-8")
     recordList = list(f)
@@ -255,84 +226,46 @@ def addEpisodesFromCsv():
         season = str(item.split('\t')[1]).rstrip()
         addSeasonFromTVDBToBase(tvdbId, season)
         
-addEpisodesFromCsv()   
-"""    
-    sorted_by_second = sorted(episodes, key=lambda tup: tup[1])
+
+#--Get the last episode
+def getTheLastEpisode(filmId):
+    sql = "SELECT nameEn, nameRu, episodeNumber, firstAired FROM episodes WHERE filmiD = %s and firstAired >= %s ORDER BY firstAired ASC LIMIT 1;" % (sqlquote(filmId), sqlquote(datetime.datetime.today().strftime("%Y-%m-%d 00:00:00")))
+    rownumber = cursor.execute(sql)
+    lastEpisode = cursor.fetchone()
+    episode = {}
+    #episode['filmName'] = getFilmNameById(filmId)
     
-    cur.executemany("insert into series_" + str(seriesNumber) + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", sorted_by_second)
-    con.commit()
-    con.close()
-
-films = films_in_memory.splitlines()
-films = csv.reader(films_in_memory.splitlines(), delimiter='\t')
-for i in range(20,30):
-    line = films[i].split('\t')
-    print(line[0], line[4], line[9])
-    for i in range(1,int(line[9])+1):
-        createSeriesTable(int(line[0]), i)
-
-
-def filmdbLastEpisode(filmID):
-    cmd = 'SELECT * FROM series_' + str(filmID) +  ' WHERE  firstAired >= date("' + datetime.datetime.today().strftime("%Y-%m-%d") + '")'
-    cur.execute(cmd)
-    episodeList = cur.fetchall()
-    # We have a list of recors, next check the numbers.
-    if len(episodeList) == 0:
-        #all episodes ended, return the last record from the table
-        cmd = 'SELECT * FROM series_' + str(filmID) + ' ORDER BY rowid DESC LIMIT 1'
-        cur.execute(cmd)
-        episode = cur.fetchone()
-        if episode[3] != None:
-            name = episode[3]
-        else:
-            name = episode[2]
-        return episode[1], name, episode[4][0:episode[4].index(" ")]
+    episode['status'] = 'progress'
+    if rownumber == 0:
+        #--if series is ended - show the last series. 
+        sql = "SELECT nameEn, nameRu, MAX(episodeNumber) as episodeNumber, firstAired FROM episodes WHERE filmId = %s" % (filmId)
+        cursor.execute(sql)
+        episode['status'] = 'finished' #--marker that shows if series is finished or not
+        lastEpisode = cursor.fetchone()
+     
+    if lastEpisode.get('nameRu') != None:
+        name = lastEpisode['nameRu']
     else:
-        #return the first row from the list (couse this is the closest to data issue)
-        if episodeList[0][3] != None:
-            name = episodeList[0][3] 
-        else:
-            name = episodeList[0][2] 
-        return episodeList[0][1], name, episodeList[0][4][0:episodeList[0][4].index(" ")]
+        name = lastEpisode['nameEn']
+    
+    episodeNumber = int(lastEpisode.get('episodeNumber'))
+    season = round(round(episodeNumber / 1000))
+    #number = season * 1000 - episodeNumber
+    episode['season'] = season
+    episode['episodeNumber'] = episodeNumber - season * 1000
+    episode['name'] = name
+    episode['firstAired'] = lastEpisode['firstAired']
+    return episode
+        
+            
+#print(getTheLastEpisode(44))
 
 n = datetime.datetime.now()
 for i in range(1,30):
-    print(filmdbLastEpisode(i))
+    episode = getTheLastEpisode(i)
+    print(str(episode['episodeNumber']) + ' ' + str(episode['name']) + ' ' + str(episode['firstAired']))
 print(datetime.datetime.now() - n)
 
-#episodeList.rowcount
-cur.rowcount
-len(cur)
-
-for row in cur:
-    print(row)
-
-filmList = cur.fetchone()
-if filmList
-
-
-
-print(filmList[1], name, filmList[4])
-
-episode['airedEpisodeNumber'], episode['episodeName'], episode['firstAired']filmList
-#print(MyPostCommand(False, 'кяввм', 2))
-# n = datetime.now()
-# print(MyPostCommand(False, '', 1))
-# print(MyPostCommand(False, 'стрела', 2))
-# print(datetime.now() - n)
-# print(MyPostCommand(False, 'подробнее', 3))
-# print(datetime.now() - n)
-# print(MyPostCommand(False, 'сериал', 4))
-# print(datetime.now() - n)
-
-# n = datetime.now()
-# print(MyPostCommand(True, '', 1))
-# print(MyPostCommand(True, 'твин пикс', 2))
-# print(datetime.now() - n)
-# print(MyPostCommand(True, 'подробнее', 3))
-# print(datetime.now() - n)
-# print(MyPostCommand(True, 'сериал', 4))
-# print(datetime.now() - n)
 
 
 #shameless info about episode https://serialium.ru/tv-series/shameless/s8/ https://serialium.ru/tv-series/shameless/s9/
@@ -343,6 +276,6 @@ episode['airedEpisodeNumber'], episode['episodeName'], episode['firstAired']film
 #18 http://www.lostfilm.tv/series/Billions/
 #26 http://www.lostfilm.tv/series/Animal_Kingdom/seasons/
 #27 http://www.lostfilm.tv/series/Gotham/seasons/
-"""
+
 
 
