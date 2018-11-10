@@ -1,9 +1,13 @@
 #----Dialog functions
+import io
 import random
-    
-quotes = open('quotes.txt').read().split('\n')
-facts = open('facts.txt').read().split('\n')
 
+
+with open('quotes.txt', mode="r", encoding="utf-8") as file:
+    quotes = file.read().split('\n')
+
+with open('facts.txt', mode="r", encoding="utf-8") as file:
+    facts = file.read().split('\n')
 
 def getRandomQuote():
     return random.choice(quotes).replace('...', '\n')
