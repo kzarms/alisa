@@ -383,8 +383,6 @@ for row in cur:
     print(row)
 
 filmList = cur.fetchone()
-if filmList
-
 
 
 print(filmList[1], name, filmList[4])
@@ -392,12 +390,14 @@ print(filmList[1], name, filmList[4])
 episode['airedEpisodeNumber'], episode['episodeName'], episode['firstAired']filmList
 #print(MyPostCommand(False, 'кяввм', 2))
 n = datetime.datetime.now()
-print(MyPostCommand(False, '', 1))
+print(MyPostCommand(False, 'ping', 1))
 print(MyPostCommand(False, 'стрела', 2))
 print(datetime.datetime.now() - n)
-print(MyPostCommand(False, 'подробнее', 3))
+print(MyPostCommand(False, 'тбв', 3))
 print(datetime.datetime.now() - n)
-print(MyPostCommand(False, 'сериал', 4))
+print(MyPostCommand(False, 'кяввм', 4))
+print(MyPostCommand(False, 'атланта', 4))
+print(MyPostCommand(False, 'Симпсоны', 4))
 print(datetime.datetime.now() - n)
 
 

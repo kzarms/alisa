@@ -401,9 +401,9 @@ def CoreSearch(text):
 # print(SeachActionTimeDetection("ГДs сока сколь;в ы новый когда же ты где?"))
 # print(SearchAction("ГДs сока сколь;в ы когда же ты где?"))
 
-print(CoreSearch("атланта"))
-print(CoreSearch("стрела"))
-print(CoreSearch("молодежка"))
+# print(CoreSearch("атланта"))
+# print(CoreSearch("стрела"))
+# print(CoreSearch("молодежка"))
 #print(CoreSearch("дай инфо о теории большого взрыва"))
 # print(CoreSearch("где глянуть теорию большого взрыва"))
 #print(CoreSearch("новая серия грифинов"))

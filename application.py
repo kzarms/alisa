@@ -39,8 +39,12 @@ def main():
         text = req['request']['command'].lower()
 
         #check for key words
-        keywords = ['как тебя зовут','добавить сериал', 'подробнее', 'сериал', 'смотреть']
+        keywords = ['ping','как тебя зовут','добавить сериал', 'подробнее', 'сериал', 'смотреть']
         if text in keywords:
+            if (text == 'ping'):
+                #Добавление сериала и сессия была (не пустой)
+                res['response']['text'] = 'pong'
+                return 
             if (text == 'как тебя зовут'):
                 #Добавление сериала и сессия была (не пустой)
                 res['response']['text'] = 'Я еще не заслужила имени, просто помогаю найти информацию о дате выхода следующей серии :)'
@@ -93,10 +97,11 @@ def main():
                 }
             ]
         if result[1] != 0:
-            f = open('logs.txt', mode="a+", encoding="utf-8")
-            csv_writer = csv.writer(f, lineterminator='\n', delimiter='\t')
-            csv_writer.writerow([True, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
-            f.close()
+            if text != 'ping':
+                f = open('logs.txt', mode="a+", encoding="utf-8")
+                csv_writer = csv.writer(f, lineterminator='\n', delimiter='\t')
+                csv_writer.writerow([True, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
+                f.close()
             res['response']['buttons'] = [
                 {
                     "title": "Сериал",
