@@ -42,12 +42,12 @@ def compare_names(name1, name2):
     overlap = set1 & set2
 
     percentage = round(compare_strings_typo(name1, name2))
-    if percentage > 60:
+    if percentage > 80:
         print('Вы сравнивали: ' + name1 + '|' + name2 + ', идентичность: ' + str(
             percentage) + '%(найдено через typo)') 
     else:
         percentage = round((len(overlap) / max(len(set1), len(set2))) * 100)
-        if percentage > 60:
+        if percentage > 80:
             print('Вы сравнивали: ' + name1 + '|' + name2 + ', общее: ' + str(overlap) + ', идентичность: ' + str(
                 percentage) + '%(найдено через normalized)')
     return round(percentage)
@@ -76,7 +76,7 @@ def SearchName(text):
     #filmReader = csv.reader(f, delimiter='\t')
     filmReader = csv.reader(aliases_in_memory.splitlines(), delimiter='\t')   
     for row in filmReader:
-        if compare_names(text, row[1]) > 60:
+        if compare_names(text, row[1]) > 80:
             return row[0]
     #Return noting
     return -1
@@ -397,7 +397,7 @@ def CoreSearch(text):
 
 #print(filmdbLastEpisode(1))
 
-#print(SearchName("воронпины"))
+print(SearchName("теория большоо взрыва"))
 # print(SeachActionTimeDetection("ГДs сока сколь;в ы новый когда же ты где?"))
 # print(SearchAction("ГДs сока сколь;в ы когда же ты где?"))
 

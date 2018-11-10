@@ -340,7 +340,7 @@ def createSeriesTable(seriesNumber, seasonNumber):
 
 films = films_in_memory.splitlines()
 films = csv.reader(films_in_memory.splitlines(), delimiter='\t')
-for i in range(20,30):
+for i in range(30,40):
     line = films[i].split('\t')
     print(line[0], line[4], line[9])
     for i in range(1,int(line[9])+1):
