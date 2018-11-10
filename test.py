@@ -172,8 +172,8 @@ for line in series_id.readlines():
 
 def MyPostCommand(remote, command, i):
     if remote:
-        #URL = "https://kzaralisa.azurewebsites.net" 
-        URL = "https://alisa.ikot.eu"
+        URL = "https://kzaralisa.azurewebsites.net" 
+        #URL = "https://alisa.ikot.eu"
     else:
         URL = "http://127.0.0.1:5000"
     if (command == '') and (i == 1):
@@ -217,17 +217,17 @@ def MyPostCommand(remote, command, i):
 
 n = datetime.datetime.now()
 print(MyPostCommand(False, '', 1))
-print(MyPostCommand(False, 'стрела', 2))
+print(MyPostCommand(False, 'воронины', 2))
 print(datetime.datetime.now() - n)
 print(MyPostCommand(False, 'подробнее', 3))
 print(datetime.datetime.now() - n)
-print(MyPostCommand(False, 'сериал', 4))
+print(MyPostCommand(False, '', 4))
 print(datetime.datetime.now() - n)
 
 
-print(MyPostCommand(False, 'как тебя зовут', 1))
-print(MyPostCommand(False, '', 1))
-print(MyPostCommand(False, 'воронины', 2))
+print(MyPostCommand(True, 'как тебя зовут', 1))
+print(MyPostCommand(True, '', 1))
+print(MyPostCommand(True, 'воронины', 2))
 print(MyPostCommand(False, 'молодежка', 2))
 print(MyPostCommand(False, 'простоквашино', 2))
 
@@ -339,8 +339,8 @@ def createSeriesTable(seriesNumber, seasonNumber):
     con.close()
 
 films = films_in_memory.splitlines()
-films = csv.reader(films_in_memory.splitlines(), delimiter='\t')
-for i in range(30,40):
+#films = csv.reader(films_in_memory.splitlines(), delimiter='\t')
+for i in range(130,137):
     line = films[i].split('\t')
     print(line[0], line[4], line[9])
     for i in range(1,int(line[9])+1):
@@ -401,7 +401,7 @@ print(MyPostCommand(False, 'Симпсоны', 4))
 print(datetime.datetime.now() - n)
 
 
-print(MyPostCommand(False, 'как тебя зовут', 1))
+print(MyPostCommand(True, 'как тебя зовут', 1))
 
 
 # n = datetime.now()

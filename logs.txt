@@ -1,16 +1,1 @@
-468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C	Ã‘â€¹ÃÂ²ÃÂ°Ã‘â€¹ÃÂ²ÃÂ°Ã‘â€¹ÃÂ°ÃÂ²	ru.yandex.searchplugin/7.16 (none none; android 4.4.2)	ru-RU
-468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C	Ã‘ÂÃÂ»ÃÂµÃÂ´	ru.yandex.searchplugin/7.16 (none none; android 4.4.2)	ru-RU
-468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C	Ã‘ÂÃÂ»ÃÂµÃÂ´	ru.yandex.searchplugin/7.16 (none none; android 4.4.2)	ru-RU
-468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C	ÃÂ½ÃÂ°Ã‘â€ ÃÂ¸Ã‘Â z	ru.yandex.searchplugin/7.16 (none none; android 4.4.2)	ru-RU
-468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C		ru.yandex.searchplugin/7.16 (none none; android 4.4.2)	ru-RU
-468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C		ru.yandex.searchplugin/7.16 (none none; android 4.4.2)	ru-RU
-468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C		ru.yandex.searchplugin/7.16 (none none; android 4.4.2)	ru-RU
-468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C		ru.yandex.searchplugin/7.16 (none none; android 4.4.2)	ru-RU
-468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C	ÃÂ²ÃÂ¾Ã‘â‚¬ÃÂ¾ÃÂ½ÃÂ¸ÃÂ½Ã‘â€¹	ru.yandex.searchplugin/7.16 (none none; android 4.4.2)	ru-RU
-468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C	ÃÂ¿Ã‘â‚¬ÃÂ¾Ã‘ÂÃ‘â€šÃÂ¾ÃÂºÃÂ²ÃÂ°Ã‘Ë†ÃÂ¸ÃÂ½ÃÂ¾	ru.yandex.searchplugin/7.16 (none none; android 4.4.2)	ru-RU
-True	468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C	Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂµÃÂ»ÃÂ°	ru.yandex.searchplugin/7.16 (none none; android 4.4.2)	ru-RU
-True	468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C	Ã‘â€šÃÂ±ÃÂ²	ru.yandex.searchplugin/7.16 (none none; android 4.4.2)	ru-RU
-True	468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C	ÃÂºÃ‘ÂÃÂ²ÃÂ²ÃÂ¼	ru.yandex.searchplugin/7.16 (none none; android 4.4.2)	ru-RU
-True	468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C	ÃÂ°Ã‘â€šÃÂ»ÃÂ°ÃÂ½Ã‘â€šÃÂ°	ru.yandex.searchplugin/7.16 (none none; android 4.4.2)	ru-RU
-True	468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C	Ã‘ÂÃÂ¸ÃÂ¼ÃÂ¿Ã‘ÂÃÂ¾ÃÂ½Ã‘â€¹	ru.yandex.searchplugin/7.16 (none none; android 4.4.2)	ru-RU
-False	468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C	ping	ru.yandex.searchplugin/7.16 (none none; android 4.4.2)	ru-RU
+True	468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C	воронины	ru.yandex.searchplugin/7.16 (none none; android 4.4.2)	ru-RU
