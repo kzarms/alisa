@@ -7,6 +7,8 @@ import logging
 import random
 
 from dbfunctions import *
+from dialogs import *
+import time
 
 from flask import Flask, request
 app = Flask(__name__)
@@ -23,6 +25,7 @@ sessionStorage = {}
 def main():
     # Hanle dialog
     def handle_dialog(req, res):
+        questionType = ''
         user_id = req['session']['user_id']
         if (req['session']['new']) and (req['request']['command'].lower() == ''):
             #New session and nothing in command, return welcome message
@@ -31,13 +34,22 @@ def main():
                 'Приветсвую, я помогаю узнать дату выхода новой серии вашего любимого сериала. Какой интересует?',
                 'Здравствуй, о какой серии ищите информацию?',
                 'Помогаю найти информацию о тате выхода свежей серии. Кстати, зрасьте :)',
-                'Привет. Буду рада подсказать дату выхода новой серии. Какой сериал?',]     
+                'Привет. Буду рада подсказать дату выхода новой серии. Какой сериал?',
+                'Привет. Какой сериал поискать?']     
             res['response']['text'] = random.choice(variants)
             return
-
         # Take user text
         text = req['request']['command'].lower()
-
+        
+        
+        if 'цитата' in text:
+            res['response']['text'] = getRandomQuote()
+            return
+        
+        if 'факт' in text:
+            res['response']['text'] = getRandomFact()
+            return
+            
         #check for key words
         keywords = ['ping','как тебя зовут','добавить сериал', 'подробнее', 'сериал', 'смотреть']
         if text in keywords:
@@ -76,13 +88,32 @@ def main():
                 else:
                     res['response']['text'] = 'Я потеряла нить нашей беседы :)'
                 return
+        questionJSON = getRandomQuestion()
+        if sessionStorage.get(user_id + '_q') != None:
+            if text in ['давай', 'расскажи', 'хочу', 'цитату', 'факт', 'конечно', 'ещё', 'еще']:
+                if sessionStorage.get(user_id + '_q') == 'quote':
+                    if questionJSON['question'] == 'quote':
+                        res['response']['text'] = getRandomQuote() + '\n' + 'Хочешь ещё одну?'
+                    else:
+                        res['response']['text'] = getRandomQuote() + '\n' + questionJSON['question']
+                if sessionStorage.get(user_id + '_q') == 'fact':
+                    if questionJSON['question'] == 'fact':
+                        res['response']['text'] = getRandomFact() + '\n' + 'Хочешь ещё что-то узнать?'
+                    else:
+                        res['response']['text'] = getRandomFact() + '\n' + questionJSON['question']
+                
+                sessionStorage[user_id + '_q'] = questionJSON['type']
+                return
+        questionJSON = getRandomQuestion()
+        sessionStorage[user_id + '_q'] = questionJSON['type']
+        #questionJSON = getRandomQuestion()
         #no more key works, execute seach function on top of this text
         # print('test search')
         result = CoreSearch(text)
         #save intId into dictionary
         sessionStorage[user_id] = result[1]
         #return result to user
-        res['response']['text'] = result[0]
+        res['response']['text'] = result[0] + '\n' + questionJSON['question']
         #res['response']['text'] = CoreSearch(text)
         #add suggessted buttons
         if result[1] == 0:
