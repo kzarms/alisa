@@ -57,8 +57,8 @@ def SearchName(text):
     words = text.split(" ")
     wordList = []
     for word in words:
-        if len(word.strip(' ?!,;:')) > 1:
-            wordList.append(word.strip(' ?!,;:'))
+        if len(word.strip(' ?!,;:.')) > 1:
+            wordList.append(word.strip(' ?!,;:.'))
     filmReader = csv.reader(aliases_in_memory.splitlines(), delimiter='\t')
     #Check aliases
     for row in filmReader:
@@ -397,13 +397,13 @@ def CoreSearch(text):
 
 #print(filmdbLastEpisode(1))
 
-print(SearchName("воронины"))
+#print(SearchName("33 несчастья"))
 # print(SeachActionTimeDetection("ГДs сока сколь;в ы новый когда же ты где?"))
 # print(SearchAction("ГДs сока сколь;в ы когда же ты где?"))
 
-# print(CoreSearch("атланта"))
+#print(CoreSearch("33 несчастья"))
 # print(CoreSearch("стрела"))
-print(CoreSearch("воронины"))
+#print(CoreSearch("воронины"))
 #print(CoreSearch("дай инфо о теории большого взрыва"))
 # print(CoreSearch("где глянуть теорию большого взрыва"))
 #print(CoreSearch("новая серия грифинов"))
