@@ -1,6 +1,5 @@
 # coding: utf-8
 #
-
 from __future__ import unicode_literals
 
 import json
@@ -25,8 +24,8 @@ def main():
     # Hanle dialog
     def handle_dialog(req, res):
         user_id = req['session']['user_id']
-        if req['session']['new']:
-            #New user, return welcome message
+        if (req['session']['new']) and (req['request']['command'].lower() == ''):
+            #New session and nothing in command, return welcome message
             variants = ['Привет, что ищешь?',
                 'Приветсвую, какой сериал интересует?',
                 'Приветсвую, я помогаю узнать дату выхода новой серии вашего любимого сериала. Какой интересует?',
@@ -40,11 +39,15 @@ def main():
         text = req['request']['command'].lower()
 
         #check for key words
-        keywords = ['добавить сериал', 'подробнее', 'сериал', 'смотреть']
+        keywords = ['как тебя зовут','добавить сериал', 'подробнее', 'сериал', 'смотреть']
         if text in keywords:
+            if (text == 'как тебя зовут'):
+                #Добавление сериала и сессия была (не пустой)
+                res['response']['text'] = 'Я еще не заслужила имени, просто помогаю найти информацию о дате выхода следующей серии :)'
+                return            
             if user_id not in sessionStorage:
                 res['response']['text'] = 'Я потеряла нить нашей беседы :)'
-                return
+                return            
             if (text == 'добавить сериал') and (sessionStorage[user_id] == 0):
                 #Добавление сериала и сессия была (не пустой)
                 res['response']['text'] = 'Спасибо! Мы проверим ваше обращение и добавим интересующий сериал в ближайшее вермя'
@@ -82,7 +85,7 @@ def main():
             #write data to the log file
             f = open('logs.txt', mode="a+", encoding="utf-8")
             csv_writer = csv.writer(f, lineterminator='\n', delimiter='\t')
-            csv_writer.writerow([user_id, text, req['meta']['client_id'], req['meta']['locale']])
+            csv_writer.writerow([False, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
             f.close()        
             res['response']['buttons'] = [
                 {
@@ -90,17 +93,18 @@ def main():
                 }
             ]
         if result[1] != 0:
+            f = open('logs.txt', mode="a+", encoding="utf-8")
+            csv_writer = csv.writer(f, lineterminator='\n', delimiter='\t')
+            csv_writer.writerow([True, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
+            f.close()
             res['response']['buttons'] = [
-                {
-                    "title": "Подробнее",
-                },
                 {
                     "title": "Сериал",
                 },
                 {
                     "title": "Смотреть",
                     "url": OfficialURL(result[1]),
-                    #"hide": True
+                    "hide": True
                 }
             ]
     #logging.info('Request: %r', request.json)
@@ -127,93 +131,6 @@ def main():
         indent=2
     )
 
-<<<<<<< HEAD
 if __name__ == "__main__":
     app.debug = True
     app.run(host = '0.0.0.0')    
-    
-    
-
-=======
-# Hanle dialog
-def handle_dialog(req, res):
-    user_id = req['session']['user_id']
-    if req['session']['new']:
-        #New user, return welcome message
-        variants = ['Привет, что ищешь?',
-            'Приветсвую, какой сериал интересует?',
-            'Приветсвую, я помогаю узнать дату выхода новой серии вашего любимого сериала. Какой интересует?',
-            'Здравствуй, о какой серии ищите информацию?',
-            'Помогаю найти информацию о тате выхода свежей серии. Кстати, зрасьте :)',
-            'Привет. Буду рада подсказать дату выхода новой серии. Какой сериал?',]     
-        res['response']['text'] = random.choice(variants)
-        return
-
-    # Take user text
-    text = req['request']['command'].lower()
-
-    #check for key words
-    keywords = ['добавить сериал', 'подробнее', 'сериал', 'смотреть']
-    if text in keywords:
-        if user_id not in sessionStorage:
-            res['response']['text'] = 'Я потеряла нить нашей беседы :)'
-            return
-        if (text == 'добавить сериал') and (sessionStorage[user_id] == 0):
-            #Добавление сериала и сессия была (не пустой)
-            res['response']['text'] = 'Спасибо! Мы проверим ваше обращение и добавим интересующий сериал в ближайшее вермя'
-            return
-        if text == 'подробнее':
-            if sessionStorage[user_id] != 0:
-                #res['response']['text'] = getFilmInfoLocal(str(sessionStorage[user_id]))
-                res['response']['text'] = 'Заглушка для подробной информации о серии'            
-            else:
-                res['response']['text'] = 'Я потеряла нить нашей беседы :)'
-            return
-        if text == 'сериал':
-            if sessionStorage[user_id] != 0:
-                res['response']['text'] = getFilmInfoLocal(str(sessionStorage[user_id]))
-            else:
-                res['response']['text'] = 'Я потеряла нить нашей беседы :)'
-            return
-        if text == 'смотреть':
-            if sessionStorage[user_id] != 0:
-                res['response']['text'] = 'Слышала, что есть альтернативные вариаты просмотра ;)'
-                res['response']['end_session'] = 'true'
-            else:
-                res['response']['text'] = 'Я потеряла нить нашей беседы :)'
-            return
-    #no more key works, execute seach function on top of this text
-    # print('test search')
-    result = CoreSearch(text)
-    #save intId into dictionary
-    sessionStorage[user_id] = result[1]
-    #return result to user
-    res['response']['text'] = result[0]
-    #res['response']['text'] = CoreSearch(text)
-    #add suggessted buttons
-    if result[1] == 0:
-        #write data to the log file
-        f = open('logs.txt', mode="a+", encoding="utf-8")
-        csv_writer = csv.writer(f, lineterminator='\n', delimiter='\t')
-        csv_writer.writerow([user_id, text, req['meta']['client_id'], req['meta']['locale']])
-        f.close()        
-        res['response']['buttons'] = [
-            {
-                "title": "Добавить сериал",
-            }
-        ]
-    if result[1] != 0:
-        res['response']['buttons'] = [
-            {
-                "title": "Сериал",
-                "hide": True
-            },
-            {
-                "title": "Смотреть",
-                "url": OfficialURL(result[1]),
-                "hide": True
-            }
-        ]
->>>>>>> 4473b6410bba1424831184f838715d27e283ca02
-
-

@@ -8,7 +8,7 @@ import sqlite3
 import datetime
 
 
-token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDE2MjU4NDEsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTUzOTQ0MSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.LZhqi1Gpo7Bj-Eycuz9T7i3nByC4sZ-2tbgX3xE1Rk0gBvP0jv2vcjY0Df2bTEyDSl63rIrIHCUsVaRZPtMzskcKAa2vRd0QthN1x7meA10OXUvbF2qBPYir-dUlWGc4lQN5eJMcSHmS5cgzHpykooy15BoH4Ef4xXbMC0l3Jwt-r14DKW3eZ8rpx3lNQgz39o1m8whJARhkTfuQYFWdw_gsZMtoSkTJxFCvWWD09rn6ybqBQDjVr-4V-vBR25SMXT3-t6Z3wigVYYUUf2f66u9E0nh8FUoHeWUNlDt5gbhyexnZKJylARHfYr5fRvyzJ0dd6Zq8CDZXU1tu0YIsFw'
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDE5MjgwNTUsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTg0MTY1NSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.ad5OITMlYUPviKc_tsM8OhlS77Ji52kDPZJTLezcGGfvdvHbfQv9lpa4yfOhqqSyyMsN7mXCy1VWZyNDxI5kvstnokV172xOlW66l-H-qNrbRbkS1r1bXN-KVl4rRHCVc4jy-COiMkSVNftdNxDDuFEiWF-exntIQVctJvE016tVOFpsYUg42xXOFINHy2uEJ3XrWUjBV5ciJnolWJ1V1Ru-B3lmFTYTpYOTNgFAiTZMqHBwKQs2km49pvG6bIW3naWxlK9srZs692jQqe73GyhZGN95ekt07JabQXrFPOF4pQ2ULd_Eph5U2Lm2_0RgDe594Qfy26ixw63P3Kb9jg'
 
 #update tokenыукпун1989
 def tockenRefresh():
@@ -147,7 +147,7 @@ def tvdbGetSerialInfo(filmID):
     print('The film ID', str(filmID), 'has been added successfully')
 
 #test add series :)
-#tvdbGetSerialInfo(273455)
+tvdbGetSerialInfo(288984)
 #tvdbGetSerialInfo(269586)
 #tvdbGetSerialInfo(321219)
 #tvdbGetSerialInfo(281776)
@@ -176,7 +176,7 @@ def MyPostCommand(remote, command, i):
         URL = "https://alisa.ikot.eu"
     else:
         URL = "http://127.0.0.1:5000"
-    if command == '':
+    if (command == '') and (i == 1):
         result = True
     else:
         result = False  
@@ -213,6 +213,23 @@ def MyPostCommand(remote, command, i):
     r = requests.post(url = URL, json = DATA, headers = HEADERS)
     data = r.json()
     return data['response']['text']
+
+
+n = datetime.datetime.now()
+print(MyPostCommand(False, '', 1))
+print(MyPostCommand(False, 'стрела', 2))
+print(datetime.datetime.now() - n)
+print(MyPostCommand(False, 'подробнее', 3))
+print(datetime.datetime.now() - n)
+print(MyPostCommand(False, 'сериал', 4))
+print(datetime.datetime.now() - n)
+
+
+print(MyPostCommand(False, 'как тебя зовут', 1))
+print(MyPostCommand(False, '', 1))
+print(MyPostCommand(False, 'воронины', 2))
+print(MyPostCommand(False, 'молодежка', 2))
+print(MyPostCommand(False, 'простоквашино', 2))
 
 #Connect and created films in the main DB
 # con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
@@ -374,14 +391,18 @@ print(filmList[1], name, filmList[4])
 
 episode['airedEpisodeNumber'], episode['episodeName'], episode['firstAired']filmList
 #print(MyPostCommand(False, 'кяввм', 2))
-# n = datetime.now()
-# print(MyPostCommand(False, '', 1))
-# print(MyPostCommand(False, 'стрела', 2))
-# print(datetime.now() - n)
-# print(MyPostCommand(False, 'подробнее', 3))
-# print(datetime.now() - n)
-# print(MyPostCommand(False, 'сериал', 4))
-# print(datetime.now() - n)
+n = datetime.datetime.now()
+print(MyPostCommand(False, '', 1))
+print(MyPostCommand(False, 'стрела', 2))
+print(datetime.datetime.now() - n)
+print(MyPostCommand(False, 'подробнее', 3))
+print(datetime.datetime.now() - n)
+print(MyPostCommand(False, 'сериал', 4))
+print(datetime.datetime.now() - n)
+
+
+print(MyPostCommand(False, 'как тебя зовут', 1))
+
 
 # n = datetime.now()
 # print(MyPostCommand(True, '', 1))

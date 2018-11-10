@@ -4,16 +4,12 @@ import csv
 import io
 import requests
 import random
+import sqlite3
 from datetime import datetime, timedelta
 import pymorphy2
 from difflib import SequenceMatcher
-<<<<<<< HEAD
 #marker
-token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDExNjY4NjAsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTA4MDQ2MCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.mqZi5mUntc7_0kFM4FKbmri7kESL2Y68l0v8iMTJf5IjOfjvMLQ5CvJrkErtNuERqu_ymEzlEG-Bx6YWG4vZJUGXDCnTVx4Y3i3jIFdzCm88LQsMNTw-Euw5IyS8Sr62n_8VXRcM2iTLVjT7Cfi5L_a9bKVWCs4WpLIA-Hri0uXcHjXB7LBX2JBMVtl8e536ASGoqc3pEHF9s4xUf4o4evz-ZVXgI6dzjGNTy0zXmbW1_YkjE8cG0wdSTNMjie6pq6euvP4EEdq7lOecTje4miXD5YtbuAfihv33b_7ffeAP__zbtjXJsdcIla0OipmuVYdcxSK7mMG930M8p4UtHg'
-=======
-
-token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDE1OTA1OTUsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTUwNDE5NSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.Ip9LG3zkR00myo3DjDNLB6edzm_09BViHa7nr-H-RpyAmoyyNx5lJ7KGvnOWDM2scMkJFwlZhG7h7B0uUfsC-c9k2y33ktEK28V4b0eZAGbUC6qLgjs9ZjPQOserucwBrPOpzx6jekjLM5uC_V-OLoezR4LYY0j3UUBIXWx6JfY9d_zEyRlnK-eLyz5PvBcN1Urj5fzuK_pZTYafnpS54k1EL8BH-Bw6iYPkYvh7NQfRScZ14LYt47z6oCZl5SCqECjKXHRpQyBIoXBNRfSI14tSUWMO8x5FmxTQ5vcERJpDWdDbYBNYh3cIx2R0DC9PS2Od3APjeeQL0yWD2KpxXg'
->>>>>>> 4473b6410bba1424831184f838715d27e283ca02
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDE5MjcwMzMsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTg0MDYzMywidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.paXoQofY18DGeu-8AnzcPtxKWH0BMaG-VUFM5DEEXi_aEwqhhYYQbqk5_Mqrkw-elR8JNvQMjwmC0Fi78GsMWGfKIqb4Nqol-X1bLu9sLIkzU96NkuUnscj3FTTGrcMx_6-f9dMaxfli0aasqJX99FEOrDm2FwF1v8orcAaEDGn2hFbYeFY_5pLlKfeJbhwcdKalCCyuhTu9M5fSdOudCAraacH7eGgfPXO9Q9BxEzqPEbNSmoGeHxd4GX6lKB7cV7AKjX_9CecoyVCKaIOUgQK3ebARs6f2uyRh3yrA6NtNgLKt6OusjC9B91u_WupOfDoTFO-tIWS9aG2zjBKf4w'
 #storage for chash
 cashRequests = {}
 #read files on start
@@ -23,10 +19,9 @@ with open('NameVariations.csv', mode="r", encoding="utf-8") as file:
 with open('films.csv', mode="r", encoding="utf-8") as file:
     films_in_memory = file.read()
 
-
 morph = pymorphy2.MorphAnalyzer()
 
-# --Получить из строки нормализованный список
+# Get Normalized name
 def get_normalized_string(string):
     list_words = string.split()
     normal_list = []
@@ -35,12 +30,12 @@ def get_normalized_string(string):
         normal_list.append(normal_word)
     return normal_list
 
-# Сравнивать текст с возможными опечатками
+# Check name with typo mistakes
 def compare_strings_typo(string1, string2):
     similarity = SequenceMatcher(None, string1, string2)
     return similarity.ratio() * 100
 
-# Сравнить две строки
+# Compare two strings
 def compare_names(name1, name2):
     set1 = set(get_normalized_string(name1))
     set2 = set(get_normalized_string(name2))
@@ -56,7 +51,6 @@ def compare_names(name1, name2):
             print('Вы сравнивали: ' + name1 + '|' + name2 + ', общее: ' + str(overlap) + ', идентичность: ' + str(
                 percentage) + '%(найдено через normalized)')
     return round(percentage)
-
 
 def SearchName(text):
     text = text.lower()
@@ -77,14 +71,18 @@ def SearchName(text):
             #Remove last space and check for 100% consistency
             return row[0]
     
-    #проверяем с помощью нормализаци слов и проверки на опечатки
-    f = open('NameVariations.csv', mode="r", encoding="utf-8")
-    filmReader = csv.reader(f, delimiter='\t')
+    #Failover to polimorhp check
+    #f = open('NameVariations.csv', mode="r", encoding="utf-8")
+    #filmReader = csv.reader(f, delimiter='\t')
+    filmReader = csv.reader(aliases_in_memory.splitlines(), delimiter='\t')   
     for row in filmReader:
         if compare_names(text, row[1]) > 60:
             return row[0]
-    f.close()
+    #Return noting
     return -1
+
+#get_normalized_string('воронины')
+#compare_names(text, 'ворниной')
 
 #Looking for key words related to action
 #time 0, plase 1, info 2, else -1
@@ -191,6 +189,34 @@ def tvdbLastEpisode(filmID, seasonNumber):
     
     cashRequests[filmID] = [datetime.now(), str(episode['airedEpisodeNumber']), episode['episodeName'], str(episode['firstAired']),]
     return episode['airedEpisodeNumber'], episode['episodeName'], episode['firstAired']
+
+
+def filmdbLastEpisode(filmID):
+    con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+    cur = con.cursor()
+    cmd = 'SELECT * FROM series_' + str(filmID) +  ' WHERE  firstAired >= date("' + datetime.today().strftime("%Y-%m-%d") + '")'
+    cur.execute(cmd)
+    episodeList = cur.fetchall()
+    # We have a list of recors, next check the numbers.
+    if len(episodeList) == 0:
+        #all episodes ended, return the last record from the table
+        cmd = 'SELECT * FROM series_' + str(filmID) + ' ORDER BY rowid DESC LIMIT 1'
+        cur.execute(cmd)
+        episode = cur.fetchone()
+        if episode[3] != None:
+            name = episode[3]
+        else:
+            name = episode[2]
+        return episode[1], name, episode[4][0:episode[4].index(" ")]
+    else:
+        #return the first row from the list (couse this is the closest to data issue)
+        if episodeList[0][3] != None:
+            name = episodeList[0][3] 
+        else:
+            name = episodeList[0][2] 
+        return episodeList[0][1], name, episodeList[0][4][0:episodeList[0][4].index(" ")]
+    con.close()
+
 
 #tvdbLastEpisode('80379','12')
 #Return the URL to the offical site 
@@ -311,14 +337,14 @@ def filmSearch(intId, action, time):
                 variants2 = ['Последняя серия под номером','Последняя серия с номером','Заключительная серия номер ','Завершающая серия под номером']
                 return random.choice(variants) + ' ' +  random.choice(variants2) + ' ' + row[13] + ' "' + row[14] + '" ' + seasonName[int(row[9])] + ' cезона вышла в прокат ' + datetime.strftime(datetime.strptime(row[12], '%Y-%m-%d'), '%d.%m.%Y'), int(intId)
             
-            tvdbanswer = tvdbLastEpisode(row[1], row[9])
+            try:
+                tvdbanswer = filmdbLastEpisode(intId)
+            except:
+                tvdbanswer = tvdbLastEpisode(row[1], row[9])
+
             #print(tvdbanswer)
             if tvdbanswer[0] == 'Error':
                 return 'Простите, не удалось найти', 0            
-            if tvdbanswer[1] == None:
-                name = 'нет названия'
-            else:
-                name = tvdbanswer[1]
             #define time according todays date
             if tvdbanswer[2] == '':
                 return 'Что то пошло не так, не удалось найти информацию о дате выхода серии. Попробуйте позже.', 0
@@ -334,14 +360,23 @@ def filmSearch(intId, action, time):
                 #     '"' + tvdbanswer[1] + '" выйдет как ' + seasonName2[int(tvdbanswer[0])] + ' cерия в ' + row[9] + '-ом сезоне ' + datetime.strftime(d, '%d.%m.%Y'),
                 #     seasonName2[int(tvdbanswer[0])] + 'серия ' + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выйдет в эфир ' datetime.strftime(d, '%d.%m.%Y')
                 #     ]
-                return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + name + '" выйдет в прокат ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
+                if tvdbanswer[1] == None:
+                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона выйдет в прокат ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
+                else:
+                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выйдет в прокат ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
                 #return random.choice(variants), int(intId)
             elif d == nowday:
                 #it is today
-                return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + name + '" выходит сегодня!', int(intId)
+                if tvdbanswer[1] == None:
+                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + name + '" выходит сегодня!', int(intId)
+                else:
+                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выходит сегодня!', int(intId)
             else:
                 #it was in a past
-                return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + name + '" уже вышла в прокат ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
+                if tvdbanswer[1] == None:
+                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона уже вышла в прокат ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
+                else:
+                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" уже вышла в прокат ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
     #final close return (if everythig esle bad)
     return 'Простите, не удалось найти в базе данных', 0
 #main function, check for key words and finnaly execute a 
@@ -358,23 +393,23 @@ def CoreSearch(text):
     #core logic
     return filmSearch(filmId, action, time)
 
-# print(SearchName("во все тяжкие большого взрыва"))
+
+
+#print(filmdbLastEpisode(1))
+
+#print(SearchName("воронпины"))
 # print(SeachActionTimeDetection("ГДs сока сколь;в ы новый когда же ты где?"))
 # print(SearchAction("ГДs сока сколь;в ы когда же ты где?"))
 
-#print(CoreSearch("теория большого взрыва"))
-#print(CoreSearch("теория большого взрыва 2"))
-#print(CoreSearch("Когда выйдет игра престолов?"))
+print(CoreSearch("атланта"))
+print(CoreSearch("стрела"))
+print(CoreSearch("молодежка"))
 #print(CoreSearch("дай инфо о теории большого взрыва"))
 # print(CoreSearch("где глянуть теорию большого взрыва"))
 #print(CoreSearch("новая серия грифинов"))
 #print(CoreSearch("свежая серия полицейского с рублевки"))
 # print(CoreSearch("доктор хаус"))
 # print(CoreSearch("кяввм"))
-<<<<<<< HEAD
-#print(CoreSearch("теория маленького взрыва"))
-=======
-#print(CoreSearch("кяввм"))
->>>>>>> 4473b6410bba1424831184f838715d27e283ca02
+# print(CoreSearch("эртугрул"))
 
 # print(tvdbLastEpisode('80379','12'))
