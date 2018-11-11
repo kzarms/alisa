@@ -1,0 +1,62 @@
+#import io
+import requests
+import sqlite3
+#import datetime
+
+def MyPostCommand(remote, command, i):
+    if remote:
+        URL = "https://kzaralisa.azurewebsites.net" 
+        #URL = "https://alisa.ikot.eu"
+    else:
+        URL = "http://127.0.0.1:5000"
+    if (command == '') and (i == 1):
+        result = True
+    else:
+        result = False  
+    HEADERS = {'Content-Type': 'application/json'}
+    DATA = {
+        "meta": {
+            "client_id": "ru.yandex.searchplugin/7.16 (none none; android 4.4.2)",
+            "interfaces": {
+            "screen": {}
+            },
+            "locale": "ru-RU",
+            "timezone": "UTC"
+        },
+        "request": {
+            "command": command,
+            "nlu": {
+            "entities": [],
+            "tokens": [
+                ""
+            ]
+            },
+            "original_utterance": command,
+            "type": "SimpleUtterance"
+        },
+        "session": {
+            "message_id": i,
+            "new": result,
+            "session_id": "aa78144d-44710a9e-64ff4317-ad1be4d5",
+            "skill_id": "6b89b259-e2f2-44fb-b203-17833d97595a",
+            "user_id": "468F375A4A728CBB299ADEC2EFAE67F25B5D8694223508B783EA9BA08601600C"
+        },
+        "version": "1.0"
+    }    
+    r = requests.post(url = URL, json = DATA, headers = HEADERS)
+    data = r.json()
+    return data['response']['text']
+
+def getFilmList():
+    con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+    cur = con.cursor()
+    cmd = 'SELECT nameRu FROM films'
+    cur.execute(cmd)
+    filmList = cur.fetchall()
+    con.close()
+    return filmList
+
+filmList = getFilmList()
+for film in filmList:    
+    result = MyPostCommand(False, film[0], 2)
+    print(('серия' in result.lower()), film[0], result,)
