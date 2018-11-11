@@ -29,17 +29,11 @@ def main():
         user_id = req['session']['user_id']
         if (req['session']['new']) and (req['request']['command'].lower() == ''):
             #New session and nothing in command, return welcome message
-            variants = ['Привет, что ищешь?',
-                'Приветсвую, какой сериал интересует?',
-                'Приветсвую, я помогаю узнать дату выхода новой серии вашего любимого сериала. Какой интересует?',
-                'Здравствуй, о какой серии ищите информацию?',
-                'Помогаю найти информацию о тате выхода свежей серии. Кстати, зрасьте :)',
-                'Привет. Буду рада подсказать дату выхода новой серии. Какой сериал?',
-                'Привет. Какой сериал поискать?']     
-            res['response']['text'] = random.choice(variants)
+            res['response']['text'] = getIntoduce()
             return
         # Take user text
         text = req['request']['command'].lower()
+        text = text.replace(",","").replace(".","").replace("?","").replace(":","")
         
         
         if 'цитата' in text:
@@ -51,70 +45,66 @@ def main():
             return
             
         #check for key words
-        keywords = ['ping','как тебя зовут','добавить сериал', 'подробнее', 'сериал', 'смотреть']
+        keywords = ['ping','как тебя зовут','добавить сериал', 'подробнее', 'сериал', 'смотреть', 'пинг']
         if text in keywords:
-            if (text == 'ping'):
-                #Добавление сериала и сессия была (не пустой)
-                res['response']['text'] = 'pong'
+            #textKey = text.replace(",","").replace(",","")
+            if (text == 'ping') or (text == 'пинг'):
+                res['response']['text'] = getAnswerForPing() + '\n' + '\n' + getIntroduceAfterAnswer()
                 return 
             if (text == 'как тебя зовут'):
-                #Добавление сериала и сессия была (не пустой)
-                res['response']['text'] = 'Я еще не заслужила имени, просто помогаю найти информацию о дате выхода следующей серии :)'
+                res['response']['text'] = getAnswerForWhatIsYourName() + '\n' + '\n' + getIntroduceAfterAnswer()
                 return            
             if user_id not in sessionStorage:
-                res['response']['text'] = 'Я потеряла нить нашей беседы :)'
+                res['response']['text'] = tellIAmSorry() + ' ' + tellIAmLost()
                 return            
             if (text == 'добавить сериал') and (sessionStorage[user_id] == 0):
-                #Добавление сериала и сессия была (не пустой)
-                res['response']['text'] = 'Спасибо! Мы проверим ваше обращение и добавим интересующий сериал в ближайшее вермя'
+                res['response']['text'] = getAnswerForAddSeries() + '\n'+ '\n' + getIntroduceAfterAnswer()
                 return
             if text == 'подробнее':
                 if sessionStorage[user_id] != 0:
-                    #res['response']['text'] = getFilmInfoLocal(str(sessionStorage[user_id]))
-                    res['response']['text'] = 'Заглушка для подробной информации о серии'            
+                    res['response']['text'] = tellICantDoThis() + ' ' + tellAskMeLater()            
                 else:
-                    res['response']['text'] = 'Я потеряла нить нашей беседы :)'
+                    res['response']['text'] = tellIAmSorry() + ' ' + tellIAmLost()
                 return
             if text == 'сериал':
                 if sessionStorage[user_id] != 0:
                     res['response']['text'] = getFilmInfoLocal(str(sessionStorage[user_id]))
                 else:
-                    res['response']['text'] = 'Я потеряла нить нашей беседы :)'
+                    res['response']['text'] = tellIAmSorry() + ' ' + tellIAmLost()
                 return
             if text == 'смотреть':
                 if sessionStorage[user_id] != 0:
                     res['response']['text'] = 'Слышала, что есть альтернативные вариаты просмотра ;)'
                     res['response']['end_session'] = 'true'
                 else:
-                    res['response']['text'] = 'Я потеряла нить нашей беседы :)'
+                    res['response']['text'] = tellIAmSorry() + ' ' + tellIAmLost()
                 return
-        questionJSON = getRandomQuestion()
-        if sessionStorage.get(user_id + '_q') != None:
-            if text in ['давай', 'расскажи', 'хочу', 'цитату', 'факт', 'конечно', 'ещё', 'еще']:
-                if sessionStorage.get(user_id + '_q') == 'quote':
-                    if questionJSON['question'] == 'quote':
-                        res['response']['text'] = getRandomQuote() + '\n' + 'Хочешь ещё одну?'
-                    else:
-                        res['response']['text'] = getRandomQuote() + '\n' + questionJSON['question']
-                if sessionStorage.get(user_id + '_q') == 'fact':
-                    if questionJSON['question'] == 'fact':
-                        res['response']['text'] = getRandomFact() + '\n' + 'Хочешь ещё что-то узнать?'
-                    else:
-                        res['response']['text'] = getRandomFact() + '\n' + questionJSON['question']
                 
-                sessionStorage[user_id + '_q'] = questionJSON['type']
-                return
+        #---Check if user wants to listen to fact or quote
         questionJSON = getRandomQuestion()
+        if (sessionStorage.get(user_id + '_q') != None) and (text in ['давай', 'расскажи', 'хочу', 'цитату', 'факт', 'конечно', 'ещё', 'еще']):
+            if sessionStorage.get(user_id + '_q') == 'quote':
+                if questionJSON['question'] == 'quote':
+                    res['response']['text'] = getRandomQuote() + '\n' + 'Хочешь ещё одну?'
+                else:
+                    res['response']['text'] = getRandomQuote() + '\n' + questionJSON['question']
+            if sessionStorage.get(user_id + '_q') == 'fact':
+                if questionJSON['question'] == 'fact':
+                    res['response']['text'] = getRandomFact() + '\n' + 'Хочешь ещё что-то узнать?'
+                else:
+                    res['response']['text'] = getRandomFact() + '\n' + questionJSON['question']
+            
+            sessionStorage[user_id + '_q'] = questionJSON['type']
+            return
         sessionStorage[user_id + '_q'] = questionJSON['type']
-        #questionJSON = getRandomQuestion()
+
         #no more key works, execute seach function on top of this text
-        # print('test search')
         result = CoreSearch(text)
         #save intId into dictionary
         sessionStorage[user_id] = result[1]
         #return result to user
-        res['response']['text'] = result[0] + '\n' + questionJSON['question']
-        #res['response']['text'] = CoreSearch(text)
+        res['response']['text'] = result[0] + '\n' + '\n' + questionJSON['question']
+        
         #add suggessted buttons
         if result[1] == 0:
             #write data to the log file

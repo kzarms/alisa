@@ -8,6 +8,7 @@ import sqlite3
 from datetime import datetime, timedelta
 import pymorphy2
 from difflib import SequenceMatcher
+from dialogs import *
 #marker
 token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDE5MjcwMzMsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTg0MDYzMywidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.paXoQofY18DGeu-8AnzcPtxKWH0BMaG-VUFM5DEEXi_aEwqhhYYQbqk5_Mqrkw-elR8JNvQMjwmC0Fi78GsMWGfKIqb4Nqol-X1bLu9sLIkzU96NkuUnscj3FTTGrcMx_6-f9dMaxfli0aasqJX99FEOrDm2FwF1v8orcAaEDGn2hFbYeFY_5pLlKfeJbhwcdKalCCyuhTu9M5fSdOudCAraacH7eGgfPXO9Q9BxEzqPEbNSmoGeHxd4GX6lKB7cV7AKjX_9CecoyVCKaIOUgQK3ebARs6f2uyRh3yrA6NtNgLKt6OusjC9B91u_WupOfDoTFO-tIWS9aG2zjBKf4w'
 #storage for chash
@@ -319,7 +320,7 @@ def filmSearch(intId, action, time):
             break
     #f.close()
     if not found:
-        return 'Простите, не удалось найти в нашей базе данных', 0
+        return tellIAmSorry() + ' ' + tellICantFindTheEpisode(), 0
     #print(intId, action, time)
     if action == 1:
         #looking for information about location for watching
@@ -347,7 +348,7 @@ def filmSearch(intId, action, time):
                 return 'Простите, не удалось найти', 0            
             #define time according todays date
             if tvdbanswer[2] == '':
-                return 'Что то пошло не так, не удалось найти информацию о дате выхода серии. Попробуйте позже.', 0
+                return tellIAmSorry() + ' ' + tellICantFindTheEpisode(), 0
             d = datetime.strptime(tvdbanswer[2], '%Y-%m-%d')
             n = datetime.now()
             nowday = datetime(n.year, n.month, n.day)
@@ -361,31 +362,31 @@ def filmSearch(intId, action, time):
                 #     seasonName2[int(tvdbanswer[0])] + 'серия ' + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выйдет в эфир ' datetime.strftime(d, '%d.%m.%Y')
                 #     ]
                 if tvdbanswer[1] == None:
-                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона выйдет в прокат ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
+                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона ' + tellWillBeAired() + ' ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
                 else:
-                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выйдет в прокат ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
+                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" ' + tellWillBeAired() +' ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
                 #return random.choice(variants), int(intId)
             elif d == nowday:
                 #it is today
                 if tvdbanswer[1] == None:
-                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + name + '" выходит сегодня!', int(intId)
+                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + name + '" ' + tellWillBeAired() + ' сегодня!', int(intId)
                 else:
-                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" выходит сегодня!', int(intId)
+                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" ' + tellWillBeAired() + ' сегодня!', int(intId)
             else:
                 #it was in a past
                 if tvdbanswer[1] == None:
-                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона уже вышла в прокат ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
+                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона ' + tellAlreadyAired() + ' ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
                 else:
-                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" уже вышла в прокат ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
+                    return "Серия " + str(tvdbanswer[0]) + " " + seasonName[int(row[9])] + ' cезона "' + tvdbanswer[1] + '" ' + tellAlreadyAired() + ' ' + datetime.strftime(d, '%d.%m.%Y'), int(intId)
     #final close return (if everythig esle bad)
-    return 'Простите, не удалось найти в базе данных', 0
+    return tellIAmSorry() + ' ' + tellICantFindTheEpisode(), 0
 #main function, check for key words and finnaly execute a 
 def CoreSearch(text):
     #looking for a name (fist stage)
     filmId = SearchName(text)
     if filmId == -1:
         #we did not find a film, return info message and None as ID
-        return "Простите, я не нашла такого фильма или сериала, попробуйте еще раз.", 0
+        return tellIAmSorry() + ' ' + tellICantFindTheEpisode(), 0
     #looking for an action, if we do not have an action return -2
     action = SearchAction(text)
     #looking for advanced action in the phrase
