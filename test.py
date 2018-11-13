@@ -169,7 +169,21 @@ for line in series_id.readlines():
     print(id + ' completed')
 
 """
+'''
+aliases = csv.reader(aliases_in_memory.splitlines(), delimiter='\t')
+con.close()
+con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+cur = con.cursor()
 
+for line in aliases:
+    print(line[1])
+    cur.execute("INSERT INTO aliases VALUES (?, ?)", line)
+
+con.commit()
+con.close()
+
+
+'''
 def MyPostCommand(remote, command, i):
     if remote:
         URL = "https://kzaralisa.azurewebsites.net" 
@@ -387,7 +401,7 @@ filmList = cur.fetchone()
 
 print(filmList[1], name, filmList[4])
 
-episode['airedEpisodeNumber'], episode['episodeName'], episode['firstAired']filmList
+#episode['airedEpisodeNumber'], episode['episodeName'], episode['firstAired']filmList
 #print(MyPostCommand(False, 'кяввм', 2))
 n = datetime.datetime.now()
 print(MyPostCommand(False, 'ping', 1))

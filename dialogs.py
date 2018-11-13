@@ -1,24 +1,24 @@
 #!/usr/bin/python3.6
-# -*- coding: utf-8 -*- 
+# coding: utf-8
 #----Dialog functions
 import io
 import random
 
 
-with open('quotes.txt', mode="r") as file:
+with open('quotes.txt', mode="r", encoding="utf-8") as file:
     quotes = file.read().split('\n')
 
-with open('facts.txt', mode="r") as file:
+with open('facts.txt', mode="r", encoding="utf-8") as file:
     facts = file.read().split('\n')
 
 def getRandomQuote():
     return random.choice(quotes).replace('...', '\n')
-    
+   
 
 def getRandomFact():
     return random.choice(facts).replace('...', '\n')
     
-    
+ 
 def getQuestionQuote():
     question = ['А ещё я знаю цитаты. Хочешь одну?', 
                 'Хочешь расскажу цитату?', 

@@ -8,7 +8,7 @@ import random
 
 from dbfunctions import *
 from dialogs import *
-import time
+#import time
 
 from flask import Flask, request
 app = Flask(__name__)
@@ -25,7 +25,7 @@ sessionStorage = {}
 def main():
     # Hanle dialog
     def handle_dialog(req, res):
-        questionType = ''
+        #questionType = ''
         user_id = req['session']['user_id']
         if (req['session']['new']) and (req['request']['command'].lower() == ''):
             #New session and nothing in command, return welcome message
@@ -33,23 +33,17 @@ def main():
             return
         # Take user text
         text = req['request']['command'].lower()
-        text = text.replace(",","").replace(".","").replace("?","").replace(":","")
-        
-        
-        if 'цитата' in text:
-            res['response']['text'] = getRandomQuote()
-            return
-        
-        if 'факт' in text:
-            res['response']['text'] = getRandomFact()
-            return
-            
+
+        #Eto chto za pizdec?! :)
+        #text = text.replace(",","").replace(".","").replace("?","").replace(":","")
+                    
         #check for key words
-        keywords = ['ping','как тебя зовут','добавить сериал', 'подробнее', 'сериал', 'смотреть', 'пинг']
+        keywords = ['ping','пинг','как тебя зовут','добавить сериал','подробнее','сериал','смотреть',]
         if text in keywords:
             #textKey = text.replace(",","").replace(",","")
             if (text == 'ping') or (text == 'пинг'):
-                res['response']['text'] = getAnswerForPing() + '\n' + '\n' + getIntroduceAfterAnswer()
+                #res['response']['text'] = getAnswerForPing() + '\n' + '\n' + getIntroduceAfterAnswer()
+                res['response']['text'] = 'Reply from new episod: bytes=32 time=46ms TTL=52'
                 return 
             if (text == 'как тебя зовут'):
                 res['response']['text'] = getAnswerForWhatIsYourName() + '\n' + '\n' + getIntroduceAfterAnswer()
@@ -68,7 +62,7 @@ def main():
                 return
             if text == 'сериал':
                 if sessionStorage[user_id] != 0:
-                    res['response']['text'] = getFilmInfoLocal(str(sessionStorage[user_id]))
+                    res['response']['text'] = getFilmInfoLocal(sessionStorage[user_id])
                 else:
                     res['response']['text'] = tellIAmSorry() + ' ' + tellIAmLost()
                 return
@@ -79,7 +73,9 @@ def main():
                 else:
                     res['response']['text'] = tellIAmSorry() + ' ' + tellIAmLost()
                 return
-                
+
+
+        """        
         #---Check if user wants to listen to fact or quote
         questionJSON = getRandomQuestion()
         if (sessionStorage.get(user_id + '_q') != None) and (text in ['давай', 'расскажи', 'хочу', 'цитату', 'факт', 'конечно', 'ещё', 'еще']):
@@ -97,13 +93,13 @@ def main():
             sessionStorage[user_id + '_q'] = questionJSON['type']
             return
         sessionStorage[user_id + '_q'] = questionJSON['type']
-
+        """
         #no more key works, execute seach function on top of this text
         result = CoreSearch(text)
         #save intId into dictionary
         sessionStorage[user_id] = result[1]
         #return result to user
-        res['response']['text'] = result[0] + '\n' + '\n' + questionJSON['question']
+        res['response']['text'] = result[0] #+ '\n' + '\n' + questionJSON['question']
         
         #add suggessted buttons
         if result[1] == 0:

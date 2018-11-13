@@ -57,6 +57,33 @@ def getFilmList():
     return filmList
 
 filmList = getFilmList()
-for film in filmList:    
-    result = MyPostCommand(False, film[0], 2)
-    print(('серия' in result.lower()), film[0], result,)
+for i in range(10,100):
+#for i in range(len(filmList)):
+    result = MyPostCommand(False, filmList[i][0], 2)
+    print(('серия' in result.lower()), filmList[i][0], result,)
+
+keywords = ['ping','пинг','как тебя зовут','добавить сериал','подробнее','сериал','смотреть',]
+#test fist key phrases (not related to previouse search)
+for i in range(3):
+    result = MyPostCommand(False, keywords[i], 2)
+    print(keywords[i], result,)
+
+#execute search to the random film
+for i in range(100,130):
+    resutl = MyPostCommand(False, filmList[i][0], 2)
+    result1 = MyPostCommand(False, 'сериал', 3)
+    result2 = MyPostCommand(False, 'смотреть', 4)
+    print((('сериал' in result1.lower()) and ('слышала' in result2.lower())), filmList[i][0],)
+
+# print(MyPostCommand(False, 'тбв', 2))
+# print(MyPostCommand(False, 'сериал', 3))
+# print(MyPostCommand(False, 'смотреть', 4))
+
+# for i in range(3,len(keywords)):
+#     result = MyPostCommand(False, keywords[i], 2)
+#     print(keywords[i], result,)
+# for film in filmList:    
+#     result = MyPostCommand(False, film[0], 2)
+#     print(('серия' in result.lower()), film[0], result,)
+
+#MyPostCommand(False, "Теория большого взрыва", 2)
