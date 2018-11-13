@@ -1,12 +1,9 @@
 import urllib.request
 from bs4 import BeautifulSoup
+from datetime import datetime
 
-"""
-Скрипт принимает файл с именами сериалов и в другой файл записывает их ИД в базе TVDB.
-В именах пробелы менять на тире.
-Названия русских сериалов писать транслитом. 
-"""
-#--Проверить ссылку сериала на thetvdb
+
+#--check tvdb (deprecated)
 def check_url_tvdb(series_name):
     try:
         url = "https://www.thetvdb.com/series/" + series_name
@@ -24,21 +21,40 @@ def check_url_tvdb(series_name):
         return 0
 
 
-#----Берём все имена сериалов с файла и добавляем в новый файл.
-series_input = open("series_input.txt", 'r')
-series_output = open("series_output.txt", 'a')
-
-for series_name in series_input:
-    series_id = str(check_url_tvdb(str.rstrip(series_name)))
-    #print(series_id)
-    series_output.write(str.rstrip(series_name) + ";" + series_id + "\n")
-
-print('....................done......................')
-
-
-
-#print(series_file.read())
+#--get info from tvguide.com
+def getEpisodeInfoFromTvGuide(url):
+    website = urllib.request.urlopen(url)
+    content = website.read()
+    soup = BeautifulSoup(content, 'html.parser')
+    episode = {}
+    episode['seriesName'] = soup.find(class_="tvobject-masthead-head-link").text.rstrip()
+    episode['seasonNumber'], episode['episodeNumber'] = changeStringFormat(soup.find(class_="tvobject-episode-meta-info hidden-xs").find_all('p')[0].text, "tvguide")
+    episode['date'] = changeDateFormat(soup.find(class_="tvobject-episode-meta-info hidden-xs").find_all('p')[1].text, "tvguide")
+    return episode
 
 
-#checked = check_url_tvdb("the-expanse")
-#print(checked)
+#--change date format depending on source website
+def changeDateFormat(date, source=""):
+    if source == 'tvguide' or source == "":
+         return datetime.strptime(date, '%B %d, %Y').strftime("%Y-%m-%d")
+
+
+def changeStringFormat(string, source=""):
+    if source == 'tvguide' or source == "":
+        parsedNumber = string.split(", ")
+        seasonNumber = parsedNumber[0].replace("Season ", "")
+        episodeNumber = parsedNumber[1].replace("Episode ", "")
+        return seasonNumber, episodeNumber
+
+
+#November 7, 2018
+#print(getEpisodeInfoFromTvGuide("https://www.tvguide.com/tvshows/south-park/episodes/100402/"))
+
+n = datetime.now()
+f = open('url.txt')
+seriesList = f.read().split('\n')
+for url in seriesList:
+    if url != "":
+        episode =  getEpisodeInfoFromTvGuide(url)
+        print("%s серия %s сезона сериала %s выходит %s" % (str(episode['episodeNumber']), str(episode['seasonNumber']), episode['seriesName'], str(episode['date'])))
+print(datetime.now() - n)
