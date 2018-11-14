@@ -10,6 +10,12 @@ import datetime
 
 token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDE5MjgwNTUsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTg0MTY1NSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.ad5OITMlYUPviKc_tsM8OhlS77Ji52kDPZJTLezcGGfvdvHbfQv9lpa4yfOhqqSyyMsN7mXCy1VWZyNDxI5kvstnokV172xOlW66l-H-qNrbRbkS1r1bXN-KVl4rRHCVc4jy-COiMkSVNftdNxDDuFEiWF-exntIQVctJvE016tVOFpsYUg42xXOFINHy2uEJ3XrWUjBV5ciJnolWJ1V1Ru-B3lmFTYTpYOTNgFAiTZMqHBwKQs2km49pvG6bIW3naWxlK9srZs692jQqe73GyhZGN95ekt07JabQXrFPOF4pQ2ULd_Eph5U2Lm2_0RgDe594Qfy26ixw63P3Kb9jg'
 
+#QUOTE this string for MySQL
+def sqlquote(value):
+    if value is None:
+         return 'NULL'
+    return "'{}'".format(str(value).replace("'", "''"))
+
 #update tokenыукпун1989
 def tockenRefresh():
     URL = "https://api.thetvdb.com/login"   
@@ -147,7 +153,7 @@ def tvdbGetSerialInfo(filmID):
     print('The film ID', str(filmID), 'has been added successfully')
 
 #test add series :)
-tvdbGetSerialInfo(288984)
+#tvdbGetSerialInfo(288984)
 #tvdbGetSerialInfo(269586)
 #tvdbGetSerialInfo(321219)
 #tvdbGetSerialInfo(281776)
@@ -228,7 +234,7 @@ def MyPostCommand(remote, command, i):
     data = r.json()
     return data['response']['text']
 
-
+"""
 n = datetime.datetime.now()
 print(MyPostCommand(False, '', 1))
 print(MyPostCommand(False, 'воронины', 2))
@@ -244,6 +250,7 @@ print(MyPostCommand(True, '', 1))
 print(MyPostCommand(True, 'воронины', 2))
 print(MyPostCommand(False, 'молодежка', 2))
 print(MyPostCommand(False, 'простоквашино', 2))
+"""
 
 #Connect and created films in the main DB
 # con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
@@ -286,6 +293,8 @@ print(MyPostCommand(False, 'простоквашино', 2))
 # con.close()
 
 #stop films DB creation
+
+
 
 #create serial table series
 def createSeriesTable(seriesNumber, seasonNumber):
@@ -352,14 +361,19 @@ def createSeriesTable(seriesNumber, seasonNumber):
     con.commit()
     con.close()
 
-films = films_in_memory.splitlines()
-#films = csv.reader(films_in_memory.splitlines(), delimiter='\t')
+#films = films_in_memory.splitlines()
+#films = csv.reader(films_in_memory.splitlines(), delimiter='\t')\
+
+
+
+
+"""
 for i in range(130,137):
     line = films[i].split('\t')
     print(line[0], line[4], line[9])
     for i in range(1,int(line[9])+1):
         createSeriesTable(int(line[0]), i)
-
+"""
 
 def filmdbLastEpisode(filmID):
     cmd = 'SELECT * FROM series_' + str(filmID) +  ' WHERE  firstAired >= date("' + datetime.datetime.today().strftime("%Y-%m-%d") + '")'
@@ -384,21 +398,15 @@ def filmdbLastEpisode(filmID):
             name = episodeList[0][2] 
         return episodeList[0][1], name, episodeList[0][4][0:episodeList[0][4].index(" ")]
 
+"""
 n = datetime.datetime.now()
 for i in range(1,30):
     print(filmdbLastEpisode(i))
 print(datetime.datetime.now() - n)
-
-#episodeList.rowcount
-cur.rowcount
-len(cur)
-
-for row in cur:
-    print(row)
-
-filmList = cur.fetchone()
+"""
 
 
+"""
 print(filmList[1], name, filmList[4])
 
 #episode['airedEpisodeNumber'], episode['episodeName'], episode['firstAired']filmList
@@ -416,7 +424,7 @@ print(datetime.datetime.now() - n)
 
 
 print(MyPostCommand(True, 'как тебя зовут', 1))
-
+"""
 
 # n = datetime.now()
 # print(MyPostCommand(True, '', 1))
@@ -436,4 +444,49 @@ print(MyPostCommand(True, 'как тебя зовут', 1))
 #18 http://www.lostfilm.tv/series/Billions/
 #26 http://www.lostfilm.tv/series/Animal_Kingdom/seasons/
 #27 http://www.lostfilm.tv/series/Gotham/seasons/
+
+
+#airedSeason, airedEpisodeNumber, episodeNameEn, episodeNameRu, firstAired, director, overviewEn, overviewRu, showUrl
+def addEpisode(seriesNumber, episodeJson):
+    con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+    sql = 'SELECT airedSeason, airedEpisodeNumber, episodeNameEn, episodeNameRu, firstAired, director, overviewEn, overviewRu, showUrl FROM series_%s WHERE airedSeason = %s AND airedEpisodeNumber = %s' % (str(seriesNumber), str(episodeJson['airedSeason']), str(episodeJson['airedEpisodeNumber']))
+    print(sql)
+    cur = con.cursor()
+    cur.execute(sql)
+    row = cur.fetchone()
+    print(row)
+    
+    if row == None:  #No episode - add
+        print('add episode')
+    else:
+        episodeBase = {}
+        episodeBase['airedSeason'] = row[0]
+        episodeBase['airedEpisodeNumber'] = row[1]
+        episodeBase['episodeNameEn'] = row[2]
+        episodeBase['episodeNameRu'] = row[3]
+        episodeBase['firstAired'] = row[4]
+        print("----------OLD ROW:-----------------")
+        print(episodeBase)
+        change = False
+        for key, value in episodeBase.items():
+            if (episodeJson.get(key) != None) and ((episodeBase.get(key) == None) or (episodeBase.get(key) == "")):
+                episodeBase[key] = episodeJson[key]
+                change = True
+        if change == True:
+            print("---------NEW ROW---------------")
+            print(episodeBase)
+            sql = 'UPDATE series_%i SET episodeNameEn = %s, episodeNameRu = %s, firstAired = %s WHERE airedSeason = %i AND airedEpisodeNumber = %i' % (seriesNumber, sqlquote(str(episodeJson.get('episodeNameEn'))), sqlquote(str(episodeJson.get('episodeNameRu'))), sqlquote(str(episodeJson.get('firstAired'))), episodeJson.get('airedSeason'), episodeJson.get('airedEpisodeNumber'))
+            print(sql)
+            cur.execute(sql)
+            con.commit()
+            con.close()
+    
+    #print(episodeBase)
+
+episodeJson = {}
+seriesNumber = 1
+episodeJson['airedSeason'] = 12
+episodeJson['airedEpisodeNumber'] = 9
+episodeJson['episodeNameEn'] = 'The Citation Negation'
+addEpisode(1, episodeJson)
 
