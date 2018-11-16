@@ -41,6 +41,7 @@ def main():
         #check for key words
         keywords = ['ping','пинг',
             'как тебя зовут','помощь','что ты умеешь',
+            'привет','здравствуй','здравствуйте','хай','hi',
             'спасибо','благодарю',
             'все','выход','конец','завешить','стоп',
             'добавить сериал','подробнее','сериал','смотреть',]
@@ -61,6 +62,9 @@ def main():
                 return            
             if (text == 'помощь'):
                 res['response']['text'] = getAnswerForHelp()
+                return
+            if (text == 'привет' or text == 'здравствуй' or text == 'здравствуйте' or text == 'хай' or text == 'hi'):
+                res['response']['text'] = getIntoduce()
                 return
             if (text == 'спасибо' or text == 'благодарю'):
                 res['response']['text'] = getAnswerForEnd()
