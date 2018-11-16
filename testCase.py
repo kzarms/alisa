@@ -64,11 +64,19 @@ for i in range(len(filmList)):
     result = MyPostCommand(False, filmList[i][0], 2)
     print(('серия' in result.lower()), filmList[i][0], result, datetime.now() - n,)
 
-keywords = ['ping','пинг','как тебя зовут','помощь','что ты умеешь','добавить сериал','подробнее','сериал','смотреть',]
+keywords = ['ping','пинг',
+            'как тебя зовут','помощь','что ты умеешь',
+            'спасибо','благодарю',
+            'все','выход','конец','завешить','стоп',
+            'добавить сериал','подробнее','сериал','смотреть',]
 #test fist key phrases (not related to previouse search)
-for i in range(5):
+for i in range(4):
     result = MyPostCommand(False, keywords[i], 2)
     print('серии' in result.lower() or 'reply' in result.lower() , keywords[i],)
+
+for i in range(5,12):
+    result = MyPostCommand(False, keywords[i], 2)
+    print('.' in result.lower(), keywords[i],)
 
 #execute search to the random film
 for i in range(100,101):

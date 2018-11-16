@@ -97,6 +97,14 @@ def getAnswerForHelp():
         ]
     return random.choice(variants)
 
+def getAnswerForEnd():
+    variants = ['Была рада помочь, обращайтесь.',
+                'Рада что помогла, возвращайтесь.',
+                'Приходите еще.',
+                'Закругляюсь.',
+        ]
+    return random.choice(variants)
+
 def getAnswerForAddSeries():
     variants = ['Спасибо! Мы проверим ваше обращение и добавим интересующий сериал в ближайшее вермя',
                 'Окей, я добавлю его',

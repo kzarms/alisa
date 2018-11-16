@@ -39,7 +39,11 @@ def main():
         #text = text.replace(",","").replace(".","").replace("?","").replace(":","")
                     
         #check for key words
-        keywords = ['ping','пинг','как тебя зовут','помощь','что ты умеешь','добавить сериал','подробнее','сериал','смотреть',]
+        keywords = ['ping','пинг',
+            'как тебя зовут','помощь','что ты умеешь',
+            'спасибо','благодарю',
+            'все','выход','конец','завешить','стоп',
+            'добавить сериал','подробнее','сериал','смотреть',]
         if text in keywords:
             #textKey = text.replace(",","").replace(",","")
             if (text == 'ping') or (text == 'пинг'):
@@ -55,6 +59,17 @@ def main():
             if (text == 'что ты умеешь'):
                 res['response']['text'] = getAnswerForHelp()
                 return            
+            if (text == 'помощь'):
+                res['response']['text'] = getAnswerForHelp()
+                return
+            if (text == 'спасибо' or text == 'благодарю'):
+                res['response']['text'] = getAnswerForEnd()
+                res['response']['end_session'] = True
+                return
+            if (text == 'все' or text == 'выход' or text == 'конец' or text == 'завешить' or text == 'стоп'):
+                res['response']['text'] = getAnswerForEnd()
+                res['response']['end_session'] = True
+                return
             if user_id not in sessionStorage:
                 res['response']['text'] = tellIAmSorry() + ' ' + tellIAmLost()
                 return            
@@ -141,18 +156,23 @@ def main():
     print('-------------------------------')
     print(request.json)
     print('-------------------------------')
+    # response = {
+    #     "version": request.json['version'],
+    #     "session": request.json['session'],
+    #     "response": {
+    #         "end_session": False
+    #     }
+    # }
     response = {
         "version": request.json['version'],
         "session": request.json['session'],
-        "response": {
-            "end_session": False
-        }
+        "response": {}        
     }
     print(response)
     
     handle_dialog(request.json, response)
 
-    #logging.info('Response: %r', response)
+    logging.info('Response: %r', response)
 
     return json.dumps(
         response,
