@@ -75,8 +75,7 @@ def getAnswerForPing():
                 'ринг...',
                 'цинк...']
     return random.choice(variants)            
-  
-  
+
 def getAnswerForWhatIsYourName():
     variants = ['можешь называть меня хоть Валерой:)',
                 'Я еще не заслужила имени, просто помогаю найти информацию о дате выхода следующей серии :)',
@@ -90,8 +89,14 @@ def getAnswerForWhatIsYourName():
                 'Тебе это поможет в поиске сериала?',
                 'А твоя девушка любит сериалы?']
     return random.choice(variants)
-                
-                
+
+def getAnswerForHelp():
+    variants = ['Ищу дату выхода новой серии твоего любимого сериала. Например, спроси меня "Когда выходит Теория Большого Взрыва?" и я найду дату выхода ближайшей серии.',
+                'Помогаю найти дату выхода новой серии твоего любимого сериала. Например, спроси меня "Когда выйдет новая серия Игры Престолов?" и я помогу с ответом, если он есть :)',
+                'Подсказываю когда выйдет новая серия. Просто спроси меня "Друзья?" и я отвечу что он завершен, а на вопрос "Стрела" отвечу номером серии, названием и датой.',
+        ]
+    return random.choice(variants)
+
 def getAnswerForAddSeries():
     variants = ['Спасибо! Мы проверим ваше обращение и добавим интересующий сериал в ближайшее вермя',
                 'Окей, я добавлю его',
@@ -104,7 +109,6 @@ def getAnswerForAddSeries():
                 'Будет сделано']
     return random.choice(variants)
 
-    
 def getIntroduceAfterAnswer():
     variants = ['А ищешь то что?',
                 'Так может скажешь, какой сериал интересует',
@@ -121,7 +125,6 @@ def getIntroduceAfterAnswer():
                 'А ты знаешь, что Дейнерис и Джон..... ой извини, чуть спойлер не получился. Ну так ты смотри сам. Тебе какой сериал нужен?']
     return random.choice(variants)
 
-
 def tellAskMeLater():
     variants = ['Позже смогу ответить.',
                 'Давай позже?',
@@ -137,7 +140,7 @@ def tellAskMeLater():
                 'Я ещё такая молодая, но потом точно получится.',
                 'Не сегодня, окей?']
     return random.choice(variants)
-                
+
 def tellICantDoThis():
     variants = ['Сегодня я не смогу.',
                 'Я пока не умею.',
@@ -151,8 +154,7 @@ def tellICantDoThis():
                 'Давай на чистоту. Ты не умеешь летать, а я не смогу сделть что ты просишь.',
                 'Мне очень жаль, но я не умею.']                
     return random.choice(variants)
-    
-    
+
 def tellIAmLost():
     variants = ['Я потеряла нить нашей беседы :)',
                 'Что-то я запуталась...',
@@ -166,8 +168,7 @@ def tellIAmLost():
                 'Я запуталась совсем.',
                 'Что-то день такой.. Я совсем потерялась о чём мы говорили.']
     return random.choice(variants)
-    
-    
+
 def tellIAmSorry():
     variants = ['Прости.',
                 'Прости меня.',
@@ -181,8 +182,6 @@ def tellIAmSorry():
                 'Извиняюсь.',
                 'Тысяча извинений.']
     return random.choice(variants)
-    
-    
 
 def tellICantFindTheEpisode():
     variants = ['Я не могу найти информацию о серии.',
@@ -198,7 +197,6 @@ def tellICantFindTheEpisode():
                 'Не получается найти информацию.']
     return random.choice(variants)
 
-
 def tellWillBeAired():
     variants = ['выйдет в прокат',
                 'можно будет посмотреть',
@@ -211,7 +209,6 @@ def tellWillBeAired():
                 'мы увидим',
                 'увидит свет']
     return random.choice(variants) 
-
 
 def tellAlreadyAired():
     variants = ['уже вышла в прокат',

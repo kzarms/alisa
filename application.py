@@ -8,7 +8,7 @@ import random
 
 from dbfunctions import *
 from dialogs import *
-#import time
+import time
 
 from flask import Flask, request
 app = Flask(__name__)
@@ -32,13 +32,14 @@ def main():
             res['response']['text'] = getIntoduce()
             return
         # Take user text
+        #text = "Когда выходит теория большого взрыва?"
         text = req['request']['command'].lower()
-
+        text = text.strip(' ?!,;:.')
         #Eto chto za pizdec?! :)
         #text = text.replace(",","").replace(".","").replace("?","").replace(":","")
                     
         #check for key words
-        keywords = ['ping','пинг','как тебя зовут','добавить сериал','подробнее','сериал','смотреть',]
+        keywords = ['ping','пинг','как тебя зовут','помощь','что ты умеешь','добавить сериал','подробнее','сериал','смотреть',]
         if text in keywords:
             #textKey = text.replace(",","").replace(",","")
             if (text == 'ping') or (text == 'пинг'):
@@ -46,13 +47,19 @@ def main():
                 res['response']['text'] = 'Reply from new episod: bytes=32 time=46ms TTL=52'
                 return 
             if (text == 'как тебя зовут'):
-                res['response']['text'] = getAnswerForWhatIsYourName() + '\n' + '\n' + getIntroduceAfterAnswer()
+                res['response']['text'] = getAnswerForWhatIsYourName()
+                return
+            if (text == 'помощь'):
+                res['response']['text'] = getAnswerForHelp()
+                return
+            if (text == 'что ты умеешь'):
+                res['response']['text'] = getAnswerForHelp()
                 return            
             if user_id not in sessionStorage:
                 res['response']['text'] = tellIAmSorry() + ' ' + tellIAmLost()
                 return            
             if (text == 'добавить сериал') and (sessionStorage[user_id] == 0):
-                res['response']['text'] = getAnswerForAddSeries() + '\n'+ '\n' + getIntroduceAfterAnswer()
+                res['response']['text'] = getAnswerForAddSeries()
                 return
             if text == 'подробнее':
                 if sessionStorage[user_id] != 0:

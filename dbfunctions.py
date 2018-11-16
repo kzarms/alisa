@@ -221,14 +221,25 @@ def filmdbLastEpisode(filmID):
             name = episode[3]
         else:
             name = episode[2]
-        return episode[0], episode[1], name, episode[4][0:episode[4].index(" ")]
+        
+        if episode[4] != None:
+            arrival = episode[4][0:episode[4].index(" ")]
+        else:
+            arrival = None
+
+        return episode[0], episode[1], name, arrival
     else:
         #return the first row from the list (couse this is the closest to data issue)
         if episodeList[0][3] != None:
             name = episodeList[0][3] 
         else:
-            name = episodeList[0][2] 
-        return episodeList[0][0], episodeList[0][1], name, episodeList[0][4][0:episodeList[0][4].index(" ")]
+            name = episodeList[0][2]
+        if episodeList[0][4] != None:
+            arrival = episodeList[0][4][0:episodeList[0][4].index(" ")]
+        else:
+            arrival = None
+
+        return episodeList[0][0], episodeList[0][1], name, arrival
     con.close()
 
 #tvdbLastEpisode('80379','12')
@@ -337,7 +348,7 @@ def filmSearch(filmId, action, time):
             variants2 = ['Последняя серия под номером','Последняя серия с номером','Заключительная серия номер ','Завершающая серия под номером']            
             return random.choice(variants) + ' ' +  random.choice(variants2) + ' ' + str(tvdbanswer[1]) + ' "' + tvdbanswer[2] + '" ' + seasonName[tvdbanswer[0]] + ' cезона вышла в прокат ' + datetime.strftime(datetime.strptime(tvdbanswer[3], '%Y-%m-%d'), '%d.%m.%Y'), filmId
 
-        if tvdbanswer[3] == '2100-01-01':
+        if tvdbanswer[3] == '2100-01-01' or tvdbanswer[3] == '' or tvdbanswer[3] == None:
             return "Сеьмки сериала ведутся, но дата выхода следующей серии еще не анонсирована. Попробуйте спросить позднее.", filmId
         
         d = datetime.strptime(tvdbanswer[3], '%Y-%m-%d')

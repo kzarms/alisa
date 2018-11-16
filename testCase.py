@@ -1,6 +1,7 @@
 #import io
 import requests
 import sqlite3
+from datetime import datetime, timedelta
 #import datetime
 
 def MyPostCommand(remote, command, i):
@@ -57,19 +58,20 @@ def getFilmList():
     return filmList
 
 filmList = getFilmList()
-for i in range(10,100):
-#for i in range(len(filmList)):
+#for i in range(10,20):
+for i in range(len(filmList)):
+    n = datetime.now()
     result = MyPostCommand(False, filmList[i][0], 2)
-    print(('серия' in result.lower()), filmList[i][0], result,)
+    print(('серия' in result.lower()), filmList[i][0], result, datetime.now() - n,)
 
-keywords = ['ping','пинг','как тебя зовут','добавить сериал','подробнее','сериал','смотреть',]
+keywords = ['ping','пинг','как тебя зовут','помощь','что ты умеешь','добавить сериал','подробнее','сериал','смотреть',]
 #test fist key phrases (not related to previouse search)
-for i in range(3):
+for i in range(5):
     result = MyPostCommand(False, keywords[i], 2)
-    print(keywords[i], result,)
+    print('серии' in result.lower() or 'reply' in result.lower() , keywords[i],)
 
 #execute search to the random film
-for i in range(100,130):
+for i in range(100,101):
     resutl = MyPostCommand(False, filmList[i][0], 2)
     result1 = MyPostCommand(False, 'сериал', 3)
     result2 = MyPostCommand(False, 'смотреть', 4)
