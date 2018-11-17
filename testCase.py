@@ -62,7 +62,7 @@ filmList = getFilmList()
 for i in range(len(filmList)):
     n = datetime.now()
     result = MyPostCommand(False, filmList[i][0], 2)
-    print(('серия' in result.lower()), filmList[i][0], result, datetime.now() - n,)
+    print(('серия' in result.lower()), (datetime.now() - n).total_seconds(), filmList[i][0], result, )
 
 keywords = ['ping','пинг',
             'как тебя зовут','помощь','что ты умеешь',
