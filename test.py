@@ -6,13 +6,14 @@ import requests
 from datetime import datetime, timedelta
 import sqlite3
 import datetime
+from webparser import *
 
 
 token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDE5MjgwNTUsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTg0MTY1NSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.ad5OITMlYUPviKc_tsM8OhlS77Ji52kDPZJTLezcGGfvdvHbfQv9lpa4yfOhqqSyyMsN7mXCy1VWZyNDxI5kvstnokV172xOlW66l-H-qNrbRbkS1r1bXN-KVl4rRHCVc4jy-COiMkSVNftdNxDDuFEiWF-exntIQVctJvE016tVOFpsYUg42xXOFINHy2uEJ3XrWUjBV5ciJnolWJ1V1Ru-B3lmFTYTpYOTNgFAiTZMqHBwKQs2km49pvG6bIW3naWxlK9srZs692jQqe73GyhZGN95ekt07JabQXrFPOF4pQ2ULd_Eph5U2Lm2_0RgDe594Qfy26ixw63P3Kb9jg'
 
 #QUOTE this string for MySQL
 def sqlquote(value):
-    if value is None:
+    if value is None or value == 'None':
          return 'NULL'
     return "'{}'".format(str(value).replace("'", "''"))
 
@@ -297,10 +298,10 @@ print(MyPostCommand(False, 'простоквашино', 2))
 
 
 #create serial table series
-def createSeriesTable(seriesNumber, seasonNumber):
+def createSeriesTable(seriesNumber, airedSeason):
     #seriesNumber = 10
     # filmID = '296762'
-    # seasonNumber = 1
+    # airedSeason = 1
     con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
     cur = con.cursor()
     cmd = 'SELECT tvdbId FROM films WHERE rowid=' + str(seriesNumber)
@@ -309,7 +310,7 @@ def createSeriesTable(seriesNumber, seasonNumber):
     
     URL = "https://api.thetvdb.com"   
     HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}  
-    PARAMS = {'airedSeason':str(seasonNumber)} 
+    PARAMS = {'airedSeason':str(airedSeason)} 
     #Create full request
     URL = URL + '/series/' + str(filmID[0]) + '/episodes/query'
     r = requests.get(url = URL, headers = HEADERS, params = PARAMS)
@@ -318,7 +319,7 @@ def createSeriesTable(seriesNumber, seasonNumber):
     r = requests.get(url = URL, headers = HEADERS, params = PARAMS)
     dataEn = r.json()
 
-    if int(seasonNumber) == 1:
+    if int(airedSeason) == 1:
         cmd = 'drop table if exists series_' + str(seriesNumber)
         cur.execute(cmd)
         #create a new one
@@ -446,18 +447,26 @@ print(MyPostCommand(True, 'как тебя зовут', 1))
 #27 http://www.lostfilm.tv/series/Gotham/seasons/
 
 
-#airedSeason, airedEpisodeNumber, episodeNameEn, episodeNameRu, firstAired, director, overviewEn, overviewRu, showUrl
-def addEpisode(seriesNumber, episodeJson):
+
+
+#--Input - dict object. 
+def addEpisode(seriesNumber, episodeJson, nameEn):
     con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
-    sql = 'SELECT airedSeason, airedEpisodeNumber, episodeNameEn, episodeNameRu, firstAired, director, overviewEn, overviewRu, showUrl FROM series_%s WHERE airedSeason = %s AND airedEpisodeNumber = %s' % (str(seriesNumber), str(episodeJson['airedSeason']), str(episodeJson['airedEpisodeNumber']))
-    print(sql)
+    sql = 'SELECT airedSeason, airedEpisodeNumber, episodeNameEn, episodeNameRu, firstAired, director, overviewRu, showUrl FROM series_%s WHERE airedSeason = %s AND airedEpisodeNumber = %s' % (str(seriesNumber), str(episodeJson['airedSeason']), str(episodeJson['airedEpisodeNumber']))
+    #print(sql)
+    #print(str(episodeJson))
     cur = con.cursor()
     cur.execute(sql)
     row = cur.fetchone()
-    print(row)
-    
+    #rint(row)    
     if row == None:  #No episode - add
-        print('add episode')
+        print(nameEn + ' NO EPISODE IN BASE , ADD---------')
+        sql = 'INSERT INTO series_%s (airedSeason, airedEpisodeNumber, episodeNameEn, episodeNameRu, firstAired, overviewEn) VALUES (%s, %s, %s, %s, %s, %s)' % (seriesNumber, episodeJson.get('airedSeason'), episodeJson.get('airedEpisodeNumber'), sqlquote(episodeJson.get('episodeNameEn')), sqlquote(episodeJson.get('episodeNameRu')), sqlquote(episodeJson.get('firstAired')), sqlquote(episodeJson.get('overviewEn')))
+        print(sql)
+        print("\n\n\n")
+        cur.execute(sql)
+        con.commit()
+        con.close()
     else:
         episodeBase = {}
         episodeBase['airedSeason'] = row[0]
@@ -465,28 +474,70 @@ def addEpisode(seriesNumber, episodeJson):
         episodeBase['episodeNameEn'] = row[2]
         episodeBase['episodeNameRu'] = row[3]
         episodeBase['firstAired'] = row[4]
-        print("----------OLD ROW:-----------------")
-        print(episodeBase)
+        #print("----------OLD ROW:-----------------")
+        #print(str(episodeBase) + ' ' + str(episodeJson))
         change = False
         for key, value in episodeBase.items():
-            if (episodeJson.get(key) != None) and ((episodeBase.get(key) == None) or (episodeBase.get(key) == "")):
+            if (episodeJson.get(key) != None) and ((episodeBase.get(key) == None) or (str(episodeBase.get(key)).rstrip() == "")):
                 episodeBase[key] = episodeJson[key]
                 change = True
         if change == True:
-            print("---------NEW ROW---------------")
-            print(episodeBase)
-            sql = 'UPDATE series_%i SET episodeNameEn = %s, episodeNameRu = %s, firstAired = %s WHERE airedSeason = %i AND airedEpisodeNumber = %i' % (seriesNumber, sqlquote(str(episodeJson.get('episodeNameEn'))), sqlquote(str(episodeJson.get('episodeNameRu'))), sqlquote(str(episodeJson.get('firstAired'))), episodeJson.get('airedSeason'), episodeJson.get('airedEpisodeNumber'))
+            print(nameEn + ' CHANGE EXISTED EPISODE------------')
+            sql = 'UPDATE series_%i SET episodeNameEn = %s, episodeNameRu = %s, firstAired = %s, overviewEn = %s  WHERE airedSeason = %i AND airedEpisodeNumber = %i' % (seriesNumber, sqlquote(str(episodeBase.get('episodeNameEn'))), sqlquote(str(episodeBase.get('episodeNameRu'))), sqlquote(str(episodeBase.get('firstAired'))), sqlquote(episodeJson.get('overviewEn')), episodeBase.get('airedSeason'), episodeBase.get('airedEpisodeNumber'))
             print(sql)
+            print("\n\n\n")
             cur.execute(sql)
             con.commit()
             con.close()
-    
-    #print(episodeBase)
 
-episodeJson = {}
-seriesNumber = 1
-episodeJson['airedSeason'] = 12
-episodeJson['airedEpisodeNumber'] = 9
-episodeJson['episodeNameEn'] = 'The Citation Negation'
-addEpisode(1, episodeJson)
 
+#--Add episodes from dictionary
+def addEpsiodesFromDict(seriesNumber, episodes, nameEn):
+    print('-----------' + nameEn + '-------------')
+    for episode in episodes:
+        #print(episode)
+        addEpisode(seriesNumber, episode, nameEn)
+
+
+#add new episodes. withois series numbers - all series. if you need to add particular series - define it in seriesNumber list 
+def addNewEpisodesFromURL(seriesNumbers = ""):
+    con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+    cur = con.cursor()
+
+    if seriesNumbers == "":
+            sql = 'SELECT rowid, nameEn, info, showURL  FROM films WHERE showURL is not NULL AND showURL <> ""'
+            cur.execute(sql)
+            films = cur.fetchall()
+            f = open('testadd.txt', 'w')
+            for line in films:
+                seriesNumber = line[0]
+                nameEn = line[1]  #not neccessary, but please don't delete (for future tests)
+                source = line[2]
+                showURL = line[3]
+                if source == "tvguide":
+                    episodes = getEpisodesInfoFromTvGuide(showURL)
+                    #print("-----------NEW SERIES-----------" + nameEn)
+                    #print('-------------nameEn-------------')
+                    f.write(nameEn + "\n")  
+                    f.write(str(episodes)) 
+                    f.write("\n")
+                addEpsiodesFromDict(seriesNumber, episodes, nameEn)
+                    
+    else: 
+        for seriesNumber in seriesNumbers:
+            sql = 'SELECT rowid, nameEn, info, showURL  FROM films WHERE rowid = %i AND showURL is not NULL AND showURL <> ""' % seriesNumber
+            cur.execute(sql)
+            line = cur.fetchone()
+            nameEn = line[1]
+            source = line[2]
+            showURL = line[3]
+            
+            if source == "tvguide":
+                print(showURL)
+                episodes = getEpisodesInfoFromTvGuide(showURL)
+            addEpsiodesFromDict(seriesNumber, episodes, nameEn)
+
+
+
+#addNewEpisodesFromURL()
+addNewEpisodesFromURL([1, 34])
