@@ -40,6 +40,7 @@ def main():
                     
         #check for key words
         keywords = ['ping','пинг',
+            '477b0c56-3dc5-4b69-ae85-a2eec9e378cd',
             'как тебя зовут','помощь','что ты умеешь',
             'привет','здравствуй','здравствуйте','хай','hi',
             'спасибо','благодарю',
@@ -51,6 +52,11 @@ def main():
                 #res['response']['text'] = getAnswerForPing() + '\n' + '\n' + getIntroduceAfterAnswer()
                 res['response']['text'] = 'Reply from new episod: bytes=32 time=46ms TTL=52'
                 return 
+            if text == '477b0c56-3dc5-4b69-ae85-a2eec9e378cd':
+                for i in range(2):
+                    addNewEpisodesFromURL(i)
+                res['response']['text'] = 'End update'
+                return
             if (text == 'как тебя зовут'):
                 res['response']['text'] = getAnswerForWhatIsYourName()
                 return

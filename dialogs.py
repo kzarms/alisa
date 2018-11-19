@@ -17,7 +17,7 @@ def getRandomQuote():
 
 def getRandomFact():
     return random.choice(facts).replace('...', '\n')
-    
+  
  
 def getQuestionQuote():
     question = ['А ещё я знаю цитаты. Хочешь одну?', 

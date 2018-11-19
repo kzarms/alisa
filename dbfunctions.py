@@ -10,7 +10,7 @@ import pymorphy2
 from difflib import SequenceMatcher
 from dialogs import *
 #marker
-token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDIxMzY0NDEsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MjA1MDA0MSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.cvGn44_U_GnbR8AIfqF4NyGiaG4YjF_4RobdELyfaYVB_XXsKvbNRSxDCJVw05CIbJ9jvD2awn2k0DRq9rb2D1JKt1rkSUfn0hZrX64bHcSdGRXum613NO4Yr5-ghKBX0HCB9F6rLga6Qs-Yoi-SZ85iQN32bRHI5quDMFKnFDe50qM9Df7RLOTd4st-EBibHT9yLufHj0D7018IjF-6AUrNX8IEZ3hXoVY8sDYMh3Z_jeIgjmn0zrebztv9a_NssYbwwh5bUnK5PQOQmx5a-CPQ1tpAnpYLzaiA04Ss12mCF1dsyliEygELF5uGnpCHHNIl6i80NeReUMEe07R10A'
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDI2NTU0MTgsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MjU2OTAxOCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.sCZAVC78b_EUbzf-CxeEDv7V4fharEUACT8dfevk7PTsojfwdNwMPD8F3i8OiYp-qRdcqsdaq0GpaCKMHe0eYEY35fGRl6dw3k-c7GBKfitCttxAFQwAWY_DiKrItDCpTIgchIxj-my2s6wJwlk41dAKdEm7Zt5TUf7ICHOzQpxWbZs4Bu5z4e_28aJruw-Bc5UM-wY8yntpxuE7_O5yOFa_PfwcZU6zJfpgB0HuErHe1EBGwnFIxNeAaIhAigLrR83L0-R1mi8PbE2u2_oDoIfBN1zA6zz9_prYHovhqX55fAQ1EmIVUBc2xQvKTI6X8Sm9jyQ3PqwDR3UalgtGDg'
 #storage for chash
 cashRequests = {}
 #read all aliases at start
@@ -26,13 +26,7 @@ cur.execute(cmd)
 films_in_memory = cur.fetchall()
 #
 con.close()
-
-# with open('NameVariations.csv', mode="r", encoding="utf-8") as file:
-#     aliases_in_memory = file.read()
-
-# with open('films.csv', mode="r", encoding="utf-8") as file:
-#     films_in_memory = file.read()
-
+#
 morph = pymorphy2.MorphAnalyzer()
 
 # Get Normalized name
@@ -129,6 +123,7 @@ def SeachActionTimeDetection(text):
         if word in TimeWords.keys():
             return TimeWords[word]
     return -1 
+
 #update token
 def tockenRefresh():
     URL = "https://api.thetvdb.com/login"   
@@ -145,65 +140,143 @@ def tockenRefresh():
         token = data['token']
   
 #seach function in the tbdb
-def tvdbLastEpisode(filmID, seasonNumber):
-    global cashRequests
-    if filmID in cashRequests:         
-         if cashRequests[filmID][0] > (datetime.now() - timedelta(hours=8)):
-             #We have cash with less thatn 8 hours resutls, Return resutls from the chash
-             return cashRequests[filmID][1], cashRequests[filmID][2], cashRequests[filmID][3]
-    #filmID = '80379'
-    #seasonNumber = '12'
-    URL = "https://api.thetvdb.com"   
-    HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}  
-    PARAMS = {'airedSeason':seasonNumber} 
-    #Create full request
-    URL = URL + '/series/' + filmID + '/episodes/query'
-    #r = requests.get(url = URL, headers = HEADERS, params = PARAMS)    
+def tvdbEpisodesFromLastSeason(filmID):
+    # global cashRequests
+    # if filmID in cashRequests:         
+    #      if cashRequests[filmID][0] > (datetime.now() - timedelta(hours=8)):
+    #          #We have cash with less thatn 8 hours resutls, Return resutls from the chash
+    #          return cashRequests[filmID][1], cashRequests[filmID][2], cashRequests[filmID][3]
+    # #filmID = '80379'
+    # #seasonNumber = '12'
+    URL = "https://api.thetvdb.com"    
+    HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)} 
+    URL1 = URL + '/series/' + str(filmID) + '/episodes/summary'
     try:
-        r = requests.get(url = URL, headers = HEADERS, params = PARAMS)
+        r = requests.get(url = URL1, headers = HEADERS)
     except:
         return 'Error', 'Connection error'
-
-    # extracting data in json format 
-    data = r.json()
-    #print(data)
-    if 'Error' in data:
+    
+    dataSum = r.json()
+    if 'Error' in dataSum:
         #there is an error
-        if 'No results for your query' in data['Error']:
+        if 'No results for your query' in dataSum['Error']:
             return 'Error', 'Search error'
-        if data['Error'] == 'Not authorized':
+        if dataSum['Error'] == 'Not authorized':
             #try update token
             tockenRefresh()
             print(token)
             if token == '0':
                 return 'Error', 'Auth error and update token error'
-            HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}
-            r = requests.get(url = URL, headers = HEADERS, params = PARAMS)
-            data = r.json()
-            if 'Error' in data:
+            HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)}
+            r = requests.get(url = URL1, headers = HEADERS)
+            dataSum = r.json()
+            if 'Error' in dataSum:
                 return 'Error', 'Error token update'
-    #looking for the last episod in the seies
-    lastEpisode = 1
-    for series in data['data']:
-        if int(series['airedEpisodeNumber']) > lastEpisode:
-            lastEpisode = int(series['airedEpisodeNumber'])
-            episode = series
-
-    if episode['episodeName'] == None:
-        #if there is no Rus name, repeat in En
-        HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)}
-        r = requests.get(url = URL, headers = HEADERS, params = PARAMS)
-        data = r.json()
-        #looking for the last episod in the seies
-        lastEpisode = 1
-        for series in data['data']:
-            if int(series['airedEpisodeNumber']) > lastEpisode:
-                lastEpisode = int(series['airedEpisodeNumber'])
-                episode = series
-    #save information into the cash
+    #Get the last season information.
+    lastSeason = max(map(int, dataSum['data']['airedSeasons']))
     
-    cashRequests[filmID] = [datetime.now(), str(episode['airedEpisodeNumber']), episode['episodeName'], str(episode['firstAired']),]
-    return episode['airedEpisodeNumber'], episode['episodeName'], episode['firstAired']
+    #Collect information about the last season
+    HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}  
+    PARAMS = {'airedSeason':str(lastSeason)} 
+    #Create full request
+    URL2 = URL + '/series/' + str(filmID) + '/episodes/query'
+    r = requests.get(url = URL2, headers = HEADERS, params = PARAMS)
+    dataRu = r.json()
+    HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)}
+    r = requests.get(url = URL2, headers = HEADERS, params = PARAMS)
+    dataEn = r.json()
+    #Genrate a new episodes list
+    episodes = []
+    for i in range(len(dataEn['data'])):
+        if dataEn['data'][i]['firstAired'] != '': 
+            data = dataEn['data'][i]['firstAired'] + ' 00:00:00'
+        elif dataRu['data'][i]['firstAired'] != '':
+            data = dataRu['data'][i]['firstAired'] + ' 00:00:00'
+        else:
+            data = None
+        episode = (int(dataEn['data'][i]['airedSeason']),
+            int(dataEn['data'][i]['airedEpisodeNumber']),
+            dataEn['data'][i]['episodeName'],
+            dataRu['data'][i]['episodeName'],
+            data,
+            dataEn['data'][i]['director'],
+            dataEn['data'][i]['overview'],
+            dataRu['data'][i]['overview'],
+            dataEn['data'][i]['showUrl'],
+            None,)
+        episodes.append(episode)
+        sorted_by_second = sorted(episodes, key=lambda tup: tup[1])
+    return sorted_by_second
+
+#--Input - dict object. 
+def addEpisode(seriesNumber, episode):
+    print(seriesNumber)
+    airedSeason = episode[0]
+    airedEpisodeNumber = episode[1]
+    con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+    cur = con.cursor()
+    sql = 'SELECT * FROM series_%s WHERE airedSeason = %s AND airedEpisodeNumber = %s' % (str(seriesNumber), str(airedSeason), str(airedEpisodeNumber))
+    cur.execute(sql)
+    row = cur.fetchone()    
+    if row == episode:
+        #they are equal, nothing to change
+        return
+    else:
+        #There is difference
+        if row == None:
+            #No data in the DB, insert a new episode
+            cur.execute("INSERT INTO series_" + str(seriesNumber) + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", episode)
+            con.commit()
+            print(seriesNumber, 'New line!')
+        else:
+            #it is not a none value, need to compare and update null values.
+            episodeValues = []
+            update = False           
+            for i in range(len(row)):
+                #if not same
+                if row[i] != episode[i]: 
+                    if row[i] == None or row[i] == '':
+                        #If there is nothing, recorded into the feild.
+                        episodeValues.append(episode[i])
+                        update = True
+                        #print('update', episode[i])
+                    elif episode[i] == None or episode[i] == '':
+                        #We have someghin in DB but the TVDB returns null
+                        episodeValues.append(row[i])
+                    else:
+                        #There is something, and episode have someting. Manual check should be performed
+                        episodeValues.append(episode[i])
+                        print('old', row[i],)
+                        print('new', episode[i],)
+                        update = True
+                else:
+                    #Same values, append only data from DB
+                    episodeValues.append(row[i])                
+            if update:
+                #if we have something to update than update DB, if we have null values in update than skip these steps
+                sql = '''UPDATE series_%i SET episodeNameEn = ?, episodeNameRu = ?, firstAired = ?, director = ?, overviewEn = ?, overviewRu = ?, showUrl = ?, info = ? WHERE airedSeason = %i AND airedEpisodeNumber = %i''' % (int(seriesNumber), airedSeason, row[1])
+                cur.execute(sql, episodeValues[2:])
+                con.commit()
+                print(seriesNumber, 'update')
+    con.close()
+
+#add new episodes. withois series numbers - all series. if you need to add particular series - define it in seriesNumber list 
+def addNewEpisodesFromURL(seriesNumber):
+    if seriesNumber == None or seriesNumber == 0:
+        return 0, 'Nothing'
+    #Collect tvdbID form the fims table
+    con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+    cur = con.cursor()
+    resutl = (cur.execute('SELECT tvdbid, status FROM films WHERE rowid=?', (str(seriesNumber),))).fetchone()
+    con.close()
+    #Collect episodes about last
+    if resutl[1] == 'Ended':
+        return 0, 'Ended'
+    #collect information form the TVdb in sorted man
+    episodes = tvdbEpisodesFromLastSeason(resutl[0])
+    for episode in episodes:
+        addEpisode(seriesNumber, episode)
+    return 1 
 
 def filmdbLastEpisode(filmID):
     con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
@@ -388,6 +461,11 @@ def CoreSearch(text):
     time = SeachActionTimeDetection(text)
     #core logic
     return filmSearch(filmId, action, time)
+
+# for i in range(138):
+#       addNewEpisodesFromURL(i)
+
+#addNewEpisodesFromURL(16)
 
 #print(filmdbLastEpisode(1))
 

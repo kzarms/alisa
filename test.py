@@ -537,7 +537,11 @@ def addNewEpisodesFromURL(seriesNumbers = ""):
                 episodes = getEpisodesInfoFromTvGuide(showURL)
             addEpsiodesFromDict(seriesNumber, episodes, nameEn)
 
+def getEpisodesInfoFromTvGuide():
+    
 
+print(getEpisodesInfoFromTvGuide("https://www.tvguide.com/tvshows/south-park/episodes/100402/"))
+#{'episodeNameEn': 'Nobody Got Cereal?', 'airedSeason': '22', 'airedEpisodeNumber': '7', 'firstAired': '2018-11-14 00:00:00', 'overviewEn': 'The boys break out of jail but are on the run from the police and ManBearPig.'},
 
 #addNewEpisodesFromURL()
-addNewEpisodesFromURL([1, 34])
+#addNewEpisodesFromURL([1, 34])
