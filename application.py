@@ -62,6 +62,16 @@ def main():
                 return
             if (text == 'помощь'):
                 res['response']['text'] = getAnswerForHelp()
+                res['response']['buttons'] = [
+                    {
+                        "title": "Теория Большого Взрыва",
+                        "hide": True
+                    },
+                    {
+                        "title": "Саус Парк",
+                        "hide": True
+                    }
+                ]
                 return
             if (text == 'что ты умеешь'):
                 res['response']['text'] = getAnswerForHelp()
@@ -76,19 +86,6 @@ def main():
                     }
                 ]
                 return            
-            if (text == 'помощь'):
-                res['response']['text'] = getAnswerForHelp()
-                res['response']['buttons'] = [
-                    {
-                        "title": "Теория Большого Взрыва",
-                        "hide": True
-                    },
-                    {
-                        "title": "Саус Парк",
-                        "hide": True
-                    }
-                ]
-                return
             if (text == 'привет' or text == 'здравствуй' or text == 'здравствуйте' or text == 'хай' or text == 'hi'):
                 res['response']['text'] = getIntoduce()
                 return
