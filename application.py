@@ -45,7 +45,7 @@ def main():
             'привет','здравствуй','здравствуйте','хай','hi',
             'спасибо','благодарю',
             'все','выход','конец','завешить','стоп',
-            'добавить сериал','подробнее','сериал','смотреть',]
+            'добавить сериал','подробнее','сериал','сайт',]
         if text in keywords:
             #textKey = text.replace(",","").replace(",","")
             if (text == 'ping') or (text == 'пинг'):
@@ -53,7 +53,7 @@ def main():
                 res['response']['text'] = 'Reply from new episod: bytes=32 time=46ms TTL=52'
                 return 
             if text == '477b0c56-3dc5-4b69-ae85-a2eec9e378cd':
-                for i in range(2):
+                for i in range(139):
                     addNewEpisodesFromURL(i)
                 res['response']['text'] = 'End update'
                 return
@@ -65,9 +65,29 @@ def main():
                 return
             if (text == 'что ты умеешь'):
                 res['response']['text'] = getAnswerForHelp()
+                res['response']['buttons'] = [
+                    {
+                        "title": "Теория Большого Взрыва",
+                        "hide": True
+                    },
+                    {
+                        "title": "Саус Парк",
+                        "hide": True
+                    }
+                ]
                 return            
             if (text == 'помощь'):
                 res['response']['text'] = getAnswerForHelp()
+                res['response']['buttons'] = [
+                    {
+                        "title": "Теория Большого Взрыва",
+                        "hide": True
+                    },
+                    {
+                        "title": "Саус Парк",
+                        "hide": True
+                    }
+                ]
                 return
             if (text == 'привет' or text == 'здравствуй' or text == 'здравствуйте' or text == 'хай' or text == 'hi'):
                 res['response']['text'] = getIntoduce()
@@ -98,10 +118,10 @@ def main():
                 else:
                     res['response']['text'] = tellIAmSorry() + ' ' + tellIAmLost()
                 return
-            if text == 'смотреть':
+            if text == 'сайт':
                 if sessionStorage[user_id] != 0:
                     res['response']['text'] = 'Слышала, что есть альтернативные вариаты просмотра ;)'
-                    res['response']['end_session'] = 'true'
+                    res['response']['end_session'] = True
                 else:
                     res['response']['text'] = tellIAmSorry() + ' ' + tellIAmLost()
                 return
@@ -143,6 +163,7 @@ def main():
             res['response']['buttons'] = [
                 {
                     "title": "Добавить сериал",
+                    "hide": True
                 }
             ]
         if result[1] != 0:
@@ -153,11 +174,12 @@ def main():
                 f.close()
             res['response']['buttons'] = [
                 {
-                    "title": "Сериал",
+                    "title": "Сайт",
+                    "url": OfficialURL(result[1]),
+                    "hide": True
                 },
                 {
-                    "title": "Смотреть",
-                    "url": OfficialURL(result[1]),
+                    "title": "Сериал",
                     "hide": True
                 }
             ]

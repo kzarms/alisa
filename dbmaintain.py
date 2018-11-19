@@ -152,4 +152,4 @@ def addSerialIntoDB(filmID):
     con.close()
 
 #Record serial into the db. Add into films, create a series table + add aliases
-addSerialIntoDB(328724)
+addSerialIntoDB(346602)

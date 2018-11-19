@@ -67,13 +67,13 @@ keywords = ['ping','пинг',
             'привет','здравствуй','здравствуйте','хай','hi',
             'спасибо','благодарю',
             'все','выход','конец','завешить','стоп',
-            'добавить сериал','подробнее','сериал','смотреть',]
+            'добавить сериал','подробнее','сериал','сайт',]
 #test fist key phrases (not related to previouse search)
 for i in range(4):
     result = MyPostCommand(False, keywords[i], 2)
     print('серии' in result.lower() or 'reply' in result.lower() , keywords[i],)
 
-for i in range(5,12):
+for i in range(5,21):
     result = MyPostCommand(False, keywords[i], 2)
     print('.' in result.lower(), keywords[i],)
 
