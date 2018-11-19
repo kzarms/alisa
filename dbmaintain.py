@@ -3,8 +3,7 @@ import requests
 import sqlite3
 import datetime
 
-token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDIxMzY0NDEsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MjA1MDA0MSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.cvGn44_U_GnbR8AIfqF4NyGiaG4YjF_4RobdELyfaYVB_XXsKvbNRSxDCJVw05CIbJ9jvD2awn2k0DRq9rb2D1JKt1rkSUfn0hZrX64bHcSdGRXum613NO4Yr5-ghKBX0HCB9F6rLga6Qs-Yoi-SZ85iQN32bRHI5quDMFKnFDe50qM9Df7RLOTd4st-EBibHT9yLufHj0D7018IjF-6AUrNX8IEZ3hXoVY8sDYMh3Z_jeIgjmn0zrebztv9a_NssYbwwh5bUnK5PQOQmx5a-CPQ1tpAnpYLzaiA04Ss12mCF1dsyliEygELF5uGnpCHHNIl6i80NeReUMEe07R10A'
-
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDI3NDM3OTUsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MjY1NzM5NSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.hdTGBd_KJQQmdHB7QPLRJgp3uzPpeLgelsne4Q1xcWb6JQwRhshCTnlwiQlUbOEe-_PRbkCGgy0FjINbwA4yyudAjcIbv267aydHsXwI_-bAjUvjM7_1ByKHbdjTijAiepNJj7XElJCOpXO0jLnuh6rCJIE0KcGLnWNYrhCoNbFdrqrL29EyHd2nBFOlUa_51l9g6P01umemEYNid7psj2adInBI0n8294zdSuREmK4dvSUVwepg7HkucfUhhJ8dKSMx65K63K45Zlkpc05y6FsqoXMVRHNJK1U5x81mIxP6BBAAomFLVrbOYjgYFTpLRvWtBskYTYZD4pgkpg70Qw'
 def tockenRefresh():
     URL = "https://api.thetvdb.com/login"   
     HEADERS = {'Content-Type': 'application/json'}  
@@ -61,7 +60,11 @@ def addSerialIntoDB(filmID):
     dataSum = r.json()
 
     lastSeason = max(map(int, dataSum['data']['airedSeasons']))    
-
+    if dataEn['data']['firstAired'] != None and dataEn['data']['firstAired'] != '':
+        firstAired = datetime.datetime.strptime(dataEn['data']['firstAired'], '%Y-%m-%d')
+    else:
+        firstAired = None
+        print("!Update first arride in the DB manually")
     #summ result in the finnal line
     fields = [(dataEn['data']['id']),
         dataEn['data']['imdbId'],
@@ -69,7 +72,7 @@ def addSerialIntoDB(filmID):
         dataEn['data']['seriesName'],
         dataRu['data']['seriesName'],
         dataEn['data']['status'],
-        datetime.datetime.strptime(dataEn['data']['firstAired'], '%Y-%m-%d'),
+        firstAired,
         dataEn['data']['network'],
         int(lastSeason),
         int(dataSum['data']['airedEpisodes']),
@@ -152,4 +155,4 @@ def addSerialIntoDB(filmID):
     con.close()
 
 #Record serial into the db. Add into films, create a series table + add aliases
-addSerialIntoDB(346602)
+addSerialIntoDB(355112)
