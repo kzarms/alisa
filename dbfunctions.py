@@ -475,7 +475,7 @@ def CoreSearch(text):
 
 #print(CoreSearch("Твин Пикс"))
 # print(CoreSearch("Звёздные войны: Сопротивление"))
-#print(CoreSearch("воронины"))
+print(CoreSearch("друзья"))
 #print(CoreSearch("дай инфо о теории большого взрыва"))
 # print(CoreSearch("где глянуть теорию большого взрыва"))
 #print(CoreSearch("новая серия грифинов"))

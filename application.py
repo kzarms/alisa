@@ -53,7 +53,7 @@ def main():
                 res['response']['text'] = 'Reply from new episod: bytes=32 time=46ms TTL=52'
                 return 
             if text == '477b0c56-3dc5-4b69-ae85-a2eec9e378cd':
-                for i in range(139):
+                for i in range(142):
                     addNewEpisodesFromURL(i)
                 res['response']['text'] = 'End update'
                 return
