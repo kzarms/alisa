@@ -55,7 +55,7 @@ def main():
             if text == '477b0c56-3dc5-4b69-ae85-a2eec9e378cd':
                 for i in range(139):
                     addNewEpisodesFromURL(i)
-                res['response']['text'] = 'End update'
+                res['response']['text'] = 'End update'  
                 return
             if (text == 'как тебя зовут'):
                 res['response']['text'] = getAnswerForWhatIsYourName()

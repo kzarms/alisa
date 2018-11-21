@@ -9,6 +9,8 @@ from datetime import datetime, timedelta, time
 import pymorphy2
 from difflib import SequenceMatcher
 from dialogs import *
+from webparser import *
+
 #marker
 token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDI2NTU0MTgsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MjU2OTAxOCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.sCZAVC78b_EUbzf-CxeEDv7V4fharEUACT8dfevk7PTsojfwdNwMPD8F3i8OiYp-qRdcqsdaq0GpaCKMHe0eYEY35fGRl6dw3k-c7GBKfitCttxAFQwAWY_DiKrItDCpTIgchIxj-my2s6wJwlk41dAKdEm7Zt5TUf7ICHOzQpxWbZs4Bu5z4e_28aJruw-Bc5UM-wY8yntpxuE7_O5yOFa_PfwcZU6zJfpgB0HuErHe1EBGwnFIxNeAaIhAigLrR83L0-R1mi8PbE2u2_oDoIfBN1zA6zz9_prYHovhqX55fAQ1EmIVUBc2xQvKTI6X8Sm9jyQ3PqwDR3UalgtGDg'
 #storage for chash
@@ -28,6 +30,12 @@ films_in_memory = cur.fetchall()
 con.close()
 #
 morph = pymorphy2.MorphAnalyzer()
+
+#--SQL quote for SQL query
+def sqlquote(value):
+    if value is None or value == 'None':
+         return 'NULL'
+    return "'{}'".format(str(value).replace("'", "''"))
 
 # Get Normalized name
 def get_normalized_string(string):
@@ -260,15 +268,18 @@ def addEpisode(seriesNumber, episode):
                 print(seriesNumber, 'update')
     con.close()
 
+
+
 #add new episodes. withois series numbers - all series. if you need to add particular series - define it in seriesNumber list 
 def addNewEpisodesFromURL(seriesNumber):
+    #--Get series from TVDB
     if seriesNumber == None or seriesNumber == 0:
         return 0, 'Nothing'
     #Collect tvdbID form the fims table
     con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
     cur = con.cursor()
     resutl = (cur.execute('SELECT tvdbid, status FROM films WHERE rowid=?', (str(seriesNumber),))).fetchone()
-    con.close()
+    #con.close()
     #Collect episodes about last
     if resutl[1] == 'Ended':
         return 0, 'Ended'
@@ -276,7 +287,66 @@ def addNewEpisodesFromURL(seriesNumber):
     episodes = tvdbEpisodesFromLastSeason(resutl[0])
     for episode in episodes:
         addEpisode(seriesNumber, episode)
+
+    #--Get series from other sources
+    sql = 'SELECT rowid, nameEn, searchURL  FROM films WHERE rowid = %i AND searchURL is not NULL AND searchURL <> ""' % seriesNumber
+    cur.execute(sql)
+    line = cur.fetchone()
+    nameEn = line[1]
+    searchURL = line[2]
+    
+    if "tvguide.com" in searchURL:
+        print(nameEn + ' ' + searchURL)
+        episodes = getEpisodesInfoFromTvGuide(searchURL)    
+        for episode in episodes:
+            addEpisodeFromDict(seriesNumber, episode, nameEn)       
     return 1 
+
+
+def addEpisodeFromDict(seriesNumber, episodeJson, nameEn):
+    con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+    sql = 'SELECT airedSeason, airedEpisodeNumber, episodeNameEn, episodeNameRu, firstAired, director, overviewRu FROM series_%s WHERE airedSeason = %s AND airedEpisodeNumber = %s' % (str(seriesNumber), str(episodeJson['airedSeason']), str(episodeJson['airedEpisodeNumber']))
+    #print(sql)
+    #print(str(episodeJson))
+    cur = con.cursor()
+    cur.execute(sql)
+    row = cur.fetchone()
+    print(nameEn)
+    #rint(row)    
+    if row == None:  #No episode - add
+        print(nameEn + ' NO EPISODE IN BASE , ADD---------')
+        sql = 'INSERT INTO series_%s (airedSeason, airedEpisodeNumber, episodeNameEn, episodeNameRu, firstAired, overviewEn) VALUES (%s, %s, %s, %s, %s, %s)' % (seriesNumber, episodeJson.get('airedSeason'), episodeJson.get('airedEpisodeNumber'), sqlquote(episodeJson.get('episodeNameEn')), sqlquote(episodeJson.get('episodeNameRu')), sqlquote(episodeJson.get('firstAired')), sqlquote(episodeJson.get('overviewEn')))
+        print(sql)
+        print("\n\n\n")
+        cur.execute(sql)
+        con.commit()
+        con.close()
+    else:
+        episodeBase = {}
+        episodeBase['airedSeason'] = row[0]
+        episodeBase['airedEpisodeNumber'] = row[1]
+        episodeBase['episodeNameEn'] = row[2]
+        episodeBase['episodeNameRu'] = row[3]
+        episodeBase['firstAired'] = row[4]
+        #print("----------OLD ROW:-----------------")
+        #print(str(episodeBase) + ' ' + str(episodeJson))
+        change = False
+        for key, value in episodeBase.items():
+            if (episodeJson.get(key) != None) and ((episodeBase.get(key) == None) or (str(episodeBase.get(key)).rstrip() == "")):
+                episodeBase[key] = episodeJson[key]
+                change = True
+        if change == True:
+            print (("%s %i %i CHANGED WITH TVGUIDE INFO") % (nameEn, episodeBase.get('airedSeason'), episodeBase.get('airedEpisodeNumber')))
+            sql = 'UPDATE series_%i SET episodeNameEn = %s, episodeNameRu = %s, firstAired = %s, overviewEn = %s  WHERE airedSeason = %i AND airedEpisodeNumber = %i' % (seriesNumber, sqlquote(str(episodeBase.get('episodeNameEn'))), sqlquote(str(episodeBase.get('episodeNameRu'))), sqlquote(str(episodeBase.get('firstAired'))), sqlquote(episodeJson.get('overviewEn')), episodeBase.get('airedSeason'), episodeBase.get('airedEpisodeNumber'))
+            print(sql)
+            print("\n\n\n")
+            cur.execute(sql)
+            con.commit()
+            con.close()
+        else:
+            print (('%s %i %i NO NEW INFO FROM TVGUIDE') % (nameEn, episodeBase.get('airedSeason'), episodeBase.get('airedEpisodeNumber')))
+
+
 
 def filmdbLastEpisode(filmID):
     con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
@@ -465,8 +535,9 @@ def CoreSearch(text):
 # for i in range(138):
 #       addNewEpisodesFromURL(i)
 
-#addNewEpisodesFromURL(16)
+#addNewEpisodesFromURL(1)
 
+№#rint(SearchName('Маша и медведь'))
 #print(filmdbLastEpisode(1))
 
 #print(SearchName("33 несчастья"))
