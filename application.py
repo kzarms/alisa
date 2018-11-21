@@ -185,13 +185,7 @@ def main():
     print('-------------------------------')
     print(request.json)
     print('-------------------------------')
-    # response = {
-    #     "version": request.json['version'],
-    #     "session": request.json['session'],
-    #     "response": {
-    #         "end_session": False
-    #     }
-    # }
+
     response = {
         "version": request.json['version'],
         "session": request.json['session'],

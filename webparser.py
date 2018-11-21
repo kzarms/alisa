@@ -55,7 +55,7 @@ def changeStringFormat(string, source=""):
 
 
 #November 7, 2018
-print(getEpisodesInfoFromTvGuide("https://www.tvguide.com/tvshows/south-park/episodes/100402/"))
+#print(getEpisodesInfoFromTvGuide("https://www.tvguide.com/tvshows/south-park/episodes/100402/"))
 #{'episodeNameEn': 'Nobody Got Cereal?', 'airedSeason': '22', 'airedEpisodeNumber': '7', 'firstAired': '2018-11-14 00:00:00', 'overviewEn': 'The boys break out of jail but are on the run from the police and ManBearPig.'},
 """
 n = datetime.now()

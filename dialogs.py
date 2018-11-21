@@ -1,22 +1,36 @@
 #!/usr/bin/python3.6
 # coding: utf-8
 #----Dialog functions
-import io
+#import io
 import random
+import sqlite3
 
 
-with open('quotes.txt', mode="r", encoding="utf-8") as file:
-    quotes = file.read().split('\n')
+con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+cur = con.cursor()
+#read all aliases into memory
+cmd = 'SELECT * FROM quotes'
+cur.execute(cmd)
+quotes_in_memory = cur.fetchall()
+#read all films into memory
+cmd = 'SELECT * FROM facts'
+cur.execute(cmd)
+facts_in_memory = cur.fetchall()
+#
+con.close()
 
-with open('facts.txt', mode="r", encoding="utf-8") as file:
-    facts = file.read().split('\n')
+#with open('quotes.txt', mode="r", encoding="utf-8") as file:
+#    quotes = file.read().split('\n')
+
+#with open('facts.txt', mode="r", encoding="utf-8") as file:
+#    facts = file.read().split('\n')
 
 def getRandomQuote():
-    return random.choice(quotes).replace('...', '\n')
+    return random.choice(quotes_in_memory).replace('...', '\n')
    
 
 def getRandomFact():
-    return random.choice(facts).replace('...', '\n')
+    return random.choice(facts_in_memory).replace('...', '\n')
   
  
 def getQuestionQuote():

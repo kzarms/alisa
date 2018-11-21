@@ -87,17 +87,11 @@ def SearchName(text):
             return alias[0]
     
     #Failover to polimorhp check
-    #f = open('NameVariations.csv', mode="r", encoding="utf-8")
-    #filmReader = csv.reader(f, delimiter='\t')
-    #filmReader = csv.reader(aliases_in_memory.splitlines(), delimiter='\t')   
     for alias in aliases_in_memory:
         if compare_names(text, alias[1]) > 80:
             return alias[0]
     #Return noting
     return -1
-
-#get_normalized_string('воронины')
-#compare_names(text, 'ворниной')
 
 #Looking for key words related to action
 #time 0, plase 1, info 2, else -1
@@ -267,7 +261,6 @@ def addEpisode(seriesNumber, episode):
                 con.commit()
                 print(seriesNumber, 'update')
     con.close()
-
 
 
 #add new episodes. withois series numbers - all series. if you need to add particular series - define it in seriesNumber list 

@@ -88,7 +88,7 @@ for i in range(5,21):
 
 # print(MyPostCommand(False, 'тбв', 2))
 # print(MyPostCommand(False, 'сериал', 3))
-# print(MyPostCommand(False, 'смотреть', 4))
+# print(MyPostCommand(False, 'сайт', 4))
 
 # for i in range(3,len(keywords)):
 #     result = MyPostCommand(False, keywords[i], 2)

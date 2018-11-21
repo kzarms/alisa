@@ -81,12 +81,14 @@ def addSerialIntoDB(filmID):
         None,
         None,
         None,
+        None,
+        None,
         ]
     #add info into the database
     print("Record basic info into the film DB")
     con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
     cur = con.cursor()
-    cur.execute("INSERT INTO films VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", fields)
+    cur.execute("INSERT INTO films VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", fields)
     seriesNumber = cur.lastrowid
     #Add aliases info
     aliases = []
@@ -154,5 +156,34 @@ def addSerialIntoDB(filmID):
     con.commit()
     con.close()
 
+def addQuote(text):
+    if text == None or text == '':
+        print("Nothing to add")
+        return 0
+    
+    con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+    cur = con.cursor()
+    cur.execute("INSERT INTO quotes VALUES (?)", (str(text),))
+    rowId = cur.lastrowid
+    con.commit()
+    con.close()
+    print ("Line number", rowId)
+
+def addFact(text):
+    if text == None or text == '':
+        print("Nothing to add")
+        return 0    
+    con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+    cur = con.cursor()
+    cur.execute("INSERT INTO facts VALUES (?)", (str(text),))
+    rowId = cur.lastrowid
+    con.commit()
+    con.close()
+    print ("Line number", rowId)
+
 #Record serial into the db. Add into films, create a series table + add aliases
-addSerialIntoDB(136401)
+#addSerialIntoDB(136401)
+#addQuote('test')
+#addFact('test')
+
+
