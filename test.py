@@ -12,10 +12,7 @@ from webparser import *
 token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDE5MjgwNTUsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MTg0MTY1NSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.ad5OITMlYUPviKc_tsM8OhlS77Ji52kDPZJTLezcGGfvdvHbfQv9lpa4yfOhqqSyyMsN7mXCy1VWZyNDxI5kvstnokV172xOlW66l-H-qNrbRbkS1r1bXN-KVl4rRHCVc4jy-COiMkSVNftdNxDDuFEiWF-exntIQVctJvE016tVOFpsYUg42xXOFINHy2uEJ3XrWUjBV5ciJnolWJ1V1Ru-B3lmFTYTpYOTNgFAiTZMqHBwKQs2km49pvG6bIW3naWxlK9srZs692jQqe73GyhZGN95ekt07JabQXrFPOF4pQ2ULd_Eph5U2Lm2_0RgDe594Qfy26ixw63P3Kb9jg'
 
 #QUOTE this string for MySQL
-def sqlquote(value):
-    if value is None or value == 'None':
-         return 'NULL'
-    return "'{}'".format(str(value).replace("'", "''"))
+
 
 #update tokenыукпун1989
 def tockenRefresh():
@@ -450,7 +447,7 @@ print(MyPostCommand(True, 'как тебя зовут', 1))
 
 
 #--Input - dict object. 
-def addEpisode(seriesNumber, episodeJson, nameEn):
+def addEpisodeFromDict(seriesNumber, episodeJson, nameEn):
     con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
     sql = 'SELECT airedSeason, airedEpisodeNumber, episodeNameEn, episodeNameRu, firstAired, director, overviewRu, showUrl FROM series_%s WHERE airedSeason = %s AND airedEpisodeNumber = %s' % (str(seriesNumber), str(episodeJson['airedSeason']), str(episodeJson['airedEpisodeNumber']))
     #print(sql)
@@ -496,52 +493,33 @@ def addEpsiodesFromDict(seriesNumber, episodes, nameEn):
     print('-----------' + nameEn + '-------------')
     for episode in episodes:
         #print(episode)
-        addEpisode(seriesNumber, episode, nameEn)
+        addEpisodeFromDict(seriesNumber, episode, nameEn)
 
 
 #add new episodes. withois series numbers - all series. if you need to add particular series - define it in seriesNumber list 
-def addNewEpisodesFromURL(seriesNumbers = ""):
+def addNewEpisodesFromURL(seriesNumber):
     con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
     cur = con.cursor()
 
-    if seriesNumbers == "":
-            sql = 'SELECT rowid, nameEn, info, showURL  FROM films WHERE showURL is not NULL AND showURL <> ""'
-            cur.execute(sql)
-            films = cur.fetchall()
-            f = open('testadd.txt', 'w')
-            for line in films:
-                seriesNumber = line[0]
-                nameEn = line[1]  #not neccessary, but please don't delete (for future tests)
-                source = line[2]
-                showURL = line[3]
-                if source == "tvguide":
-                    episodes = getEpisodesInfoFromTvGuide(showURL)
-                    #print("-----------NEW SERIES-----------" + nameEn)
-                    #print('-------------nameEn-------------')
-                    f.write(nameEn + "\n")  
-                    f.write(str(episodes)) 
-                    f.write("\n")
-                addEpsiodesFromDict(seriesNumber, episodes, nameEn)
-                    
-    else: 
-        for seriesNumber in seriesNumbers:
-            sql = 'SELECT rowid, nameEn, info, showURL  FROM films WHERE rowid = %i AND showURL is not NULL AND showURL <> ""' % seriesNumber
-            cur.execute(sql)
-            line = cur.fetchone()
-            nameEn = line[1]
-            source = line[2]
-            showURL = line[3]
+    f = open('testadd.txt', 'w') 
+    sql = 'SELECT rowid, nameEn, info, showURL  FROM films WHERE rowid = %i AND showURL is not NULL AND showURL <> ""' % seriesNumber
+    cur.execute(sql)
+    line = cur.fetchone()
+    nameEn = line[1]
+    showURL = line[3]
+    
+    if "tvguide.com" in showURL:
+        print(showURL)
+        episodes = getEpisodesInfoFromTvGuide(showURL)
+        f.write(nameEn + "\n" + str(episodes))             
+        addEpsiodesFromDict(seriesNumber, episodes, nameEn)
             
-            if source == "tvguide":
-                print(showURL)
-                episodes = getEpisodesInfoFromTvGuide(showURL)
-            addEpsiodesFromDict(seriesNumber, episodes, nameEn)
 
-def getEpisodesInfoFromTvGuide():
+#def getEpisodesInfoFromTvGuide():
     
 
-print(getEpisodesInfoFromTvGuide("https://www.tvguide.com/tvshows/south-park/episodes/100402/"))
+#print(getEpisodesInfoFromTvGuide("https://www.tvguide.com/tvshows/south-park/episodes/100402/"))
 #{'episodeNameEn': 'Nobody Got Cereal?', 'airedSeason': '22', 'airedEpisodeNumber': '7', 'firstAired': '2018-11-14 00:00:00', 'overviewEn': 'The boys break out of jail but are on the run from the police and ManBearPig.'},
 
 #addNewEpisodesFromURL()
-#addNewEpisodesFromURL([1, 34])
+addNewEpisodesFromURL([1])
