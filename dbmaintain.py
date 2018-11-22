@@ -3,7 +3,7 @@ import requests
 import sqlite3
 import datetime
 
-token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDI3NDM3OTUsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MjY1NzM5NSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.hdTGBd_KJQQmdHB7QPLRJgp3uzPpeLgelsne4Q1xcWb6JQwRhshCTnlwiQlUbOEe-_PRbkCGgy0FjINbwA4yyudAjcIbv267aydHsXwI_-bAjUvjM7_1ByKHbdjTijAiepNJj7XElJCOpXO0jLnuh6rCJIE0KcGLnWNYrhCoNbFdrqrL29EyHd2nBFOlUa_51l9g6P01umemEYNid7psj2adInBI0n8294zdSuREmK4dvSUVwepg7HkucfUhhJ8dKSMx65K63K45Zlkpc05y6FsqoXMVRHNJK1U5x81mIxP6BBAAomFLVrbOYjgYFTpLRvWtBskYTYZD4pgkpg70Qw'
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDI5NDM4MzIsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0Mjg1NzQzMiwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.G2bBXwx90bf_LTV0en0pTMuP07y_idn-Dj46SXGBFCbXEqHw4NyUG1pAck6JH6g2ga0dEolu86Ax0GnT94-yOKjXFHFxxIZG2jjJiwkFEBkXNHDJyx5SHgyYhmAqLJyG9LftRPMQ9ZBmG2cm7ZDdhcvYyOYIue7oYdDa5yW6r7oK2-Z4e_65MUoHj_q110baaqjJmtRtMb_W2Xk_qwoM5lZ7PQ4hwd4XXkSJS_hUp713dBWAr-HbskarTOQHYWsNB006VkieRw8AoHCpXyL7ECF0jNmt2rulDXr2Y9u2qBprItrR4R5ysDAQP4HbiLGzqAw_8k7tMjxlcTlT94jkzA'
 def tockenRefresh():
     URL = "https://api.thetvdb.com/login"   
     HEADERS = {'Content-Type': 'application/json'}  
@@ -182,7 +182,7 @@ def addFact(text):
     print ("Line number", rowId)
 
 #Record serial into the db. Add into films, create a series table + add aliases
-#addSerialIntoDB(136401)
+addSerialIntoDB(280441)
 #addQuote('test')
 #addFact('test')
 
