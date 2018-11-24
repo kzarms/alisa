@@ -3,7 +3,7 @@ import requests
 import sqlite3
 import datetime
 
-token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDI5NDM4MzIsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0Mjg1NzQzMiwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.G2bBXwx90bf_LTV0en0pTMuP07y_idn-Dj46SXGBFCbXEqHw4NyUG1pAck6JH6g2ga0dEolu86Ax0GnT94-yOKjXFHFxxIZG2jjJiwkFEBkXNHDJyx5SHgyYhmAqLJyG9LftRPMQ9ZBmG2cm7ZDdhcvYyOYIue7oYdDa5yW6r7oK2-Z4e_65MUoHj_q110baaqjJmtRtMb_W2Xk_qwoM5lZ7PQ4hwd4XXkSJS_hUp713dBWAr-HbskarTOQHYWsNB006VkieRw8AoHCpXyL7ECF0jNmt2rulDXr2Y9u2qBprItrR4R5ysDAQP4HbiLGzqAw_8k7tMjxlcTlT94jkzA'
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDMxNDM1NzEsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MzA1NzE3MSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.yPxza7OAS58U_ehnK5RrMSDTptJ6jt3XyAx_qTsLRNHA-Y_7yVdaMiy61qMMBBvQHj_KdXUk0iO_-W0DRHEd6gH9ODedjWa5eov3X3Tdg2x0fh8eslP2CuXecrJfipdRYxluHPfr0erJIZun14y6OJ9vR7CeriDD6tnVN68pQpRbvJm5RYd2uPCKdxiXy-VzmmASnCoo7JR3CXTP1WvTGMhNp5Z5coFgO5zbwjv0bs8sdU71wlC1JqPlTnPra-3pamoET4hgVvfGbEAHY-4HqspzK8UAUTr3UywVOfDSLTYe0ZCD02i9ncaTQ6ohtVtuskF7HoeKVX0_R8y1djsGtQ'
 def tockenRefresh():
     URL = "https://api.thetvdb.com/login"   
     HEADERS = {'Content-Type': 'application/json'}  
@@ -83,12 +83,13 @@ def addSerialIntoDB(filmID):
         None,
         None,
         None,
+        0,
         ]
     #add info into the database
     print("Record basic info into the film DB")
     con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
     cur = con.cursor()
-    cur.execute("INSERT INTO films VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", fields)
+    cur.execute("INSERT INTO films VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", fields)
     seriesNumber = cur.lastrowid
     #Add aliases info
     aliases = []
@@ -182,7 +183,7 @@ def addFact(text):
     print ("Line number", rowId)
 
 #Record serial into the db. Add into films, create a series table + add aliases
-#addSerialIntoDB(337955)
+addSerialIntoDB(73739)
 #addQuote('test')
 #addFact('test')
 
