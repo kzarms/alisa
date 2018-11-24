@@ -122,6 +122,12 @@ def getAnswerForEnd():
         ]
     return random.choice(variants)
 
+def tellTheLast():
+    variants = ['Последняя',
+                'Крайняя'
+        ]
+    return random.choice(variants)
+
 def getAnswerForAddSeries():
     variants = ['Спасибо! Мы проверим ваше обращение и добавим интересующий сериал в ближайшее вермя',
                 'Окей, я добавлю его',
