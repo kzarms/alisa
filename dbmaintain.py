@@ -182,7 +182,7 @@ def addFact(text):
     print ("Line number", rowId)
 
 #Record serial into the db. Add into films, create a series table + add aliases
-addSerialIntoDB(280441)
+#addSerialIntoDB(337955)
 #addQuote('test')
 #addFact('test')
 

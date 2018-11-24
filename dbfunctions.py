@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, time
 import pymorphy2
 from difflib import SequenceMatcher
 from dialogs import *
-#from webparser import *
+from webparser import *
 
 #marker
 token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDI2NTU0MTgsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MjU2OTAxOCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.sCZAVC78b_EUbzf-CxeEDv7V4fharEUACT8dfevk7PTsojfwdNwMPD8F3i8OiYp-qRdcqsdaq0GpaCKMHe0eYEY35fGRl6dw3k-c7GBKfitCttxAFQwAWY_DiKrItDCpTIgchIxj-my2s6wJwlk41dAKdEm7Zt5TUf7ICHOzQpxWbZs4Bu5z4e_28aJruw-Bc5UM-wY8yntpxuE7_O5yOFa_PfwcZU6zJfpgB0HuErHe1EBGwnFIxNeAaIhAigLrR83L0-R1mi8PbE2u2_oDoIfBN1zA6zz9_prYHovhqX55fAQ1EmIVUBc2xQvKTI6X8Sm9jyQ3PqwDR3UalgtGDg'
@@ -282,18 +282,18 @@ def addNewEpisodesFromURL(seriesNumber):
         addEpisode(seriesNumber, episode)
 
     #--Get series from other sources
-    sql = 'SELECT rowid, nameEn, searchURL  FROM films WHERE rowid = %i AND searchURL is not NULL AND searchURL <> ""' % seriesNumber
+    sql = 'SELECT rowid, nameEn, searchURL FROM films WHERE rowid = %i AND searchURL is not NULL AND searchURL <> ""' % seriesNumber
     cur.execute(sql)
     line = cur.fetchone()
-    nameEn = line[1]
-    searchURL = line[2]
-    
-    if "tvguide.com" in searchURL:
-        print(nameEn + ' ' + searchURL)
-        episodes = getEpisodesInfoFromTvGuide(searchURL)    
-        for episode in episodes:
-            addEpisodeFromDict(seriesNumber, episode, nameEn)       
-    return 1 
+    if line != None:
+        nameEn = line[1]
+        searchURL = line[2]    
+        if "tvguide.com" in searchURL:
+            print(nameEn + ' ' + searchURL)
+            episodes = getEpisodesInfoFromTvGuide(searchURL)    
+            for episode in episodes:
+                addEpisodeFromDict(seriesNumber, episode, nameEn)       
+        return 1 
 
 
 def addEpisodeFromDict(seriesNumber, episodeJson, nameEn):
@@ -340,6 +340,14 @@ def addEpisodeFromDict(seriesNumber, episodeJson, nameEn):
             print (('%s %i %i NO NEW INFO FROM TVGUIDE') % (nameEn, episodeBase.get('airedSeason'), episodeBase.get('airedEpisodeNumber')))
 
 
+#get neccessary column from film table
+def getInfoFromFilm(filmId, column="nameEn"):
+    con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+    cur = con.cursor()
+    cmd = 'SELECT %s FROM films WHERE rowid = %i' % (column, filmId)
+    cur.execute(cmd)
+    return cur.fetchone()[0]
+
 
 def filmdbLastEpisode(filmID):
     con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
@@ -353,6 +361,7 @@ def filmdbLastEpisode(filmID):
         cmd = 'SELECT * FROM series_' + str(filmID) + ' ORDER BY rowid DESC LIMIT 1'
         cur.execute(cmd)
         episode = cur.fetchone()
+        #print(episode)
         if episode[3] != None:
             name = episode[3]
         else:
@@ -417,6 +426,8 @@ def OfficialURL(intId):
         return URLs[row[7]]
     else:
         return 'https://www.yandex.ru'
+
+
 #Return main info about serial
 def getFilmInfoLocal(filmId):
     #all films are in memory. filmID will be -1 to the memory list becouse it starts form 0
@@ -437,10 +448,14 @@ def getFilmInfoLocal(filmId):
         variants = ['Сьемки сериала завершены.','Серии более не выпускаются.','Сериал закончен.','Выпуск новых серий и сезонов не планируется.']
         msg += ' ' + random.choice(variants)
     return msg
+
+
 #Return film location 
 def getFilmLocationLocal(filmId):
     #intId = '1'
     return "Сериал можно посмотреть на сайте " + OfficialURL(filmId)
+
+
 #Film Search function
 def filmSearch(filmId, action, time):
     #print(id, action, time)
@@ -490,7 +505,9 @@ def filmSearch(filmId, action, time):
         d = datetime.strptime(tvdbanswer[3], '%Y-%m-%d')
         n = datetime.now()
         nowday = datetime(n.year, n.month, n.day)
-        
+        buzz = film[16]
+        seasonFinished = film[17]
+
         if d > nowday:
             if tvdbanswer[2] == None:
                 return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона ' + tellWillBeAired() + ' ' + datetime.strftime(d, '%d.%m.%Y'), filmId
@@ -504,11 +521,17 @@ def filmSearch(filmId, action, time):
             else:
                 return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона "' + tvdbanswer[2] + '" ' + tellWillBeAired() + ' сегодня!', filmId
         else:
-            #it was in a past
-            if tvdbanswer[2] == None:
-                return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона ' + tellAlreadyAired() + ' ' + datetime.strftime(d, '%d.%m.%Y'), filmId
+            if seasonFinished == 1:   #if season is over
+                if tvdbanswer[2] == None:
+                    return '%s серия %s сезона %s %s. %s' % (tellTheLast(), seasonName[tvdbanswer[0]], tellAlreadyAired(), datetime.strftime(d, '%d.%m.%Y'), buzz), filmId
+                else:
+                    return '%s серия %s сезона %s %s %s. %s' % (tellTheLast(), seasonName[tvdbanswer[0]], tvdbanswer[2], tellAlreadyAired(), datetime.strftime(d, '%d.%m.%Y'), buzz), filmId
             else:
-                return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона "' + tvdbanswer[2] + '" ' + tellAlreadyAired() + ' ' + datetime.strftime(d, '%d.%m.%Y'), filmId
+                #it was in a past
+                if tvdbanswer[2] == None:
+                    return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона ' + tellAlreadyAired() + ' ' + datetime.strftime(d, '%d.%m.%Y'), filmId
+                else:
+                    return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона "' + tvdbanswer[2] + '" ' + tellAlreadyAired() + ' ' + datetime.strftime(d, '%d.%m.%Y'), filmId
     #final close return (if everythig esle bad)
     return tellIAmSorry() + ' ' + tellICantFindTheEpisode(), 0
 #main function, check for key words and finnaly execute a 
@@ -525,8 +548,11 @@ def CoreSearch(text):
     #core logic
     return filmSearch(filmId, action, time)
 
-# for i in range(138):
-#       addNewEpisodesFromURL(i)
+
+
+#addNewEpisodesFromURL(7)
+#for i in range(146):
+#    addNewEpisodesFromURL(i)
 
 #addNewEpisodesFromURL(1)
 
@@ -549,3 +575,5 @@ def CoreSearch(text):
 #print(CoreSearch("эртугрул"))
 
 # print(tvdbLastEpisode('80379','12'))
+#print(CoreSearch('Теория большого взрыва'))
+#print (getInfoFromFilm(6, "seasonFinished"))addNewEpisodesFromURL
