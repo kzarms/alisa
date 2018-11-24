@@ -30,6 +30,7 @@ def main():
         if (req['session']['new']) and (req['request']['command'].lower() == ''):
             #New session and nothing in command, return welcome message
             res['response']['text'] = getIntoduce()
+            res['response']['buttons'] = getExampleButtons()     
             return
         # Take user text
         #text = "Когда выходит теория большого взрыва?"
@@ -62,32 +63,15 @@ def main():
                 return
             if (text == 'помощь'):
                 res['response']['text'] = getAnswerForHelp()
-                res['response']['buttons'] = [
-                    {
-                        "title": "Теория Большого Взрыва",
-                        "hide": True
-                    },
-                    {
-                        "title": "Саус Парк",
-                        "hide": True
-                    }
-                ]
+                res['response']['buttons'] = getExampleButtons()
                 return
             if (text == 'что ты умеешь'):
                 res['response']['text'] = getAnswerForHelp()
-                res['response']['buttons'] = [
-                    {
-                        "title": "Теория Большого Взрыва",
-                        "hide": True
-                    },
-                    {
-                        "title": "Саус Парк",
-                        "hide": True
-                    }
-                ]
+                res['response']['buttons'] = getExampleButtons()                    
                 return            
             if (text == 'привет' or text == 'здравствуй' or text == 'здравствуйте' or text == 'хай' or text == 'hi'):
                 res['response']['text'] = getIntoduce()
+                res['response']['buttons'] = getExampleButtons()
                 return
             if (text == 'спасибо' or text == 'благодарю'):
                 res['response']['text'] = getAnswerForEnd()

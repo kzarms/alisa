@@ -9,10 +9,10 @@ from datetime import datetime, timedelta, time
 import pymorphy2
 from difflib import SequenceMatcher
 from dialogs import *
-#from webparser import *
+from webparser import *
 
 #marker
-token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDI2NTU0MTgsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MjU2OTAxOCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.sCZAVC78b_EUbzf-CxeEDv7V4fharEUACT8dfevk7PTsojfwdNwMPD8F3i8OiYp-qRdcqsdaq0GpaCKMHe0eYEY35fGRl6dw3k-c7GBKfitCttxAFQwAWY_DiKrItDCpTIgchIxj-my2s6wJwlk41dAKdEm7Zt5TUf7ICHOzQpxWbZs4Bu5z4e_28aJruw-Bc5UM-wY8yntpxuE7_O5yOFa_PfwcZU6zJfpgB0HuErHe1EBGwnFIxNeAaIhAigLrR83L0-R1mi8PbE2u2_oDoIfBN1zA6zz9_prYHovhqX55fAQ1EmIVUBc2xQvKTI6X8Sm9jyQ3PqwDR3UalgtGDg'
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDMxMzU1NjIsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MzA0OTE2MiwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.L4v7yMelaCtFAtwRkwdi27QSdRSLGutAQKrEs6iCSz3NxnB3VTYfAKF8wMj4iEMKn2XfWSRcB-YyT0lCEgsuCFpMV-fLG6tB1bb2FWI-rPnI-vDenkAUFZorfaFxJ5Sdga92ZfNfyd9a2BAk00AP3eOlRFeyDxgtdv6EPmqzsqsijrxJQeBf142XAS58sudSPYvXzk00ekNBonPfJgXbNNMg8DJt_jvqxw9PM7L6u4CRXMwpIOY8hgOPdgdeTgXyRR1nAhqpij0FTcE7Ez1oe7Mzd1SNxGeZRCMLgPMfdWvt5MLTGy0dzaO5C2Qln8_vRzqm1OSHQpWzHpArLi8epQ'
 #storage for chash
 cashRequests = {}
 #read all aliases at start
@@ -517,7 +517,7 @@ def CoreSearch(text):
     filmId = SearchName(text)
     if filmId == -1:
         #we did not find a film, return info message and None as ID
-        return tellIAmSorry() + ' ' + tellICantFindTheEpisode(), 0
+        return tellIAmSorry() + ' ' + tellICantFindTheEpisode() + ' ' + tellInstruction(), 0
     #looking for an action, if we do not have an action return -2
     action = SearchAction(text)
     #looking for advanced action in the phrase
@@ -525,8 +525,8 @@ def CoreSearch(text):
     #core logic
     return filmSearch(filmId, action, time)
 
-# for i in range(138):
-#       addNewEpisodesFromURL(i)
+for i in range(146):
+      addNewEpisodesFromURL(i)
 
 #addNewEpisodesFromURL(1)
 
