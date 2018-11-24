@@ -394,7 +394,7 @@ def OfficialURL(intId):
     if (film[14] != None) and (film[14].rstrip() != ""):
         return film[14]
     else:
-        return str('https://yandex.ru/search/?text=сериал ' + film[4])
+        return str('"https://yandex.ru/search/?text=сериал ' + film[4] + '"')
 
 
 
@@ -545,5 +545,5 @@ def CoreSearch(text):
 
 # print(tvdbLastEpisode('80379','12'))
 #print(CoreSearch('Физрук'))
-#print(OfficialURL(100))
+print(OfficialURL(100))
 #print (getInfoFromFilm(6, "seasonFinished"))addNewEpisodesFromURL
