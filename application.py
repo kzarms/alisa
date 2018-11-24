@@ -46,7 +46,7 @@ def main():
             'привет','здравствуй','здравствуйте','хай','hi',
             'спасибо','благодарю',
             'все','выход','конец','завешить','стоп',
-            'добавить сериал','подробнее','сериал','сайт', 'осериале', 'осерии']
+            'добавить сериал','подробнее','сериал','сайт']
         if text in keywords:
             #textKey = text.replace(",","").replace(",","")
             if (text == 'ping') or (text == 'пинг'):
@@ -93,7 +93,7 @@ def main():
                 else:
                     res['response']['text'] = tellIAmSorry() + ' ' + tellIAmLost()
                 return
-            if text == 'сериал' or text == 'осериале':
+            if text == 'сериал':
                 if sessionStorage[user_id] != 0:
                     res['response']['text'] = getFilmInfoLocal(sessionStorage[user_id])
                 else:
@@ -160,7 +160,7 @@ def main():
                     "hide": True
                 },
                 {
-                    "title": "о сериале",
+                    "title": "Сериал",
                     "hide": True
                 }
             ]

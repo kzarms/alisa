@@ -394,7 +394,7 @@ def OfficialURL(intId):
     if (film[14] != None) and (film[14].rstrip() != ""):
         return film[14]
     else:
-        return 'https://yandex.ru/search/?text=сериал ' + film[4] 
+        return str('https://yandex.ru/search/?text=сериал ' + film[4])
 
 
 
