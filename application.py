@@ -160,7 +160,7 @@ def main():
                     "hide": True
                 },
                 {
-                    "title": "О сериале",
+                    "title": "о сериале",
                     "hide": True
                 }
             ]
