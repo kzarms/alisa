@@ -11,8 +11,22 @@ from difflib import SequenceMatcher
 from dialogs import *
 from webparser import *
 
-#marker
+#token var
 token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDMxMzU1NjIsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MzA0OTE2MiwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.L4v7yMelaCtFAtwRkwdi27QSdRSLGutAQKrEs6iCSz3NxnB3VTYfAKF8wMj4iEMKn2XfWSRcB-YyT0lCEgsuCFpMV-fLG6tB1bb2FWI-rPnI-vDenkAUFZorfaFxJ5Sdga92ZfNfyd9a2BAk00AP3eOlRFeyDxgtdv6EPmqzsqsijrxJQeBf142XAS58sudSPYvXzk00ekNBonPfJgXbNNMg8DJt_jvqxw9PM7L6u4CRXMwpIOY8hgOPdgdeTgXyRR1nAhqpij0FTcE7Ez1oe7Mzd1SNxGeZRCMLgPMfdWvt5MLTGy0dzaO5C2Qln8_vRzqm1OSHQpWzHpArLi8epQ'
+#define key words for action and time
+ActionKeyWords = {
+        'когда': 0, 'кагда': 0, 'when': 0, 'скоро': 0,
+        'где': 1,
+        'info': 2, 'инфо': 2, 'информация': 2, 'подробнее': 2, 'подробно': 2,
+        'цитата': 3, 'цититу':3, 'цитируй':3, 'процитируй':3,
+        'факт': 4, 'факты':4, 'фактик': 4, 'fuck':4,
+    }
+TimeKeyWords = {
+        'следующий': 2, 'следующая': 2, 'новый': 2, 'новая': 2, 'очередной': 2, 'очередная': 2, 'очередные': 2, 'будет': 2, 'появится': 2, 'выйдет': 2, "выходит": 2,
+        'идет': 1, 'проходит': 1, 'показывают': 1, 'крутят': 1,
+        'была': 0, 'прошла': 0, 'показали': 0, 'крутили': 0, 'прошлая': 0, 'прошедшая': 0, 'предыдущий': 0, 'предыдущая': 0,
+    }
+
 #storage for chash
 cashRequests = {}
 #read all aliases at start
@@ -60,7 +74,7 @@ def compare_names(name1, name2):
     percentage = round(compare_strings_typo(name1, name2))
     if percentage > 80:
         print('Вы сравнивали: ' + name1 + '|' + name2 + ', идентичность: ' + str(
-            percentage) + '%(найдено через typo)') 
+            percentage) + '%(найдено через typo)')
     else:
         percentage = round((len(overlap) / max(len(set1), len(set2))) * 100)
         if percentage > 80:
@@ -69,67 +83,74 @@ def compare_names(name1, name2):
     return round(percentage)
 
 def SearchName(text):
+    result = {'filmId':-1,'action':-1,'time':-1,}
     text = text.lower()
     words = text.split(" ")
-    wordList = []
+    WordList = []
+    SerialName = []
     for word in words:
         if len(word.strip(' ?!,;:.')) > 1:
-            wordList.append(word.strip(' ?!,;:.'))
+            WordList.append(word.strip(' ?!,;:.'))
+    #Check Action KeyWord
+    for word in WordList:
+        if word in ActionKeyWords.keys():
+            if result['action'] == -1:
+                #record only first one
+                result['action'] = ActionKeyWords[word]
+        elif word in TimeKeyWords.keys():
+            if result['time'] == -1:
+                #record only first one
+                result['time'] = TimeKeyWords[word]
+        else:
+            #save results in a separate list for further seach action
+            SerialName.append(word)
     #Check aliases
     for alias in aliases_in_memory:
         #print(row)
         filmName = ""
-        for word in wordList:
+        for word in SerialName:
             if word in alias[1]:
                 filmName += word + " "
         if filmName[:-1] == alias[1]:
             #Remove last space and check for 100% consistency
-            return alias[0]
-    
+            result['filmId'] = alias[0]
+            return result
+
     #Failover to polimorhp check
+    SerialNameText = ' '.join([str(e) for e in SerialName])
     for alias in aliases_in_memory:
-        if compare_names(text, alias[1]) > 80:
-            return alias[0]
-    #Return noting
-    return -1
+        if compare_names(SerialNameText, alias[1]) > 80:
+            result['filmId'] = alias[0]
+            return result
+
+    #Return null result
+    return result
 
 #Looking for key words related to action
 #time 0, plase 1, info 2, else -1
-def SearchAction(text):
-    KeyWords = {
-        'когда': 0, 'кагда': 0, 'when': 0, 'скоро': 0,
-        'где': 1,
-        'info': 2, 'инфо': 2, 'информация': 2, 'подробнее': 2, 'подробно': 2,
-        'цитата': 3, 'цититу':3, 'цитируй':3, 'процитируй':3,
-        'факт': 4, 'факты':4, 'фактик': 4, 'fuck':4,
-    }
-    text = text.lower()    
-    WordList = text.split(" ")
-    for word in WordList:
-        word = word.strip(" ?!,;:")
-        if word in KeyWords.keys():
-            return KeyWords[word]
-    return -1
+# def SearchAction(text):
+#     text = text.lower()
+#     WordList = text.split(" ")
+#     for word in WordList:
+#         word = word.strip(" ?!,;:")
+#         if word in ActionKeyWords.keys():
+#             return ActionKeyWords[word]
+#     return -1
 #Looking for key words related to time
 #future 2, present 1 and past 0, else -1
-def SeachActionTimeDetection(text):
-    TimeWords = {
-        'следующий': 2, 'следующая': 2, 'новый': 2, 'новая': 2, 'очередной': 2, 'очередная': 2, 'очередные': 2, 'будет': 2, 'появится': 2, 'выйдет': 2, "выходит": 2,
-        'идет': 1, 'проходит': 1, 'показывают': 1, 'крутят': 1,
-        'была': 0, 'прошла': 0, 'показали': 0, 'крутили': 0, 'прошлая': 0, 'прошедшая': 0, 'предыдущий': 0, 'предыдущая': 0,
-    }
-    text = text.lower()    
-    WordList = text.split(" ")
-    for word in WordList:
-        word = word.strip(" ?!,;:")
-        if word in TimeWords.keys():
-            return TimeWords[word]
-    return -1 
+# def SeachActionTimeDetection(text):
+#     text = text.lower()
+#     WordList = text.split(" ")
+#     for word in WordList:
+#         word = word.strip(" ?!,;:")
+#         if word in TimeKeyWords.keys():
+#             return TimeKeyWords[word]
+#     return -1
 
 #update token
 def tockenRefresh():
-    URL = "https://api.thetvdb.com/login"   
-    HEADERS = {'Content-Type': 'application/json'}  
+    URL = "https://api.thetvdb.com/login"
+    HEADERS = {'Content-Type': 'application/json'}
     DATA = {"apikey": "0AHRVCC9FPSYWACV", "userkey": "QOCM9N37ADVTQ42W", "username": "vlkootmni"}
     r = requests.post(url = URL, json = DATA, headers = HEADERS)
     data = r.json()
@@ -140,24 +161,24 @@ def tockenRefresh():
     if 'token' in data:
         print('the token has been got sussessfully')
         token = data['token']
-  
+
 #seach function in the tbdb
 def tvdbEpisodesFromLastSeason(filmID):
     # global cashRequests
-    # if filmID in cashRequests:         
+    # if filmID in cashRequests:
     #      if cashRequests[filmID][0] > (datetime.now() - timedelta(hours=8)):
     #          #We have cash with less thatn 8 hours resutls, Return resutls from the chash
     #          return cashRequests[filmID][1], cashRequests[filmID][2], cashRequests[filmID][3]
     # #filmID = '80379'
     # #seasonNumber = '12'
-    URL = "https://api.thetvdb.com"    
-    HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)} 
+    URL = "https://api.thetvdb.com"
+    HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)}
     URL1 = URL + '/series/' + str(filmID) + '/episodes/summary'
     try:
         r = requests.get(url = URL1, headers = HEADERS)
     except:
         return 'Error', 'Connection error'
-    
+
     dataSum = r.json()
     if 'Error' in dataSum:
         #there is an error
@@ -176,10 +197,10 @@ def tvdbEpisodesFromLastSeason(filmID):
                 return 'Error', 'Error token update'
     #Get the last season information.
     lastSeason = max(map(int, dataSum['data']['airedSeasons']))
-    
+
     #Collect information about the last season
-    HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}  
-    PARAMS = {'airedSeason':str(lastSeason)} 
+    HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}
+    PARAMS = {'airedSeason':str(lastSeason)}
     #Create full request
     URL2 = URL + '/series/' + str(filmID) + '/episodes/query'
     r = requests.get(url = URL2, headers = HEADERS, params = PARAMS)
@@ -190,7 +211,7 @@ def tvdbEpisodesFromLastSeason(filmID):
     #Genrate a new episodes list
     episodes = []
     for i in range(len(dataEn['data'])):
-        if dataEn['data'][i]['firstAired'] != '': 
+        if dataEn['data'][i]['firstAired'] != '':
             data = dataEn['data'][i]['firstAired'] + ' 00:00:00'
         elif dataRu['data'][i]['firstAired'] != '':
             data = dataRu['data'][i]['firstAired'] + ' 00:00:00'
@@ -210,7 +231,7 @@ def tvdbEpisodesFromLastSeason(filmID):
         sorted_by_second = sorted(episodes, key=lambda tup: tup[1])
     return sorted_by_second
 
-#--Input - dict object. 
+#--Input - dict object.
 def addEpisode(seriesNumber, episode):
     print(seriesNumber)
     airedSeason = episode[0]
@@ -219,7 +240,7 @@ def addEpisode(seriesNumber, episode):
     cur = con.cursor()
     sql = 'SELECT * FROM series_%s WHERE airedSeason = %s AND airedEpisodeNumber = %s' % (str(seriesNumber), str(airedSeason), str(airedEpisodeNumber))
     cur.execute(sql)
-    row = cur.fetchone()    
+    row = cur.fetchone()
     if row == episode:
         #they are equal, nothing to change
         return
@@ -233,10 +254,10 @@ def addEpisode(seriesNumber, episode):
         else:
             #it is not a none value, need to compare and update null values.
             episodeValues = []
-            update = False           
+            update = False
             for i in range(len(row)):
                 #if not same
-                if row[i] != episode[i]: 
+                if row[i] != episode[i]:
                     if row[i] == None or row[i] == '':
                         #If there is nothing, recorded into the feild.
                         episodeValues.append(episode[i])
@@ -253,7 +274,7 @@ def addEpisode(seriesNumber, episode):
                         update = True
                 else:
                     #Same values, append only data from DB
-                    episodeValues.append(row[i])                
+                    episodeValues.append(row[i])
             if update:
                 #if we have something to update than update DB, if we have null values in update than skip these steps
                 sql = '''UPDATE series_%i SET episodeNameEn = ?, episodeNameRu = ?, firstAired = ?, director = ?, overviewEn = ?, overviewRu = ?, showUrl = ?, info = ? WHERE airedSeason = %i AND airedEpisodeNumber = %i''' % (int(seriesNumber), airedSeason, row[1])
@@ -263,7 +284,7 @@ def addEpisode(seriesNumber, episode):
     con.close()
 
 
-#add new episodes. withois series numbers - all series. if you need to add particular series - define it in seriesNumber list 
+#add new episodes. withois series numbers - all series. if you need to add particular series - define it in seriesNumber list
 def addNewEpisodesFromURL(seriesNumber):
     #--Get series from TVDB
     if seriesNumber == None or seriesNumber == 0:
@@ -287,13 +308,13 @@ def addNewEpisodesFromURL(seriesNumber):
     line = cur.fetchone()
     if line != None:
         nameEn = line[1]
-        searchURL = line[2]    
+        searchURL = line[2]
         if "tvguide.com" in searchURL:
             print(nameEn + ' ' + searchURL)
-            episodes = getEpisodesInfoFromTvGuide(searchURL)    
+            episodes = getEpisodesInfoFromTvGuide(searchURL)
             for episode in episodes:
-                addEpisodeFromDict(seriesNumber, episode, nameEn)       
-        return 1 
+                addEpisodeFromDict(seriesNumber, episode, nameEn)
+        return 1
 
 
 def addEpisodeFromDict(seriesNumber, episodeJson, nameEn):
@@ -305,7 +326,7 @@ def addEpisodeFromDict(seriesNumber, episodeJson, nameEn):
     cur.execute(sql)
     row = cur.fetchone()
     print(nameEn)
-    #rint(row)    
+    #rint(row)
     if row == None:  #No episode - add
         print(nameEn + ' NO EPISODE IN BASE , ADD---------')
         sql = 'INSERT INTO series_%s (airedSeason, airedEpisodeNumber, episodeNameEn, episodeNameRu, firstAired, overviewEn) VALUES (%s, %s, %s, %s, %s, %s)' % (seriesNumber, episodeJson.get('airedSeason'), episodeJson.get('airedEpisodeNumber'), sqlquote(episodeJson.get('episodeNameEn')), sqlquote(episodeJson.get('episodeNameRu')), sqlquote(episodeJson.get('firstAired')), sqlquote(episodeJson.get('overviewEn')))
@@ -366,7 +387,7 @@ def filmdbLastEpisode(filmID):
             name = episode[3]
         else:
             name = episode[2]
-        
+
         if episode[4] != None:
             arrival = episode[4][0:episode[4].index(" ")]
         else:
@@ -376,7 +397,7 @@ def filmdbLastEpisode(filmID):
     else:
         #return the first row from the list (couse this is the closest to data issue)
         if episodeList[0][3] != None:
-            name = episodeList[0][3] 
+            name = episodeList[0][3]
         else:
             name = episodeList[0][2]
         if episodeList[0][4] != None:
@@ -388,7 +409,7 @@ def filmdbLastEpisode(filmID):
     con.close()
 
 #tvdbLastEpisode('80379','12')
-#Return the URL to the offical site 
+#Return the URL to the offical site
 def OfficialURL(intId):
     URLs = {
         'CBS': 'https://www.cbs.com',
@@ -407,7 +428,7 @@ def OfficialURL(intId):
         'Hulu': 'https://www.hulu.com',
         'ITV Encore': 'https://www.itv.com',
         'NBC':  'https://www.nbc.com',
-        'Netflix': 'https://www.netflix.com',             
+        'Netflix': 'https://www.netflix.com',
         'Showtime': 'https://www.sho.com',
         'Sony Crackle': 'https://www.sonycrackle.com',
         'Starz!': 'https://www.starz.com',
@@ -422,7 +443,7 @@ def OfficialURL(intId):
     for row in films_in_memory:
         if intId == row[0]:
             break
-    if row[7] in URLs:        
+    if row[7] in URLs:
         return URLs[row[7]]
     else:
         return 'https://www.yandex.ru'
@@ -432,7 +453,7 @@ def OfficialURL(intId):
 def getFilmInfoLocal(filmId):
     #all films are in memory. filmID will be -1 to the memory list becouse it starts form 0
     film = films_in_memory[filmId-1]
-    #      
+    #
     msg = 'Сериал "' + film[4] + '" (' + film[3] + ') впервые вышел в прокат ' + datetime.strftime(datetime.strptime(film[6], '%Y-%m-%d %H:%M:%S'), '%d.%m.%Y') + ' на канале ' + film[7] + '.'
     if film[8] == 1:
         msg += ' В сериале только 1 сезон и ' + str(film[9]) + ' серий.'
@@ -450,7 +471,7 @@ def getFilmInfoLocal(filmId):
     return msg
 
 
-#Return film location 
+#Return film location
 def getFilmLocationLocal(filmId):
     #intId = '1'
     return "Сериал можно посмотреть на сайте " + OfficialURL(filmId)
@@ -477,31 +498,30 @@ def filmSearch(filmId, action, time):
     #    ]
     #all films are in memory. filmID will be -1 to the memory list becouse it starts form 0
     film = films_in_memory[filmId-1]
-    
     if action == 1:
         #looking for information about location for watching
-        return getFilmLocationLocal(filmId), filmId 
+        return getFilmLocationLocal(filmId)
     if action == 2:
-        #loocing for additional info in local file
-        return getFilmInfoLocal(filmId), filmId
+        #looking for additional info in local file
+        return getFilmInfoLocal(filmId)
     if action == 3:
-        #action to return quote    
-        return getRandomQuote(), filmId
+        #action to return quote
+        return getRandomQuote()
     if action == 4:
-        #action to return fact    
-        return getRandomFact(), filmId   
+        #action to return fact
+        return getRandomFact()
     if action == 0 or action == -1:
         #question about time, looking for corresponding data, accept default action
-        tvdbanswer = filmdbLastEpisode(filmId)        
+        tvdbanswer = filmdbLastEpisode(filmId)
         if(film[5] == 'Ended'):
             #This serial is ended, return message with search ID
             variants = ['Этот сериал завершен.','К сожалению, этот сериал завершен.','Сериал более не выпускается.','Сериал закончен.']
-            variants2 = ['Последняя серия под номером','Последняя серия с номером','Заключительная серия номер ','Завершающая серия под номером']            
-            return random.choice(variants) + ' ' +  random.choice(variants2) + ' ' + str(tvdbanswer[1]) + ' "' + tvdbanswer[2] + '" ' + seasonName[tvdbanswer[0]] + ' cезона вышла в прокат ' + datetime.strftime(datetime.strptime(tvdbanswer[3], '%Y-%m-%d'), '%d.%m.%Y'), filmId
+            variants2 = ['Последняя серия под номером','Последняя серия с номером','Заключительная серия номер ','Завершающая серия под номером']
+            return random.choice(variants) + ' ' +  random.choice(variants2) + ' ' + str(tvdbanswer[1]) + ' "' + tvdbanswer[2] + '" ' + seasonName[tvdbanswer[0]] + ' cезона вышла в прокат ' + datetime.strftime(datetime.strptime(tvdbanswer[3], '%Y-%m-%d'), '%d.%m.%Y')
 
         if tvdbanswer[3] == '2100-01-01' or tvdbanswer[3] == '' or tvdbanswer[3] == None:
-            return "Сеьмки сериала ведутся, но дата выхода следующей серии еще не анонсирована. Попробуйте спросить позднее.", filmId
-        
+            return "Съемки сериала ведутся, но дата выхода следующей серии еще не анонсирована. Попробуйте спросить позднее."
+
         d = datetime.strptime(tvdbanswer[3], '%Y-%m-%d')
         n = datetime.now()
         nowday = datetime(n.year, n.month, n.day)
@@ -510,44 +530,43 @@ def filmSearch(filmId, action, time):
 
         if d > nowday:
             if tvdbanswer[2] == None:
-                return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона ' + tellWillBeAired() + ' ' + datetime.strftime(d, '%d.%m.%Y'), filmId
+                return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона ' + tellWillBeAired() + ' ' + datetime.strftime(d, '%d.%m.%Y')
             else:
-                return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона "' + tvdbanswer[2] + '" ' + tellWillBeAired() +' ' + datetime.strftime(d, '%d.%m.%Y'), filmId
+                return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона "' + tvdbanswer[2] + '" ' + tellWillBeAired() +' ' + datetime.strftime(d, '%d.%m.%Y')
             #return random.choice(variants), int(intId)
         elif d == nowday:
             #it is today
             if tvdbanswer[2] == None:
-                return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона ' + tellWillBeAired() + ' сегодня!', filmId
+                return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона ' + tellWillBeAired() + ' сегодня!'
             else:
-                return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона "' + tvdbanswer[2] + '" ' + tellWillBeAired() + ' сегодня!', filmId
+                return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона "' + tvdbanswer[2] + '" ' + tellWillBeAired() + ' сегодня!'
         else:
             if seasonFinished == 1:   #if season is over
                 if tvdbanswer[2] == None:
-                    return '%s серия %s сезона %s %s. %s' % (tellTheLast(), seasonName[tvdbanswer[0]], tellAlreadyAired(), datetime.strftime(d, '%d.%m.%Y'), buzz), filmId
+                    return '%s серия %s сезона %s %s. %s' % (tellTheLast(), seasonName[tvdbanswer[0]], tellAlreadyAired(), datetime.strftime(d, '%d.%m.%Y'), buzz)
                 else:
-                    return '%s серия %s сезона %s %s %s. %s' % (tellTheLast(), seasonName[tvdbanswer[0]], tvdbanswer[2], tellAlreadyAired(), datetime.strftime(d, '%d.%m.%Y'), buzz), filmId
+                    return '%s серия %s сезона %s %s %s. %s' % (tellTheLast(), seasonName[tvdbanswer[0]], tvdbanswer[2], tellAlreadyAired(), datetime.strftime(d, '%d.%m.%Y'), buzz)
             else:
                 #it was in a past
                 if tvdbanswer[2] == None:
-                    return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона ' + tellAlreadyAired() + ' ' + datetime.strftime(d, '%d.%m.%Y'), filmId
+                    return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона ' + tellAlreadyAired() + ' ' + datetime.strftime(d, '%d.%m.%Y')
                 else:
-                    return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона "' + tvdbanswer[2] + '" ' + tellAlreadyAired() + ' ' + datetime.strftime(d, '%d.%m.%Y'), filmId
+                    return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона "' + tvdbanswer[2] + '" ' + tellAlreadyAired() + ' ' + datetime.strftime(d, '%d.%m.%Y')
     #final close return (if everythig esle bad)
-    return tellIAmSorry() + ' ' + tellICantFindTheEpisode(), 0
-#main function, check for key words and finnaly execute a 
+    return tellIAmSorry() + ' ' + tellICantFindTheEpisode()
+#main function, check for key words and finnaly execute a
 def CoreSearch(text):
+    result = {'responce':'','filmId':-1}
     #looking for a name (fist stage)
-    filmId = SearchName(text)
-    if filmId == -1:
-        #we did not find a film, return info message and None as ID
-        return tellIAmSorry() + ' ' + tellICantFindTheEpisode() + ' ' + tellInstruction(), 0
-    #looking for an action, if we do not have an action return -2
-    action = SearchAction(text)
-    #looking for advanced action in the phrase
-    time = SeachActionTimeDetection(text)
-    #core logic
-    return filmSearch(filmId, action, time)
+    SearchResult = SearchName(text)
+    if SearchResult['filmId'] == -1:
+        #we did not find a film, return default
+        return result
 
+    #Run the filmSearch function on top of film ID and rerutn text in result
+    result['responce'] = filmSearch(SearchResult['filmId'], SearchResult['action'], SearchResult['time'])
+    result['filmId'] = SearchResult['filmId']
+    return result
 
 
 #addNewEpisodesFromURL(7)
@@ -556,19 +575,21 @@ def CoreSearch(text):
 
 #addNewEpisodesFromURL(1)
 
+print(len(aliases_in_memory),'aliases and', len(films_in_memory), 'serials have been loaded successfully')
+
+
 #print(SearchName('Маша и медведь'))
 #print(filmdbLastEpisode(1))
 
 #print(SearchName("33 несчастья"))
 # print(SeachActionTimeDetection("ГДs сока сколь;в ы новый когда же ты где?"))
-# print(SearchAction("ГДs сока сколь;в ы когда же ты где?"))
-
-#print(CoreSearch("Твин Пикс"))
+# print(CoreSearch("ГДs сока сколь;в ы когда же ты где?"))
+# print(CoreSearch("Твин Пикс"))
 # print(CoreSearch("Звёздные войны: Сопротивление"))
-#print(CoreSearch("друзья"))
-#print(CoreSearch("дай инфо о теории большого взрыва"))
+# print(CoreSearch("друзья"))
+# print(CoreSearch("дай инфо о теории большого взрыва"))
 # print(CoreSearch("где глянуть теорию большого взрыва"))
-#print(CoreSearch("новая серия грифинов"))
+# print(CoreSearch("новая серия грифинов"))
 #print(CoreSearch("свежая серия полицейского с рублевки"))
 # print(CoreSearch("доктор хаус"))
 # print(CoreSearch("кяввм"))

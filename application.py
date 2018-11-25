@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 import json
 import logging
 import random
-
 from dbfunctions import *
 from dialogs import *
 import time
@@ -96,12 +95,13 @@ def main():
             if text == 'сериал':
                 if sessionStorage[user_id] != 0:
                     res['response']['text'] = getFilmInfoLocal(sessionStorage[user_id])
+                    res['response']['buttons'] = getSiteButtons()
                 else:
                     res['response']['text'] = tellIAmSorry() + ' ' + tellIAmLost()
                 return
             if text == 'сайт':
                 if sessionStorage[user_id] != 0:
-                    res['response']['text'] = 'Слышала, что есть альтернативные вариаты просмотра ;)'
+                    res['response']['text'] = 'Желаю удачи и приятного просмотра.'
                     res['response']['end_session'] = True
                 else:
                     res['response']['text'] = tellIAmSorry() + ' ' + tellIAmLost()
@@ -129,41 +129,23 @@ def main():
         """
         #no more key works, execute seach function on top of this text
         result = CoreSearch(text)
-        #save intId into dictionary
-        sessionStorage[user_id] = result[1]
-        #return result to user
-        res['response']['text'] = result[0] #+ '\n' + '\n' + questionJSON['question']
-        
-        #add suggessted buttons
-        if result[1] == 0:
-            #write data to the log file
-            f = open('logs.txt', mode="a+", encoding="utf-8")
-            csv_writer = csv.writer(f, lineterminator='\n', delimiter='\t')
+        #tempLogFile:
+        f = open('logs.txt', mode="a+", encoding="utf-8")
+        csv_writer = csv.writer(f, lineterminator='\n', delimiter='\t')
+        #
+        if result['filmId'] == -1:
+            res['response']['text'] =  tellIAmSorry() + ' ' + tellICantFindTheEpisode() + ' ' + tellInstruction()
+            res['response']['buttons'] = getExampleButtons()
             csv_writer.writerow([False, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
-            f.close()        
-            res['response']['buttons'] = [
-                {
-                    "title": "Добавить сериал",
-                    "hide": True
-                }
-            ]
-        if result[1] != 0:
-            if text != 'ping':
-                f = open('logs.txt', mode="a+", encoding="utf-8")
-                csv_writer = csv.writer(f, lineterminator='\n', delimiter='\t')
-                csv_writer.writerow([True, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
-                f.close()
-            res['response']['buttons'] = [
-                {
-                    "title": "Сайт",
-                    "url": OfficialURL(result[1]),
-                    "hide": True
-                },
-                {
-                    "title": "Сериал",
-                    "hide": True
-                }
-            ]
+        else:            
+            #save intId into dictionary
+            sessionStorage[user_id] = result['filmId']
+            res['response']['text'] = result['responce'] #+ '\n' + '\n' + questionJSON['question']
+            res['response']['buttons'] = getAddinitonaInfoButtons()
+            csv_writer.writerow([True, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
+        #Close file 
+        f.close()        
+        
     #logging.info('Request: %r', request.json)
     
     print('-------------------------------')

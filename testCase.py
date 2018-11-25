@@ -60,7 +60,7 @@ filmList = getFilmList()
 for i in range(len(filmList)):
     n = datetime.now()
     result = MyPostCommand(False, filmList[i][0], 2)
-    print(('серия' in result.lower()), (datetime.now() - n).total_seconds(), filmList[i][0], result, )
+    print(('серия' in result.lower()) or ('съемки' in result.lower()), (datetime.now() - n).total_seconds(), filmList[i][0], result, )
 
 keywords = ['ping','пинг',
             'как тебя зовут','помощь','что ты умеешь',
@@ -79,12 +79,24 @@ for i in range(5,21):
 
 #print(MyPostCommand(False, '477b0c56-3dc5-4b69-ae85-a2eec9e378cd', 2))
 
+wastePhrase = "это пустая фраза "
+for i in range(0,20):
+    n = datetime.now()
+    result = MyPostCommand(False, (wastePhrase + filmList[i][0]), 2)
+    print(('серия' in result.lower()) or ('съемки' in result.lower()), (datetime.now() - n).total_seconds(), filmList[i][0], result, )
+
+#typo mistake
+for i in range(0,20):
+    n = datetime.now()
+    result = MyPostCommand(False, filmList[i][0][1:], 2)
+    print(('серия' in result.lower()), (datetime.now() - n).total_seconds(), filmList[i][0], result, )
+
 #execute search to the random film
-# for i in range(0,20):
-#     resutl = MyPostCommand(False, filmList[i][0], 2)
-#     result1 = MyPostCommand(False, 'сериал', 3)
-#     result2 = MyPostCommand(False, 'смотреть', 4)
-#     print((('сериал' in result1.lower()) and ('слышала' in result2.lower())), filmList[i][0],)
+for i in range(0,20):
+    resutl = MyPostCommand(False, filmList[i][0], 2)
+    result1 = MyPostCommand(False, 'сериал', 3)
+    result2 = MyPostCommand(False, 'сайт', 4)
+    print((('сериал' in result1.lower()) and ('приятного' in result2.lower())), filmList[i][0],)
 
 # print(MyPostCommand(False, 'тбв', 2))
 # print(MyPostCommand(False, 'сериал', 3))

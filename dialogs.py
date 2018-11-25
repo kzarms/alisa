@@ -230,7 +230,7 @@ def tellICantFindTheEpisode():
 
 def tellInstruction():
     variants = ['Попробуйте поискать другой сериал',
-                'Попробуйте найти спросить другой сериал',
+                'Попробуйте спросить другой сериал',
                 'Может получится найти другой сериал',
                 ]
     return random.choice(variants)
@@ -293,6 +293,27 @@ def getSampleButtons():
                 }
             ]
 
+def getAddinitonaInfoButtons():
+    return [
+                {
+                    "title": "Сайт",
+                    #"url": OfficialURL(result[1]),
+                    "hide": True
+                },
+                {
+                    "title": "Сериал",
+                    "hide": True
+                }
+            ]
+
+def getSiteButtons():
+    return [
+                {
+                    "title": "Сайт",
+                    #"url": OfficialURL(result[1]),
+                    "hide": True
+                }
+            ]
 #print(tellIAmSorry() + ' ' + tellIAmLost())
 
 
