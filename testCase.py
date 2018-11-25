@@ -99,6 +99,7 @@ for i in range(0,20):
     print((('сериал' in result1.lower()) and ('приятного' in result2.lower())), filmList[i][0],)
 
 print(MyPostCommand(False, 'что посмотреть?', 2))
+print(MyPostCommand(False, 'тест', 4))
 # print(MyPostCommand(False, 'сериал', 3))
 # print(MyPostCommand(False, 'сайт', 4))
 

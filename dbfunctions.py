@@ -20,7 +20,7 @@ ActionKeyWords = {
         'info': 2, 'инфо': 2, 'информация': 2, 'подробнее': 2, 'подробно': 2,
         'цитата': 3, 'цититу':3, 'цитируй':3, 'процитируй':3,
         'факт': 4, 'факты':4, 'фактик': 4, 'fuck':4,
-        'посмотреть': 5, 'глянуть': 5, 
+        'посмотреть': 5, 'глянуть': 5,
     }
 TimeKeyWords = {
         'следующий': 2, 'следующая': 2, 'новый': 2, 'новая': 2, 'очередной': 2, 'очередная': 2, 'очередные': 2, 'будет': 2, 'появится': 2, 'выйдет': 2, "выходит": 2,
@@ -533,8 +533,8 @@ def CoreSearch(text):
 
 
 #addNewEpisodesFromURL(7)
-for i in range(len(films_in_memory)+1):
-   addNewEpisodesFromURL(i)
+# for i in range(len(films_in_memory)+1):
+#    addNewEpisodesFromURL(i)
 
 #addNewEpisodesFromURL(1)
 
