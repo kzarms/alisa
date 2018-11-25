@@ -35,9 +35,7 @@ def main():
         #text = "Когда выходит теория большого взрыва?"
         text = req['request']['command'].lower()
         text = text.strip(' ?!,;:.')
-        #Eto chto za pizdec?! :)
-        #text = text.replace(",","").replace(".","").replace("?","").replace(":","")
-                    
+                 
         #check for key words
         keywords = ['ping','пинг',
             '477b0c56-3dc5-4b69-ae85-a2eec9e378cd',
@@ -135,6 +133,10 @@ def main():
         #
         if result['filmId'] == -1:
             res['response']['text'] =  tellIAmSorry() + ' ' + tellICantFindTheEpisode() + ' ' + tellInstruction()
+            res['response']['buttons'] = getExampleButtons()
+            csv_writer.writerow([False, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
+        elif result['filmId'] == 0:
+            res['response']['text'] = result['responce']
             res['response']['buttons'] = getExampleButtons()
             csv_writer.writerow([False, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
         else:            

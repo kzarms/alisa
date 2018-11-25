@@ -12,7 +12,7 @@ from dialogs import *
 from webparser import *
 
 #token var
-token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDMxMzU1NjIsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MzA0OTE2MiwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.L4v7yMelaCtFAtwRkwdi27QSdRSLGutAQKrEs6iCSz3NxnB3VTYfAKF8wMj4iEMKn2XfWSRcB-YyT0lCEgsuCFpMV-fLG6tB1bb2FWI-rPnI-vDenkAUFZorfaFxJ5Sdga92ZfNfyd9a2BAk00AP3eOlRFeyDxgtdv6EPmqzsqsijrxJQeBf142XAS58sudSPYvXzk00ekNBonPfJgXbNNMg8DJt_jvqxw9PM7L6u4CRXMwpIOY8hgOPdgdeTgXyRR1nAhqpij0FTcE7Ez1oe7Mzd1SNxGeZRCMLgPMfdWvt5MLTGy0dzaO5C2Qln8_vRzqm1OSHQpWzHpArLi8epQ'
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDMyNDkwMDUsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MzE2MjYwNSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.whTIDWYo-Lx7NN3g-N83QTzKxigRJzS-YOrqp4_N_qBYIWpCo9IWIfyVWwXeAxdTpsHmdV3QCPVRq8A7H63QL-OC2GHzcLbSesCtbBpZTUK7biw7dysebj452fZxNCSPGrWBckm98e4hqWUn81K9QvcLk6R8J1h6kEBAXRrHhArBrE7Pk0hpK-8AXTcI52ygUhyMzfPPWH8JY9A4CV562QJnx3oDRILDCIADCWHH5hp7vhU5QVmZ1p0E2FOfiewF_pkaA6gLn6k9gTMB-ZWQuwLsdbH3YUOhXXRvzCRKXvfBWTIktd74Y-J0i-aOMx1dfYJcN2YG7Dg2fXnTipjGHg'
 #define key words for action and time
 ActionKeyWords = {
         'когда': 0, 'кагда': 0, 'when': 0, 'скоро': 0,
@@ -20,12 +20,16 @@ ActionKeyWords = {
         'info': 2, 'инфо': 2, 'информация': 2, 'подробнее': 2, 'подробно': 2,
         'цитата': 3, 'цититу':3, 'цитируй':3, 'процитируй':3,
         'факт': 4, 'факты':4, 'фактик': 4, 'fuck':4,
+        'посмотреть': 5, 'глянуть': 5, 
     }
 TimeKeyWords = {
         'следующий': 2, 'следующая': 2, 'новый': 2, 'новая': 2, 'очередной': 2, 'очередная': 2, 'очередные': 2, 'будет': 2, 'появится': 2, 'выйдет': 2, "выходит": 2,
         'идет': 1, 'проходит': 1, 'показывают': 1, 'крутят': 1,
         'была': 0, 'прошла': 0, 'показали': 0, 'крутили': 0, 'прошлая': 0, 'прошедшая': 0, 'предыдущий': 0, 'предыдущая': 0,
     }
+OffensiveWords = (
+    'хуй','пизда','пиздец','ссука','хуйло','хуило','заебал','нахуй','на хуй','пиздуй','блядь',
+)
 
 #storage for chash
 cashRequests = {}
@@ -91,6 +95,11 @@ def SearchName(text):
     for word in words:
         if len(word.strip(' ?!,;:.')) > 1:
             WordList.append(word.strip(' ?!,;:.'))
+    #Check offenceive words
+    for word in WordList:
+        if word in OffensiveWords:
+            #do not spend time for search, return nothing
+            return result
     #Check Action KeyWord
     for word in WordList:
         if word in ActionKeyWords.keys():
@@ -126,26 +135,6 @@ def SearchName(text):
     #Return null result
     return result
 
-#Looking for key words related to action
-#time 0, plase 1, info 2, else -1
-# def SearchAction(text):
-#     text = text.lower()
-#     WordList = text.split(" ")
-#     for word in WordList:
-#         word = word.strip(" ?!,;:")
-#         if word in ActionKeyWords.keys():
-#             return ActionKeyWords[word]
-#     return -1
-#Looking for key words related to time
-#future 2, present 1 and past 0, else -1
-# def SeachActionTimeDetection(text):
-#     text = text.lower()
-#     WordList = text.split(" ")
-#     for word in WordList:
-#         word = word.strip(" ?!,;:")
-#         if word in TimeKeyWords.keys():
-#             return TimeKeyWords[word]
-#     return -1
 
 #update token
 def tockenRefresh():
@@ -233,7 +222,7 @@ def tvdbEpisodesFromLastSeason(filmID):
 
 #--Input - dict object.
 def addEpisode(seriesNumber, episode):
-    print(seriesNumber)
+    #print(seriesNumber)
     airedSeason = episode[0]
     airedEpisodeNumber = episode[1]
     con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
@@ -325,7 +314,7 @@ def addEpisodeFromDict(seriesNumber, episodeJson, nameEn):
     cur = con.cursor()
     cur.execute(sql)
     row = cur.fetchone()
-    print(nameEn)
+    #print(nameEn)
     #rint(row)
     if row == None:  #No episode - add
         print(nameEn + ' NO EPISODE IN BASE , ADD---------')
@@ -358,7 +347,8 @@ def addEpisodeFromDict(seriesNumber, episodeJson, nameEn):
             con.commit()
             con.close()
         else:
-            print (('%s %i %i NO NEW INFO FROM TVGUIDE') % (nameEn, episodeBase.get('airedSeason'), episodeBase.get('airedEpisodeNumber')))
+            #print (('%s %i %i NO NEW INFO FROM TVGUIDE') % (nameEn, episodeBase.get('airedSeason'), episodeBase.get('airedEpisodeNumber')))
+            pass
 
 
 #get neccessary column from film table
@@ -529,6 +519,10 @@ def CoreSearch(text):
     #looking for a name (fist stage)
     SearchResult = SearchName(text)
     if SearchResult['filmId'] == -1:
+        if SearchResult['action'] == 5:
+            #No film but want to wathc, probably query what i can watch?
+            result['responce'] = tellSuggestionToWathc()
+            result['filmId'] = 0
         #we did not find a film, return default
         return result
 
@@ -539,16 +533,13 @@ def CoreSearch(text):
 
 
 #addNewEpisodesFromURL(7)
-#for i in range(146):
-#    addNewEpisodesFromURL(i)
+for i in range(len(films_in_memory)+1):
+   addNewEpisodesFromURL(i)
 
 #addNewEpisodesFromURL(1)
 
 print(len(aliases_in_memory),'aliases and', len(films_in_memory), 'serials have been loaded successfully')
 
-
-#print(SearchName('Маша и медведь'))
-#print(filmdbLastEpisode(1))
 
 #print(SearchName("33 несчастья"))
 # print(SeachActionTimeDetection("ГДs сока сколь;в ы новый когда же ты где?"))
@@ -563,8 +554,3 @@ print(len(aliases_in_memory),'aliases and', len(films_in_memory), 'serials have 
 # print(CoreSearch("доктор хаус"))
 # print(CoreSearch("кяввм"))
 #print(CoreSearch("эртугрул"))
-
-# print(tvdbLastEpisode('80379','12'))
-#print(CoreSearch('Физрук'))
-#print(OfficialURL(100))
-#print (getInfoFromFilm(6, "seasonFinished"))addNewEpisodesFromURL

@@ -258,6 +258,28 @@ def tellAlreadyAired():
                 'вышла']
     return random.choice(variants)
 
+def tellSuggestionToWathc():
+    variants = ['Сейчас активно сниматся и публикуются ',
+                'Могу рекомендовать к просмотру ',
+                'Наиболее популярные сериалы ',
+                ]
+    variants2 = ['Теория Большого Взрыва.',
+                'Саус Парк.',
+                'Гриффины',
+                'Стрела',
+                'Викинги',
+                'Ходячие мертвецы',
+                'Симпсоны',
+                'Детство Шелдона',
+                'Флеш',
+                'Сверхестественное',
+                'Snatch',
+                'Титаны',
+                'Люцифер',
+                'Агенты Щ.И.Т.',
+                ]
+    return random.choice(variants) + random.choice(variants2) + ', ' + random.choice(variants2) + ' и ' + random.choice(variants2)
+
 ####buttons#####
 def getExampleButtons():
     variants = ['Теория Большого Взрыва.',
@@ -269,6 +291,8 @@ def getExampleButtons():
                 'Симпсоны',
                 'Детство Шелдона',
                 'Флеш',
+                'Сверхестественное',
+                'Титаны',
                 ]
     return [
                 {
@@ -314,6 +338,7 @@ def getSiteButtons(url):
                     "hide": True
                 }
             ]
+
 #print(tellIAmSorry() + ' ' + tellIAmLost())
 
 
