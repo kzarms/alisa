@@ -411,42 +411,12 @@ def filmdbLastEpisode(filmID):
 #tvdbLastEpisode('80379','12')
 #Return the URL to the offical site
 def OfficialURL(intId):
-    URLs = {
-        'CBS': 'https://www.cbs.com',
-        'CBS All Access': 'https://www.cbs.com',
-        'Comedy Central (US)': 'https://www.cc.com',
-        'Crackle': 'https://www.sonycrackle.com',
-        'CW Seed': 'https://www.cwseed.com',
-        'DC Universe': 'https://www.dcuniverse.com',
-        'Disney Channel (US)': 'https://shows.disney.com',
-        'Disney XD': 'https://shows.disney.com',
-        'FOX (US)': 'https://www.fox.com',
-        'FX (US)': 'https://www.fxnetworks.com',
-        'FXX': 'https://www.fxnetworks.com',
-        'HBO': 'https://www.hbogo.com',
-        'History': 'https://www.history.com',
-        'Hulu': 'https://www.hulu.com',
-        'ITV Encore': 'https://www.itv.com',
-        'NBC':  'https://www.nbc.com',
-        'Netflix': 'https://www.netflix.com',
-        'Showtime': 'https://www.sho.com',
-        'Sony Crackle': 'https://www.sonycrackle.com',
-        'Starz!': 'https://www.starz.com',
-        'Syfy': 'https://www.syfy.com',
-        'The CW': 'http://www.cwtv.com',
-        'TNT (US)': 'https://www.tntdrama.com/shows',
-        'USA Network': 'http://www.usanetwork.com/shows',
-        'Первый канал': 'https://www.1tv.ru',
-        'Пятый канал': 'https://www.5-tv.ru',
-        'ТНТ': 'https://tnt-online.ru/',
-    }
-    for row in films_in_memory:
-        if intId == row[0]:
-            break
-    if row[7] in URLs:
-        return URLs[row[7]]
+    film = films_in_memory[intId - 1]
+    if (film[14] != None) and (film[14].rstrip() != ""):
+        return film[14]
     else:
-        return 'https://www.yandex.ru'
+        return str('https://yandex.ru/search/?text=сериал%20' + film[4].replace(" ","%20").strip(' ?!,;:.'))
+
 
 
 #Return main info about serial
@@ -526,7 +496,6 @@ def filmSearch(filmId, action, time):
         n = datetime.now()
         nowday = datetime(n.year, n.month, n.day)
         buzz = film[16]
-        seasonFinished = film[17]
 
         if d > nowday:
             if tvdbanswer[2] == None:
@@ -541,7 +510,7 @@ def filmSearch(filmId, action, time):
             else:
                 return "Серия " + str(tvdbanswer[1]) + " " + seasonName[tvdbanswer[0]] + ' cезона "' + tvdbanswer[2] + '" ' + tellWillBeAired() + ' сегодня!'
         else:
-            if seasonFinished == 1:   #if season is over
+            if (buzz != None) and (buzz.rstrip() != ""):   #if buzz exist
                 if tvdbanswer[2] == None:
                     return '%s серия %s сезона %s %s. %s' % (tellTheLast(), seasonName[tvdbanswer[0]], tellAlreadyAired(), datetime.strftime(d, '%d.%m.%Y'), buzz)
                 else:
@@ -596,5 +565,6 @@ print(len(aliases_in_memory),'aliases and', len(films_in_memory), 'serials have 
 #print(CoreSearch("эртугрул"))
 
 # print(tvdbLastEpisode('80379','12'))
-#print(CoreSearch('Теория большого взрыва'))
+#print(CoreSearch('Физрук'))
+print(OfficialURL(100))
 #print (getInfoFromFilm(6, "seasonFinished"))addNewEpisodesFromURL
