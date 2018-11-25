@@ -37,7 +37,7 @@ def main():
         text = text.strip(' ?!,;:.')
                  
         #check for key words
-        keywords = ['ping','пинг',
+        keywords = ['ping','пинг','test','тест',
             '477b0c56-3dc5-4b69-ae85-a2eec9e378cd',
             'как тебя зовут','помощь','что ты умеешь',
             'привет','здравствуй','здравствуйте','хай','hi',
@@ -47,8 +47,10 @@ def main():
         if text in keywords:
             #textKey = text.replace(",","").replace(",","")
             if (text == 'ping') or (text == 'пинг'):
-                #res['response']['text'] = getAnswerForPing() + '\n' + '\n' + getIntroduceAfterAnswer()
                 res['response']['text'] = 'Reply from new episod: bytes=32 time=46ms TTL=52'
+                return
+            if (text == 'test') or (text == 'тест'):
+                res['response']['text'] = 'Test has been completed successfully'
                 return 
             if text == '477b0c56-3dc5-4b69-ae85-a2eec9e378cd':
                 for i in range(142):
