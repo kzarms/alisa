@@ -95,13 +95,13 @@ def main():
             if text == 'сериал':
                 if sessionStorage[user_id] != 0:
                     res['response']['text'] = getFilmInfoLocal(sessionStorage[user_id])
-                    res['response']['buttons'] = getSiteButtons()
+                    res['response']['buttons'] = getSiteButtons(OfficialURL(sessionStorage[user_id]))
                 else:
                     res['response']['text'] = tellIAmSorry() + ' ' + tellIAmLost()
                 return
             if text == 'сайт':
                 if sessionStorage[user_id] != 0:
-                    res['response']['text'] = 'Желаю удачи и приятного просмотра.'
+                    res['response']['text'] = 'Желаю приятного просмотра.'
                     res['response']['end_session'] = True
                 else:
                     res['response']['text'] = tellIAmSorry() + ' ' + tellIAmLost()
@@ -141,7 +141,7 @@ def main():
             #save intId into dictionary
             sessionStorage[user_id] = result['filmId']
             res['response']['text'] = result['responce'] #+ '\n' + '\n' + questionJSON['question']
-            res['response']['buttons'] = getAddinitonaInfoButtons()
+            res['response']['buttons'] = getAddinitonaInfoButtons(OfficialURL(result['filmId']))
             csv_writer.writerow([True, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
         #Close file 
         f.close()        

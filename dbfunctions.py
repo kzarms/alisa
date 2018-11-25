@@ -411,12 +411,13 @@ def filmdbLastEpisode(filmID):
 #tvdbLastEpisode('80379','12')
 #Return the URL to the offical site
 def OfficialURL(intId):
+    if (intId == None) or (intId < 1):
+         return str('https://www.yandex.ru/')
     film = films_in_memory[intId - 1]
     if (film[14] != None) and (film[14].rstrip() != ""):
         return film[14]
     else:
         return str('https://yandex.ru/search/?text=сериал%20' + film[4].replace(" ","%20").strip(' ?!,;:.'))
-
 
 
 #Return main info about serial
@@ -443,7 +444,6 @@ def getFilmInfoLocal(filmId):
 
 #Return film location
 def getFilmLocationLocal(filmId):
-    #intId = '1'
     return "Сериал можно посмотреть на сайте " + OfficialURL(filmId)
 
 
@@ -566,5 +566,5 @@ print(len(aliases_in_memory),'aliases and', len(films_in_memory), 'serials have 
 
 # print(tvdbLastEpisode('80379','12'))
 #print(CoreSearch('Физрук'))
-print(OfficialURL(100))
+#print(OfficialURL(100))
 #print (getInfoFromFilm(6, "seasonFinished"))addNewEpisodesFromURL

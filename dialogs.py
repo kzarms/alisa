@@ -293,11 +293,11 @@ def getSampleButtons():
                 }
             ]
 
-def getAddinitonaInfoButtons():
+def getAddinitonaInfoButtons(url):
     return [
                 {
                     "title": "Сайт",
-                    #"url": OfficialURL(result[1]),
+                    "url": url,
                     "hide": True
                 },
                 {
@@ -306,11 +306,11 @@ def getAddinitonaInfoButtons():
                 }
             ]
 
-def getSiteButtons():
+def getSiteButtons(url):
     return [
                 {
                     "title": "Сайт",
-                    #"url": OfficialURL(result[1]),
+                    "url": url,
                     "hide": True
                 }
             ]
