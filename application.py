@@ -28,11 +28,11 @@ def main():
         user_id = req['session']['user_id']
         text = req['request']['command'].lower()
         text = text.strip(' ?!,;:.')
-
-        f = open('logs.txt', mode="a+", encoding="utf-8")
-        csv_writer = csv.writer(f, lineterminator='\n', delimiter='\t')
-        csv_writer.writerow([datetime.now(), 'None', user_id, text, req['meta']['client_id'], req['meta']['locale'],],)
-        f.close() 
+        if text != 'ping':
+            f = open('logs.txt', mode="a+", encoding="utf-8")
+            csv_writer = csv.writer(f, lineterminator='\n', delimiter='\t')
+            csv_writer.writerow([datetime.now(), 'None', user_id, text, req['meta']['client_id'], req['meta']['locale'],],)
+            f.close() 
        
         if (req['session']['new']) and (text == ''):
             #New session and nothing in command, return welcome message
@@ -51,7 +51,7 @@ def main():
         if text in keywords:
             #textKey = text.replace(",","").replace(",","")
             if (text == 'ping') or (text == 'пинг'):
-                res['response']['text'] = 'Reply from new episod: bytes=32 time=46ms TTL=52'
+                res['response']['text'] = 'Reply from guru: bytes=32 time=46ms TTL=52'
                 return
             if (text == 'test') or (text == 'тест'):
                 res['response']['text'] = 'Test has been completed successfully'
