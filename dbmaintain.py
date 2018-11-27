@@ -2,8 +2,11 @@
 import requests
 import sqlite3
 import datetime
+#from dbfunctions import *
 
-token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDMxNDM1NzEsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MzA1NzE3MSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.yPxza7OAS58U_ehnK5RrMSDTptJ6jt3XyAx_qTsLRNHA-Y_7yVdaMiy61qMMBBvQHj_KdXUk0iO_-W0DRHEd6gH9ODedjWa5eov3X3Tdg2x0fh8eslP2CuXecrJfipdRYxluHPfr0erJIZun14y6OJ9vR7CeriDD6tnVN68pQpRbvJm5RYd2uPCKdxiXy-VzmmASnCoo7JR3CXTP1WvTGMhNp5Z5coFgO5zbwjv0bs8sdU71wlC1JqPlTnPra-3pamoET4hgVvfGbEAHY-4HqspzK8UAUTr3UywVOfDSLTYe0ZCD02i9ncaTQ6ohtVtuskF7HoeKVX0_R8y1djsGtQ'
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDMzMzcyMDcsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MzI1MDgwNywidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.DlEzMIwGAqqHuOW5YkMzD5yNoyZqbrcVN_TDNXCoKNE9zCWYJXpnNTMaIjiq6JORzYlShyINoi8aaRunN-DtXufy6Tkhkdr_e2KmZVQTFZoqvhH4Eal4ht_egbLhifmbj3nWDw0jq4hg7t4LdSc6yTFNZ8GnxbwYYHmV4nPx3zi_FuclwnWcY5IuWXORWJYZuLSd3HEE2R_L-pENBPDWnfKYTyQlgGTHO3k-eZ_qGIGkuSyYnIZ6VSpI_TEsjrftgq1s_DUXDeBMaUlNs9rNxzO1Ht-0343j-zcf7-n09JStuyMbVi-AHr8oZmU9WXcz851L-x21r38BDFFMGRyAsg'
+yaToken = 'AQAAAAAVYDL-AAT7o7R7jc6HBkc2ihaRcW3RMuk'
+
 def tockenRefresh():
     URL = "https://api.thetvdb.com/login"   
     HEADERS = {'Content-Type': 'application/json'}  
@@ -83,13 +86,12 @@ def addSerialIntoDB(filmID):
         None,
         None,
         None,
-        0,
         ]
     #add info into the database
     print("Record basic info into the film DB")
     con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
     cur = con.cursor()
-    cur.execute("INSERT INTO films VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", fields)
+    cur.execute("INSERT INTO films VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", fields)
     seriesNumber = cur.lastrowid
     #Add aliases info
     aliases = []
@@ -182,9 +184,31 @@ def addFact(text):
     con.close()
     print ("Line number", rowId)
 
+def getFreeSpace():
+    URL = "https://dialogs.yandex.net/api/v1/status"   
+    HEADERS = {'Authorization': 'OAuth ' + yaToken}
+    #HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)} 
+    r = requests.get(url = URL, headers = HEADERS)
+    data = r.json()
+    print(data)
+
+def UploadImage():
+    URL = "https://dialogs.yandex.net/api/v1/skills/6b89b259-e2f2-44fb-b203-17833d97595a/images"   
+    HEADERS = {'Authorization': 'OAuth ' + yaToken,'Content-Type': 'multipart/form-data'}
+    HEADERS = {'Authorization': 'OAuth ' + yaToken}
+    imgFile = {'file':('1_1.jpg',open('1_1.jpg', 'rb'),'multipart/form-data')}
+    r = requests.post(url=URL, headers=HEADERS, data=imgFile)
+    r.json()
+    data = r.json()    
+    r = requests.get(url = URL, headers = HEADERS)
+    data = r.json()
+    print(data)
+
 #Record serial into the db. Add into films, create a series table + add aliases
-addSerialIntoDB(73739)
+addSerialIntoDB(349309)
 #addQuote('test')
 #addFact('test')
 
-
+#addNewEpisodesFromURL(7)
+# for i in range(len(films_in_memory)+1):
+#    addNewEpisodesFromURL(i)

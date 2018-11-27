@@ -24,22 +24,26 @@ sessionStorage = {}
 def main():
     # Hanle dialog
     def handle_dialog(req, res):
-        #questionType = ''
+        # Take user text
         user_id = req['session']['user_id']
-        if (req['session']['new']) and (req['request']['command'].lower() == ''):
+        text = req['request']['command'].lower()
+        text = text.strip(' ?!,;:.')
+
+        f = open('logs.txt', mode="a+", encoding="utf-8")
+        csv_writer = csv.writer(f, lineterminator='\n', delimiter='\t')
+        csv_writer.writerow([datetime.now(), 'None', user_id, text, req['meta']['client_id'], req['meta']['locale'],],)
+        f.close() 
+       
+        if (req['session']['new']) and (text == ''):
             #New session and nothing in command, return welcome message
             res['response']['text'] = getIntoduce()
             res['response']['buttons'] = getExampleButtons()     
             return
-        # Take user text
-        #text = "Когда выходит теория большого взрыва?"
-        text = req['request']['command'].lower()
-        text = text.strip(' ?!,;:.')
-                 
+       
         #check for key words
         keywords = ['ping','пинг','test','тест',
             '477b0c56-3dc5-4b69-ae85-a2eec9e378cd',
-            'как тебя зовут','помощь','что ты умеешь',
+            'как тебя зовут','помощь','что ты умеешь','куку','ку-ку',
             'привет','здравствуй','здравствуйте','хай','hi',
             'спасибо','благодарю',
             'все','выход','конец','завешить','стоп',
@@ -64,7 +68,7 @@ def main():
                 res['response']['text'] = getAnswerForHelp()
                 res['response']['buttons'] = getExampleButtons()
                 return
-            if (text == 'что ты умеешь'):
+            if (text == 'что ты умеешь' or text == 'куку' or text == 'ку-ку'):
                 res['response']['text'] = getAnswerForHelp()
                 res['response']['buttons'] = getExampleButtons()                    
                 return            
@@ -130,25 +134,25 @@ def main():
         #no more key works, execute seach function on top of this text
         result = CoreSearch(text)
         #tempLogFile:
-        f = open('logs.txt', mode="a+", encoding="utf-8")
-        csv_writer = csv.writer(f, lineterminator='\n', delimiter='\t')
+        # f = open('logs.txt', mode="a+", encoding="utf-8")
+        # csv_writer = csv.writer(f, lineterminator='\n', delimiter='\t')
         #
         if result['filmId'] == -1:
             res['response']['text'] =  tellIAmSorry() + ' ' + tellICantFindTheEpisode() + ' ' + tellInstruction()
             res['response']['buttons'] = getExampleButtons()
-            csv_writer.writerow([False, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
+            # csv_writer.writerow([False, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
         elif result['filmId'] == 0:
             res['response']['text'] = result['responce']
             res['response']['buttons'] = getExampleButtons()
-            csv_writer.writerow([False, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
+            # csv_writer.writerow([False, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
         else:            
             #save intId into dictionary
             sessionStorage[user_id] = result['filmId']
             res['response']['text'] = result['responce'] #+ '\n' + '\n' + questionJSON['question']
             res['response']['buttons'] = getAddinitonaInfoButtons(OfficialURL(result['filmId']))
-            csv_writer.writerow([True, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
+            # csv_writer.writerow([True, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
         #Close file 
-        f.close()        
+        # f.close()        
         
     #logging.info('Request: %r', request.json)
     
