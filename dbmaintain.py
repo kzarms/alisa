@@ -4,7 +4,7 @@ import sqlite3
 import datetime
 #from dbfunctions import *
 
-token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDMzMzcyMDcsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MzI1MDgwNywidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.DlEzMIwGAqqHuOW5YkMzD5yNoyZqbrcVN_TDNXCoKNE9zCWYJXpnNTMaIjiq6JORzYlShyINoi8aaRunN-DtXufy6Tkhkdr_e2KmZVQTFZoqvhH4Eal4ht_egbLhifmbj3nWDw0jq4hg7t4LdSc6yTFNZ8GnxbwYYHmV4nPx3zi_FuclwnWcY5IuWXORWJYZuLSd3HEE2R_L-pENBPDWnfKYTyQlgGTHO3k-eZ_qGIGkuSyYnIZ6VSpI_TEsjrftgq1s_DUXDeBMaUlNs9rNxzO1Ht-0343j-zcf7-n09JStuyMbVi-AHr8oZmU9WXcz851L-x21r38BDFFMGRyAsg'
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDM0Mzc0MTQsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MzM1MTAxNCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.sSkgZUo5FVMUUSpJ4soDv90FL2mSVCsZPg08V_tuyszojY_tWw1RULQlijeU4KW4F0Re5HAlJ1ratVekfCNupJyRdMcucYeoZlJXRBCUYxtE5Mm6AyzC-Q4RGg6ViE595mPQqDdnp-2r-e_XZee-NdPijT4rWtoZEZUY1G1Ja3FDrU5jCVMoJTLYC7qQa0INwkvodhBMKphfh1UPHRD1OT6a7Y-OPGX0vuNKQNGwWPQeuY3PPUIFZizc87yKLt1oHmsIQcO50Tucr4FZQzkcRGl2vlrlsbO_JfV3GXF9V_9_ngNbQ7RJ7CQTNQeypk0tA158r0R848Gu2XjJZdxAKQ'
 yaToken = 'AQAAAAAVYDL-AAT7o7R7jc6HBkc2ihaRcW3RMuk'
 
 def tockenRefresh():
@@ -205,7 +205,7 @@ def UploadImage():
     print(data)
 
 #Record serial into the db. Add into films, create a series table + add aliases
-addSerialIntoDB(349309)
+addSerialIntoDB(344995)
 #addQuote('test')
 #addFact('test')
 

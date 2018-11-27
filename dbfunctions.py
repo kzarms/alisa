@@ -12,8 +12,7 @@ from dialogs import *
 from webparser import *
 
 #token var
-token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDMyNDkwMDUsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MzE2MjYwNSwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.whTIDWYo-Lx7NN3g-N83QTzKxigRJzS-YOrqp4_N_qBYIWpCo9IWIfyVWwXeAxdTpsHmdV3QCPVRq8A7H63QL-OC2GHzcLbSesCtbBpZTUK7biw7dysebj452fZxNCSPGrWBckm98e4hqWUn81K9QvcLk6R8J1h6kEBAXRrHhArBrE7Pk0hpK-8AXTcI52ygUhyMzfPPWH8JY9A4CV562QJnx3oDRILDCIADCWHH5hp7vhU5QVmZ1p0E2FOfiewF_pkaA6gLn6k9gTMB-ZWQuwLsdbH3YUOhXXRvzCRKXvfBWTIktd74Y-J0i-aOMx1dfYJcN2YG7Dg2fXnTipjGHg'
-#define key words for action and time
+token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDM0Mzc0MTQsImlkIjoiYWxpc2EiLCJvcmlnX2lhdCI6MTU0MzM1MTAxNCwidXNlcmlkIjo1MTM1MDcsInVzZXJuYW1lIjoidmxrb290bW5pIn0.sSkgZUo5FVMUUSpJ4soDv90FL2mSVCsZPg08V_tuyszojY_tWw1RULQlijeU4KW4F0Re5HAlJ1ratVekfCNupJyRdMcucYeoZlJXRBCUYxtE5Mm6AyzC-Q4RGg6ViE595mPQqDdnp-2r-e_XZee-NdPijT4rWtoZEZUY1G1Ja3FDrU5jCVMoJTLYC7qQa0INwkvodhBMKphfh1UPHRD1OT6a7Y-OPGX0vuNKQNGwWPQeuY3PPUIFZizc87yKLt1oHmsIQcO50Tucr4FZQzkcRGl2vlrlsbO_JfV3GXF9V_9_ngNbQ7RJ7CQTNQeypk0tA158r0R848Gu2XjJZdxAKQ'
 ActionKeyWords = {
         'когда': 0, 'кагда': 0, 'when': 0, 'скоро': 0,
         'где': 1,
@@ -533,8 +532,8 @@ def CoreSearch(text):
 
 
 #addNewEpisodesFromURL(7)
-# for i in range(len(films_in_memory)+1):
-#    addNewEpisodesFromURL(i)
+for i in range(len(films_in_memory)+1):
+   addNewEpisodesFromURL(i)
 
 #addNewEpisodesFromURL(1)
 
