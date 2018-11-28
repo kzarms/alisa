@@ -536,7 +536,6 @@ def CoreSearch(text):
     return result
 
 
-
 def addSerialIntoDB(filmID):
     responce = []
     con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
