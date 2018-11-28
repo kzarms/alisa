@@ -205,7 +205,7 @@ def UploadImage():
     print(data)
 
 #Record serial into the db. Add into films, create a series table + add aliases
-addSerialIntoDB(344995)
+addSerialIntoDB(350498)
 #addQuote('test')
 #addFact('test')
 

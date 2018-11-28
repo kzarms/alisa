@@ -341,9 +341,14 @@ def getSiteButtons(url):
 
 #print(tellIAmSorry() + ' ' + tellIAmLost())
 
-
-
-
+#####Card######
+def getCard(img):
+    return {
+            "type": "BigImage",
+            "image_id": img,
+            "title": "",
+            "description": "",
+            }
 
 
 

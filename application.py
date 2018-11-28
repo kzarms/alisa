@@ -42,7 +42,7 @@ def main():
        
         #check for key words
         keywords = ['ping','пинг','test','тест',
-            '477b0c56-3dc5-4b69-ae85-a2eec9e378cd',
+            '477b0c56-3dc5-4b69-ae85-a2eec9e378cd', '477b0c56-3dc5-4b69-ae85-a2eec9e378ce',
             'как тебя зовут','помощь','что ты умеешь','куку','ку-ку',
             'привет','здравствуй','здравствуйте','хай','hi',
             'спасибо','благодарю',
@@ -57,7 +57,11 @@ def main():
                 res['response']['text'] = 'Test has been completed successfully'
                 return 
             if text == '477b0c56-3dc5-4b69-ae85-a2eec9e378cd':
-                for i in range(142):
+                res['response']['text'] = 'Give me ID'
+                sessionStorage[user_id] = "addSerial" 
+                return
+            if text == '477b0c56-3dc5-4b69-ae85-a2eec9e378cd':
+                for i in range(len(films_in_memory)+1):
                     addNewEpisodesFromURL(i)
                 res['response']['text'] = 'End update'  
                 return
@@ -149,6 +153,8 @@ def main():
             #save intId into dictionary
             sessionStorage[user_id] = result['filmId']
             res['response']['text'] = result['responce'] #+ '\n' + '\n' + questionJSON['question']
+            if not result['img'] == '':
+                res['response']['card'] = getCard(result['img'])
             res['response']['buttons'] = getAddinitonaInfoButtons(OfficialURL(result['filmId']))
             # csv_writer.writerow([True, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
         #Close file 

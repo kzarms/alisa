@@ -514,7 +514,7 @@ def filmSearch(filmId, action, time):
     return tellIAmSorry() + ' ' + tellICantFindTheEpisode()
 #main function, check for key words and finnaly execute a
 def CoreSearch(text):
-    result = {'responce':'','filmId':-1}
+    result = {'responce':'','filmId':-1, 'img':''}
     #looking for a name (fist stage)
     SearchResult = SearchName(text)
     if SearchResult['filmId'] == -1:
@@ -528,12 +528,158 @@ def CoreSearch(text):
     #Run the filmSearch function on top of film ID and rerutn text in result
     result['responce'] = filmSearch(SearchResult['filmId'], SearchResult['action'], SearchResult['time'])
     result['filmId'] = SearchResult['filmId']
+    imgsRaw = films_in_memory[int(SearchResult['filmId'])-1][12]
+    if not ((imgsRaw == '') or (imgsRaw == None)):
+        imgs = imgsRaw.split(',')
+        result['img'] = random.choice(imgs)
     return result
 
 
+
+def addSerialIntoDB(filmID):
+    responce = []
+    con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+    cur = con.cursor()
+    #check we do not have such film in the list
+    resutl = (cur.execute('SELECT rowid FROM films WHERE tvdbid=?', (str(filmID),))).fetchone()
+    con.close()
+    if resutl != None:
+        responce.append('This film ID ' + str(filmID) + ' is already in the DB. Exit.')
+        return responce
+    
+    #Create a web-request
+    URL = "https://api.thetvdb.com"    
+    HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)} 
+    URL1 = URL + '/series/' + str(filmID)
+    r = requests.get(url = URL1, headers = HEADERS)  
+    # extracting data in json format 
+    dataEn = r.json()
+    if 'Error' in dataEn:
+        #there is an error
+        if 'No results for your query' in dataEn['Error']:
+            return 'Error', 'Search error'
+        if dataEn['Error'] == 'Not authorized':
+            #try update token
+            tockenRefresh()
+            print(token)
+            if token == '0':
+                return 'Error', 'Auth error and update token error'
+            HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)}
+            r = requests.get(url = URL1, headers = HEADERS)
+            dataEn = r.json()
+            if 'Error' in dataEn:
+                return responce.append('Error token update')
+    #collect Rus Name
+    HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}
+    r = requests.get(url = URL1, headers = HEADERS)
+    dataRu = r.json()
+    #find the last season number in Eng verson
+    URL2 = URL + '/series/' + str(filmID) + '/episodes/summary'
+    r = requests.get(url = URL2, headers = HEADERS)
+    dataSum = r.json()
+
+    lastSeason = max(map(int, dataSum['data']['airedSeasons']))    
+    if dataEn['data']['firstAired'] != None and dataEn['data']['firstAired'] != '':
+        firstAired = datetime.datetime.strptime(dataEn['data']['firstAired'], '%Y-%m-%d')
+    else:
+        firstAired = None
+        responce.append("!Update first arride in the DB manually")
+    #summ result in the finnal line
+    fields = [(dataEn['data']['id']),
+        dataEn['data']['imdbId'],
+        None,
+        dataEn['data']['seriesName'],
+        dataRu['data']['seriesName'],
+        dataEn['data']['status'],
+        firstAired,
+        dataEn['data']['network'],
+        int(lastSeason),
+        int(dataSum['data']['airedEpisodes']),
+        float(dataEn['data']['siteRating']),
+        0,
+        None,
+        None,
+        None,
+        None,
+        None,
+        ]
+    #add info into the database
+    print("Record basic info into the film DB")
+    con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+    cur = con.cursor()
+    cur.execute("INSERT INTO films VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", fields)
+    seriesNumber = cur.lastrowid
+    #Add aliases info
+    aliases = []
+    if dataRu['data']['seriesName'] != None:
+        cur.execute("INSERT INTO aliases VALUES (?, ?)", [str(seriesNumber), dataRu['data']['seriesName'].lower(),])
+        print("Add alias", dataRu['data']['seriesName'])
+    if dataEn['data']['seriesName'] != None:
+        cur.execute("INSERT INTO aliases VALUES (?, ?)", [str(seriesNumber), dataEn['data']['seriesName'].lower(),])
+        print("Add alias", dataEn['data']['seriesName'])
+    #create a corresponding table for the serial
+    
+    print("Create a corresponding table", str(seriesNumber))
+    for seasonNumber in range(1, int(lastSeason)+1):
+        if int(seasonNumber) == 1:
+            #clean up
+            cmd = 'DROP TABLE IF EXISTS series_' + str(seriesNumber)
+            cur.execute(cmd)
+            cmd = '''CREATE TABLE series_''' + str(seriesNumber) + '''
+                    (airedSeason int,
+                    airedEpisodeNumber int,
+                    episodeNameEn varchar,
+                    episodeNameRu varchar,
+                    firstAired data,
+                    director varchar,
+                    overviewEn text,
+                    overviewRu text,
+                    showUrl varchar,
+                    info text
+                    )'''
+            cur.execute(cmd)
+        HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token),'Accept-Language':'ru'}  
+        PARAMS = {'airedSeason':str(seasonNumber)} 
+        #Create full request
+        URL4 = URL + '/series/' + str(filmID) + '/episodes/query'
+        r = requests.get(url = URL4, headers = HEADERS, params = PARAMS)
+        dataRu = r.json()
+        HEADERS = {'Content-Type': 'application/json','Authorization':('Bearer ' + token)}
+        r = requests.get(url = URL4, headers = HEADERS, params = PARAMS)
+        dataEn = r.json()
+
+        episodes = []
+        for i in range(len(dataEn['data'])):
+            if dataEn['data'][i]['firstAired'] != '': 
+                data = datetime.datetime.strptime(dataEn['data'][i]['firstAired'], '%Y-%m-%d')
+            elif dataRu['data'][i]['firstAired'] != '':
+                data = datetime.datetime.strptime(dataRu['data'][i]['firstAired'], '%Y-%m-%d')
+            else:
+                data = None
+            episode = (int(dataEn['data'][i]['airedSeason']),
+                int(dataEn['data'][i]['airedEpisodeNumber']),
+                dataEn['data'][i]['episodeName'],
+                dataRu['data'][i]['episodeName'],
+                data,
+                dataEn['data'][i]['director'],
+                dataEn['data'][i]['overview'],
+                dataRu['data'][i]['overview'],
+                dataEn['data'][i]['showUrl'],
+                None,)
+            episodes.append(episode)
+        responce.append("Season " + str(seasonNumber))
+        #sort results by series ID
+        sorted_by_second = sorted(episodes, key=lambda tup: tup[1])
+        cur.executemany("INSERT INTO series_" + str(seriesNumber) + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", sorted_by_second)
+    #save results
+    con.commit()
+    con.close()
+    return responce
+
+
 #addNewEpisodesFromURL(7)
-for i in range(len(films_in_memory)+1):
-   addNewEpisodesFromURL(i)
+# for i in range(len(films_in_memory)+1):
+#    addNewEpisodesFromURL(i)
 
 #addNewEpisodesFromURL(1)
 
@@ -543,8 +689,8 @@ print(len(aliases_in_memory),'aliases and', len(films_in_memory), 'serials have 
 #print(SearchName("33 несчастья"))
 # print(SeachActionTimeDetection("ГДs сока сколь;в ы новый когда же ты где?"))
 # print(CoreSearch("ГДs сока сколь;в ы когда же ты где?"))
-# print(CoreSearch("Твин Пикс"))
-# print(CoreSearch("Звёздные войны: Сопротивление"))
+print(CoreSearch("Твин Пикс"))
+print(CoreSearch("Теория большого взрыва"))
 # print(CoreSearch("друзья"))
 # print(CoreSearch("дай инфо о теории большого взрыва"))
 # print(CoreSearch("где глянуть теорию большого взрыва"))
