@@ -679,8 +679,8 @@ def addSerialIntoDB(filmID):
 
 
 #addNewEpisodesFromURL(7)
-for i in range(len(films_in_memory)+1):
-   addNewEpisodesFromURL(i)
+# for i in range(len(films_in_memory)+1):
+#    addNewEpisodesFromURL(i)
 
 #addNewEpisodesFromURL(1)
 
