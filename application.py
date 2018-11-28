@@ -152,9 +152,12 @@ def main():
         else:            
             #save intId into dictionary
             sessionStorage[user_id] = result['filmId']
-            res['response']['text'] = result['responce'] #+ '\n' + '\n' + questionJSON['question']
+            #if there is image than modify it 
             if not result['img'] == '':
-                res['response']['card'] = getCard(result['img'])
+                res['response']['card'] = getCard(result['responce'],result['img'],result['nameRu'])
+            else:
+                res['response']['text'] = result['responce'] #+ '\n' + '\n' + questionJSON['question']
+            
             res['response']['buttons'] = getAddinitonaInfoButtons(OfficialURL(result['filmId']))
             # csv_writer.writerow([True, user_id, text, req['meta']['client_id'], req['meta']['locale']],)
         #Close file 

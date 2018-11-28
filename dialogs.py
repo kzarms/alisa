@@ -342,12 +342,12 @@ def getSiteButtons(url):
 #print(tellIAmSorry() + ' ' + tellIAmLost())
 
 #####Card######
-def getCard(img):
+def getCard(text,img,title):
     return {
             "type": "BigImage",
             "image_id": img,
-            "title": "",
-            "description": "",
+            "title": title,
+            "description": text,
             }
 
 

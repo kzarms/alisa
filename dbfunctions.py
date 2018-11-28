@@ -514,7 +514,7 @@ def filmSearch(filmId, action, time):
     return tellIAmSorry() + ' ' + tellICantFindTheEpisode()
 #main function, check for key words and finnaly execute a
 def CoreSearch(text):
-    result = {'responce':'','filmId':-1, 'img':''}
+    result = {'responce':'','filmId':-1, 'img':'', 'nameRu':''}
     #looking for a name (fist stage)
     SearchResult = SearchName(text)
     if SearchResult['filmId'] == -1:
@@ -528,6 +528,7 @@ def CoreSearch(text):
     #Run the filmSearch function on top of film ID and rerutn text in result
     result['responce'] = filmSearch(SearchResult['filmId'], SearchResult['action'], SearchResult['time'])
     result['filmId'] = SearchResult['filmId']
+    result['nameRu'] = films_in_memory[int(SearchResult['filmId'])-1][4]
     imgsRaw = films_in_memory[int(SearchResult['filmId'])-1][12]
     if not ((imgsRaw == '') or (imgsRaw == None)):
         imgs = imgsRaw.split(',')
@@ -689,8 +690,8 @@ print(len(aliases_in_memory),'aliases and', len(films_in_memory), 'serials have 
 #print(SearchName("33 несчастья"))
 # print(SeachActionTimeDetection("ГДs сока сколь;в ы новый когда же ты где?"))
 # print(CoreSearch("ГДs сока сколь;в ы когда же ты где?"))
-print(CoreSearch("Твин Пикс"))
-print(CoreSearch("Теория большого взрыва"))
+# print(CoreSearch("Твин Пикс"))
+# print(CoreSearch("Теория большого взрыва"))
 # print(CoreSearch("друзья"))
 # print(CoreSearch("дай инфо о теории большого взрыва"))
 # print(CoreSearch("где глянуть теорию большого взрыва"))
