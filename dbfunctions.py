@@ -679,8 +679,8 @@ def addSerialIntoDB(filmID):
 
 
 #addNewEpisodesFromURL(7)
-# for i in range(len(films_in_memory)+1):
-#    addNewEpisodesFromURL(i)
+for i in range(len(films_in_memory)+1):
+   addNewEpisodesFromURL(i)
 
 #addNewEpisodesFromURL(1)
 
@@ -690,7 +690,7 @@ print(len(aliases_in_memory),'aliases and', len(films_in_memory), 'serials have 
 #print(SearchName("33 несчастья"))
 # print(SeachActionTimeDetection("ГДs сока сколь;в ы новый когда же ты где?"))
 # print(CoreSearch("ГДs сока сколь;в ы когда же ты где?"))
-# print(CoreSearch("Твин Пикс"))
+#print(CoreSearch("Мир дикого запада"))
 # print(CoreSearch("Теория большого взрыва"))
 # print(CoreSearch("друзья"))
 # print(CoreSearch("дай инфо о теории большого взрыва"))

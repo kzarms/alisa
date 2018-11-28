@@ -77,7 +77,7 @@ for i in range(5,21):
     result = MyPostCommand(False, keywords[i], 2)
     print('.' in result.lower(), keywords[i],)
 
-#print(MyPostCommand(False, '477b0c56-3dc5-4b69-ae85-a2eec9e378cd', 2))
+print(MyPostCommand(False, 'тбв', 2))
 
 wastePhrase = "это пустая фраза "
 for i in range(0,20):
