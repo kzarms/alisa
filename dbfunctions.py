@@ -238,7 +238,8 @@ def addEpisode(seriesNumber, episode):
             #No data in the DB, insert a new episode
             cur.execute("INSERT INTO series_" + str(seriesNumber) + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", episode)
             con.commit()
-            print(seriesNumber, 'New line!')
+            #print(seriesNumber, 'New line!')
+            return "%s - ADD %s by %s" % (filmName(seriesNumber), episode[:3], "TVDB")
         else:
             #it is not a none value, need to compare and update null values.
             episodeValues = []
@@ -268,7 +269,8 @@ def addEpisode(seriesNumber, episode):
                 sql = '''UPDATE series_%i SET episodeNameEn = ?, episodeNameRu = ?, firstAired = ?, director = ?, overviewEn = ?, overviewRu = ?, showUrl = ?, info = ? WHERE airedSeason = %i AND airedEpisodeNumber = %i''' % (int(seriesNumber), airedSeason, row[1])
                 cur.execute(sql, episodeValues[2:])
                 con.commit()
-                print(seriesNumber, 'update')
+                #print(seriesNumber, 'update')
+                return "%s - UPDATE %s by %s" % (filmName(seriesNumber), episodeValues[:3], "TVDB")
     con.close()
 
 
@@ -288,24 +290,22 @@ def addNewEpisodesFromURL(seriesNumber):
     #collect information form the TVdb in sorted man
     episodes = tvdbEpisodesFromLastSeason(resutl[0])
     for episode in episodes:
-        addEpisode(seriesNumber, episode)
+        logUpdateInfo(addEpisode(seriesNumber, episode))
 
     #--Get series from other sources
     sql = 'SELECT rowid, nameEn, searchURL FROM films WHERE rowid = %i AND searchURL is not NULL AND searchURL <> ""' % seriesNumber
     cur.execute(sql)
     line = cur.fetchone()
     if line != None:
-        nameEn = line[1]
         searchURL = line[2]
         if "tvguide.com" in searchURL:
-            print(nameEn + ' ' + searchURL)
             episodes = getEpisodesInfoFromTvGuide(searchURL)
             for episode in episodes:
-                addEpisodeFromDict(seriesNumber, episode, nameEn)
+                logUpdateInfo(addEpisodeFromDict(seriesNumber, episode))
         return 1
 
 
-def addEpisodeFromDict(seriesNumber, episodeJson, nameEn):
+def addEpisodeFromDict(seriesNumber, episodeJson):
     con = sqlite3.connect("mainDb.db", detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
     sql = 'SELECT airedSeason, airedEpisodeNumber, episodeNameEn, episodeNameRu, firstAired, director, overviewRu FROM series_%s WHERE airedSeason = %s AND airedEpisodeNumber = %s' % (str(seriesNumber), str(episodeJson['airedSeason']), str(episodeJson['airedEpisodeNumber']))
     #print(sql)
@@ -313,16 +313,13 @@ def addEpisodeFromDict(seriesNumber, episodeJson, nameEn):
     cur = con.cursor()
     cur.execute(sql)
     row = cur.fetchone()
-    #print(nameEn)
-    #rint(row)
-    if row == None:  #No episode - add
-        print(nameEn + ' NO EPISODE IN BASE , ADD---------')
+    result = "0"
+    if row == None:  #No episode - add        
         sql = 'INSERT INTO series_%s (airedSeason, airedEpisodeNumber, episodeNameEn, episodeNameRu, firstAired, overviewEn) VALUES (%s, %s, %s, %s, %s, %s)' % (seriesNumber, episodeJson.get('airedSeason'), episodeJson.get('airedEpisodeNumber'), sqlquote(episodeJson.get('episodeNameEn')), sqlquote(episodeJson.get('episodeNameRu')), sqlquote(episodeJson.get('firstAired')), sqlquote(episodeJson.get('overviewEn')))
-        print(sql)
-        print("\n\n\n")
         cur.execute(sql)
         con.commit()
         con.close()
+        return "%s - ADD %s BY %s" % (filmName(seriesNumber), str(episodeJson), "TVGUIDE")
     else:
         episodeBase = {}
         episodeBase['airedSeason'] = row[0]
@@ -338,13 +335,12 @@ def addEpisodeFromDict(seriesNumber, episodeJson, nameEn):
                 episodeBase[key] = episodeJson[key]
                 change = True
         if change == True:
-            print (("%s %i %i CHANGED WITH TVGUIDE INFO") % (nameEn, episodeBase.get('airedSeason'), episodeBase.get('airedEpisodeNumber')))
+            #print (("%s %i %i CHANGED WITH TVGUIDE INFO") % (nameEn, episodeBase.get('airedSeason'), episodeBase.get('airedEpisodeNumber')))            
             sql = 'UPDATE series_%i SET episodeNameEn = %s, episodeNameRu = %s, firstAired = %s, overviewEn = %s  WHERE airedSeason = %i AND airedEpisodeNumber = %i' % (seriesNumber, sqlquote(str(episodeBase.get('episodeNameEn'))), sqlquote(str(episodeBase.get('episodeNameRu'))), sqlquote(str(episodeBase.get('firstAired'))), sqlquote(episodeJson.get('overviewEn')), episodeBase.get('airedSeason'), episodeBase.get('airedEpisodeNumber'))
-            print(sql)
-            print("\n\n\n")
             cur.execute(sql)
             con.commit()
             con.close()
+            return "%s - ADD %s BY %s" % (filmName(seriesNumber), str(episodeBase), "TVGUIDE")
         else:
             #print (('%s %i %i NO NEW INFO FROM TVGUIDE') % (nameEn, episodeBase.get('airedSeason'), episodeBase.get('airedEpisodeNumber')))
             pass
@@ -407,6 +403,11 @@ def OfficialURL(intId):
         return film[14]
     else:
         return str('https://yandex.ru/search/?text=сериал%20' + film[4].replace(" ","%20").strip(' ?!,;:.'))
+
+
+#Get film name
+def filmName(filmId):
+    return films_in_memory[filmId - 1][3]
 
 
 #Return main info about serial
@@ -678,15 +679,22 @@ def addSerialIntoDB(filmID):
     return responce
 
 
+
+def logUpdateInfo(info):
+    if info != None and info != "":
+        f = open('update.log', 'a')
+        f.write(datetime.today().strftime("%Y-%m-%d") + "    " + str(info) + "\n") 
+        f.close()
+        print(info)
 #addNewEpisodesFromURL(7)
-# for i in range(len(films_in_memory)+1):
-#    addNewEpisodesFromURL(i)
+#for i in range(len(films_in_memory)+1):
+#   addNewEpisodesFromURL(i)
 
 #addNewEpisodesFromURL(1)
 
-print(len(aliases_in_memory),'aliases and', len(films_in_memory), 'serials have been loaded successfully')
-
-
+#print(len(aliases_in_memory),'aliases and', len(films_in_memory), 'serials have been loaded successfully')
+#print(filmName(1))
+#addNewEpisodesFromURL(1)
 #print(SearchName("33 несчастья"))
 # print(SeachActionTimeDetection("ГДs сока сколь;в ы новый когда же ты где?"))
 # print(CoreSearch("ГДs сока сколь;в ы когда же ты где?"))
