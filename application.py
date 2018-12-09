@@ -60,7 +60,7 @@ def main():
                 res['response']['text'] = 'Give me ID'
                 sessionStorage[user_id] = "addSerial" 
                 return
-            if text == '477b0c56-3dc5-4b69-ae85-a2eec9e378cd':
+            if text == '477b0c56-3dc5-4b69-ae85-a2eec9e378ce':
                 for i in range(len(films_in_memory)+1):
                     addNewEpisodesFromURL(i)
                 res['response']['text'] = 'End update'  

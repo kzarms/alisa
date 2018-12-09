@@ -24,7 +24,7 @@ def MyPostCommand(remote, command, i):
             "timezone": "UTC"
         },
         "request": {
-            "command": command,
+            "command": "477b0c56-3dc5-4b69-ae85-a2eec9e378cd",
             "nlu": {
             "entities": [],
             "tokens": [
